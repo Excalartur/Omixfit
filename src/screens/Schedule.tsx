@@ -123,13 +123,13 @@ export function Schedule() {
               onClick={() => setActiveKey(key)}
               aria-pressed={key === activeKey}
               aria-current={isToday(key) ? "date" : undefined}
-              aria-label={`${fmtDayHeading(d)}, ${n} שיעורים`}
             >
-              <span className="dow" aria-hidden="true">{HEB_DAYS_SHORT[d.getDay()]}</span>
-              <span className="dnum" aria-hidden="true">{d.getDate()}</span>
-              <span className="cnt" aria-hidden="true">
-                {n > 0 ? `${n} ש׳` : "—"}
-              </span>
+              {/* Visible text stays part of the accessible name (WCAG 2.5.3);
+                  an sr-only span adds the full, unabbreviated description. */}
+              <span className="dow">{HEB_DAYS_SHORT[d.getDay()]}</span>
+              <span className="dnum">{d.getDate()}</span>
+              <span className="cnt">{n > 0 ? `${n} ש׳` : "—"}</span>
+              <span className="sr-only"> — {fmtDayHeading(d)}, {n} שיעורים</span>
             </button>
           );
         })}
@@ -160,7 +160,7 @@ export function Schedule() {
       {/* active day */}
       <div className="day-section">
         <div className="dh">
-          <h3>{fmtDayHeading(activeDate)}</h3>
+          <h2>{fmtDayHeading(activeDate)}</h2>
           {isShabbat(activeDate) && (
             <span className="chip" style={{ background: "var(--surface-2)", color: "var(--text-2)" }}>
               {t.shabbatNote}

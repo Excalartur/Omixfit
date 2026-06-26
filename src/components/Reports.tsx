@@ -124,7 +124,7 @@ export function Reports() {
       <div className="report-grid">
         {/* popular classes */}
         <div className="report-section">
-          <h3>{t.popularClasses}</h3>
+          <h2>{t.popularClasses}</h2>
           {r.popular.length === 0 && <p className="muted">{t.reportsNoData}</p>}
           <div className="bars">
             {r.popular.map(({ type, n }) => {
@@ -147,7 +147,7 @@ export function Reports() {
 
         {/* top members */}
         <div className="report-section">
-          <h3>{t.topMembers}</h3>
+          <h2>{t.topMembers}</h2>
           {r.topMembers.length === 0 && <p className="muted">{t.reportsNoData}</p>}
           <div className="bars">
             {r.topMembers.map(({ user, n }) => (
@@ -171,7 +171,7 @@ export function Reports() {
 
       {/* fill by day */}
       <div className="report-section">
-        <h3>{t.fillByDay}</h3>
+        <h2>{t.fillByDay}</h2>
         <div className="day-bars">
           {r.dayFill.map((v, i) => (
             <div key={i} className={`day-bar ${i === 6 ? "is-shabbat" : ""}`}>

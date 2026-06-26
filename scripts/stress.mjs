@@ -34,7 +34,7 @@ async function check(label, w, { hash = "", userId, seg } = {}) {
   await p.waitForSelector(".appbar");
   await new Promise((r) => setTimeout(r, 400));
   if (hash === "") {
-    await p.evaluate(() => { const c = [...document.querySelectorAll(".daycol")].find((x) => /,\s*[1-9]\d*\s*שיעורים/.test(x.getAttribute("aria-label") || "")); c?.click(); });
+    await p.evaluate(() => { const c = [...document.querySelectorAll(".daycol")].find((x) => /,\s*[1-9]\d*\s*שיעורים/.test(x.textContent || "")); c?.click(); });
     await new Promise((r) => setTimeout(r, 400));
   }
   if (seg) { await p.click(`.seg button:nth-child(${seg})`).catch(() => {}); await new Promise((r) => setTimeout(r, 400)); }

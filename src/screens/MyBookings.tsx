@@ -59,6 +59,7 @@ export function MyBookings({ onGoSchedule }: { onGoSchedule: () => void }) {
         </div>
       </div>
 
+      <h2 className="sr-only">{tab === "upcoming" ? t.upcoming : t.past}</h2>
       {list.length === 0 ? (
         <div className="empty">
           <div className="ico">

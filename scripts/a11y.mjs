@@ -41,7 +41,7 @@ async function audit(label, { hash = "", userId, open, then } = {}) {
   if (open && open.includes("class-card")) {
     await page.evaluate(() => {
       const col = [...document.querySelectorAll(".daycol")].find((c) =>
-        /,\s*[1-9]\d*\s*שיעורים/.test(c.getAttribute("aria-label") || ""),
+        /,\s*[1-9]\d*\s*שיעורים/.test(c.textContent || ""),
       );
       col?.click();
     });

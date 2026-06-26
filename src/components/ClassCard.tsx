@@ -59,10 +59,10 @@ export function ClassCard({
           <span className="dur">{session.durationMin}׳</span>
         </div>
         <div className="cc-main">
-          <h4 className="cc-title">
+          <h3 className="cc-title">
             <span className="cc-emoji" aria-hidden="true">{meta.emoji}</span>
             {type.name}
-          </h4>
+          </h3>
           <div className="cc-meta">
             <span className="m">
               <IcUser />

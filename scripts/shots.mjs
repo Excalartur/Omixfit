@@ -57,7 +57,7 @@ async function shot(name, { viewport, hash = "", userId, click, then, wait = 700
   if (hash === "") {
     await page.evaluate(() => {
       const col = [...document.querySelectorAll(".daycol")].find((c) =>
-        /,\s*[1-9]\d*\s*שיעורים/.test(c.getAttribute("aria-label") || ""),
+        /,\s*[1-9]\d*\s*שיעורים/.test(c.textContent || ""),
       );
       col?.click();
     });

@@ -21,7 +21,7 @@ export function AuditLog({ limit = 20 }: { limit?: number }) {
 
   return (
     <div className="report-section">
-      <h3>{t.auditLog}</h3>
+      <h2>{t.auditLog}</h2>
       {entries.length === 0 ? (
         <p className="muted">{t.auditEmpty}</p>
       ) : (

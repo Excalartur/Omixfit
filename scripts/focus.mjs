@@ -9,7 +9,7 @@ await p.waitForSelector(".daycol");
 // Select a day that has classes (today may be Shabbat / empty) — date-robust.
 await p.evaluate(() => {
   const col = [...document.querySelectorAll(".daycol")].find((c) =>
-    /,\s*[1-9]\d*\s*שיעורים/.test(c.getAttribute("aria-label") || ""),
+    /,\s*[1-9]\d*\s*שיעורים/.test(c.textContent || ""),
   );
   col?.click();
 });

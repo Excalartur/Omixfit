@@ -17,6 +17,7 @@
     "responsive": "node scripts/responsive.mjs",
     "stress": "node scripts/stress.mjs",
     "empty": "node scripts/empty.mjs",
+    "lighthouse": "node scripts/lighthouse.mjs",
     "test": "esbuild test/smoke.ts --bundle --platform=node --format=cjs --outfile=test/smoke.cjs --log-level=error && node test/runner.mjs"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "axe-core": "^4.12.1",
+    "lighthouse": "^12.8.2",
     "puppeteer-core": "^23.11.1",
     "typescript": "^5.6.3",
     "vite": "^5.4.11"

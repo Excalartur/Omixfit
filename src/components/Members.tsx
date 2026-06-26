@@ -62,7 +62,7 @@ export function Members() {
       {filtered.length === 0 ? (
         <div className="empty">
           <div className="ico"><IcUsers width={40} height={40} style={{ opacity: 0.4 }} /></div>
-          <h3>{t.noMembers}</h3>
+          <h2>{t.noMembers}</h2>
         </div>
       ) : (
         <div className="member-list">

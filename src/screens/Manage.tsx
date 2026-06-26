@@ -107,7 +107,7 @@ export function Manage() {
       {tab === "catalog" && data.classTypes.length === 0 && (
         <div className="empty">
           <div className="ico">🏷️</div>
-          <h3>{t.catalogEmpty}</h3>
+          <h2>{t.catalogEmpty}</h2>
           <p>{t.catalogEmptyHint}</p>
           <button className="btn btn-lime" style={{ marginTop: 14 }} onClick={() => setTypeEditor({ mode: "create" })}>
             <IcPlus width={18} height={18} /> {t.newTypeTitle}
