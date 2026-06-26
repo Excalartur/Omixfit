@@ -2,17 +2,19 @@ import { useMemo, useState } from "react";
 import { t } from "../lib/i18n";
 import type { ClassSession } from "../lib/types";
 import { sessionStartDate, useStore } from "../lib/store";
+import { useNow } from "../lib/useNow";
 import { ClassCard } from "../components/ClassCard";
 import { SessionDetail } from "../components/SessionDetail";
 import { IcBookmark } from "../components/icons";
 
 export function MyBookings({ onGoSchedule }: { onGoSchedule: () => void }) {
   const data = useStore((s) => s);
+  const nowTick = useNow(); // re-split upcoming/past as sessions roll into the past
   const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
   const [open, setOpen] = useState<ClassSession | null>(null);
 
   const { upcoming, past } = useMemo(() => {
-    const now = Date.now();
+    const now = nowTick;
     const mineIds = new Set(
       data.bookings
         .filter(
@@ -32,7 +34,7 @@ export function MyBookings({ onGoSchedule }: { onGoSchedule: () => void }) {
       upcoming: sessions.filter((s) => sessionStartDate(s).getTime() >= now && !s.cancelled),
       past: sessions.filter((s) => sessionStartDate(s).getTime() < now || s.cancelled).reverse(),
     };
-  }, [data]);
+  }, [data, nowTick]);
 
   const list = tab === "upcoming" ? upcoming : past;
 

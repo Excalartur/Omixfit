@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { CATEGORY_META, t } from "../lib/i18n";
 import type { ClassCategory, ClassSession } from "../lib/types";
 import { useStore } from "../lib/store";
+import { useNow } from "../lib/useNow";
 import {
   addDays,
   fmtDayHeading,
@@ -20,6 +21,7 @@ import { IcCalendar } from "../components/icons";
 
 export function Schedule() {
   const data = useStore((s) => s);
+  useNow(); // keep time-dependent booking states fresh as time passes (§5.3)
   const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()));
   const [activeKey, setActiveKey] = useState(() => toKey(new Date()));
   const [cats, setCats] = useState<Set<ClassCategory>>(new Set());

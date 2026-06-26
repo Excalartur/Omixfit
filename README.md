@@ -102,8 +102,13 @@ booker names are **staff‑only** (privacy); booking is gated on `membershipActi
 - [x] **i6** — Waitlist (§4.3 / Q4): join when full, FIFO position, auto‑promote
       on cancellation or capacity increase, staff waitlist roster, My‑Bookings
       badge. Smoke test now 28 checks; axe still 0 violations.
+- [x] **i7** — Live clock tick (§5.3): the schedule + My Bookings refresh
+      time‑dependent state (booking window closing, sessions rolling into the
+      past) without a user interaction.
 
 **MVP + v1 coverage of `docs/plan.md` is complete.** Deferred to a true v2 (per
 the §6 decisions): a payments/billing engine, no‑show penalty strikes,
-multi‑branch UI, and live WebSocket spot‑counts — all have data‑model hooks
-already in place (`membershipActive`, `no_show` state, `locationId`).
+multi‑branch UI, and real‑time multi‑client spot‑counts via WebSocket/SSE (the
+client now self‑refreshes on a timer; cross‑client push needs a backend) — all
+have data‑model hooks already in place (`membershipActive`, `no_show`,
+`locationId`).
