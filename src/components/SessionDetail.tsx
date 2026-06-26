@@ -14,6 +14,7 @@ import { fmtDayHeading, fmtTime, fromKey } from "../lib/date";
 import { Sheet } from "./Sheet";
 import { Avatar, CapacityBar } from "./common";
 import { toast } from "./Toast";
+import { celebrate } from "./Celebration";
 import { IcClock, IcClose, IcPin, IcUser } from "./icons";
 
 export function SessionDetail({
@@ -41,7 +42,10 @@ export function SessionDetail({
 
   function doBook() {
     const r = book(session.id, data.currentUserId);
-    if (r === "ok") toast(t.bookedToast, "ok");
+    if (r === "ok") {
+      toast(t.bookedToast, "ok");
+      celebrate();
+    }
     else if (r === "full") toast(t.fullToast, "err");
     else if (r === "membership") toast(t.membershipBlocked, "err");
     else if (r === "limit") toast(t.limitReached, "err");

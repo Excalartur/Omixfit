@@ -6,7 +6,13 @@
 // ---------------------------------------------------------------------------
 
 import { useSyncExternalStore } from "react";
-import type { AppData, Booking, ClassSession, ClassType } from "./types";
+import type {
+  AppData,
+  Booking,
+  ClassSession,
+  ClassType,
+  User,
+} from "./types";
 import { buildSeed } from "./seed";
 import { fromKey } from "./date";
 
@@ -231,6 +237,56 @@ export function setAttendance(
       : b,
   );
   set({ ...state, bookings });
+}
+
+export function updateUser(userId: string, patch: Partial<User>): void {
+  set({
+    ...state,
+    users: state.users.map((u) => (u.id === userId ? { ...u, ...patch } : u)),
+  });
+}
+
+export function upsertClassType(ct: ClassType): void {
+  const exists = state.classTypes.some((c) => c.id === ct.id);
+  const classTypes = exists
+    ? state.classTypes.map((c) => (c.id === ct.id ? ct : c))
+    : [...state.classTypes, ct];
+  set({ ...state, classTypes });
+}
+
+export function deleteClassType(typeId: string): boolean {
+  // Refuse if any session references it (keeps the schedule consistent).
+  if (state.sessions.some((s) => s.classTypeId === typeId)) return false;
+  set({ ...state, classTypes: state.classTypes.filter((c) => c.id !== typeId) });
+  return true;
+}
+
+export function newTypeId(): string {
+  return nextId("ct");
+}
+
+/** Personal stats for the profile screen. */
+export function memberStats(userId: string, s: AppData = state) {
+  const mine = s.bookings.filter((b) => b.userId === userId);
+  const attended = mine.filter((b) => b.state === "attended").length;
+  const upcoming = mine.filter(
+    (b) =>
+      b.state === "confirmed" &&
+      sessionStartDate(s.sessions.find((x) => x.id === b.sessionId)!).getTime() >
+        Date.now(),
+  ).length;
+  // favorite category by booking count
+  const tally = new Map<string, number>();
+  for (const b of mine) {
+    const sess = s.sessions.find((x) => x.id === b.sessionId);
+    if (!sess) continue;
+    const cat = s.classTypes.find((c) => c.id === sess.classTypeId)!.category;
+    tally.set(cat, (tally.get(cat) ?? 0) + 1);
+  }
+  let favorite: string | null = null;
+  let max = 0;
+  for (const [cat, n] of tally) if (n > max) ((max = n), (favorite = cat));
+  return { attended, upcoming, total: mine.length, favorite };
 }
 
 export function resetData(): void {

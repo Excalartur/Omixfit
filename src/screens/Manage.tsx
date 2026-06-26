@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { CATEGORY_META, t } from "../lib/i18n";
-import type { ClassSession } from "../lib/types";
+import type { ClassSession, ClassType } from "../lib/types";
 import { classTypeOf, confirmedCount, useStore } from "../lib/store";
 import {
   addDays,
@@ -14,6 +14,7 @@ import {
 import { WeekNav } from "../components/common";
 import { SessionEditor } from "../components/SessionEditor";
 import { SessionDetail } from "../components/SessionDetail";
+import { TypeEditor } from "../components/TypeEditor";
 import { IcPlus, IcSpark, IcUsers, IcCalendar } from "../components/icons";
 
 type EditorState =
@@ -23,9 +24,13 @@ type EditorState =
 
 export function Manage() {
   const data = useStore((s) => s);
+  const [tab, setTab] = useState<"schedule" | "catalog">("schedule");
   const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()));
   const [editor, setEditor] = useState<EditorState>({ mode: "closed" });
   const [detail, setDetail] = useState<ClassSession | null>(null);
+  const [typeEditor, setTypeEditor] = useState<
+    { mode: "closed" } | { mode: "create" } | { mode: "edit"; type: ClassType }
+  >({ mode: "closed" });
 
   const days = weekDays(weekStart);
   const weekKeys = new Set(days.map(toKey));
@@ -67,11 +72,53 @@ export function Manage() {
           <h1 className="h1">{t.manageTitle}</h1>
           <div className="sub">{data.locations[0].name}</div>
         </div>
-        <button className="btn btn-lime" onClick={() => setEditor({ mode: "create", date: toKey(days[0]) })}>
-          <IcPlus width={18} height={18} /> {t.newSession}
+        {tab === "schedule" ? (
+          <button className="btn btn-lime" onClick={() => setEditor({ mode: "create", date: toKey(days[0]) })}>
+            <IcPlus width={18} height={18} /> {t.newSession}
+          </button>
+        ) : (
+          <button className="btn btn-lime" onClick={() => setTypeEditor({ mode: "create" })}>
+            <IcPlus width={18} height={18} /> {t.newTypeTitle}
+          </button>
+        )}
+      </div>
+
+      <div className="seg" style={{ marginBottom: 18 }}>
+        <button className={tab === "schedule" ? "on" : ""} onClick={() => setTab("schedule")}>
+          {t.scheduleTab}
+        </button>
+        <button className={tab === "catalog" ? "on" : ""} onClick={() => setTab("catalog")}>
+          {t.catalog}
         </button>
       </div>
 
+      {tab === "catalog" && (
+        <div className="catalog">
+          {data.classTypes.map((ct) => {
+            const meta = CATEGORY_META[ct.category];
+            const count = data.sessions.filter((s) => s.classTypeId === ct.id).length;
+            return (
+              <button
+                key={ct.id}
+                className="cat-card"
+                style={{ ["--cat-hue" as string]: meta.hue }}
+                onClick={() => setTypeEditor({ mode: "edit", type: ct })}
+              >
+                <span className="cc-ico">{meta.emoji}</span>
+                <span className="cc-body">
+                  <b>{ct.name}</b>
+                  <small>
+                    {meta.label} · {ct.defaultCapacity} מקומות · {ct.defaultDurationMin}׳ · {t.typeSessions(count)}
+                  </small>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {tab === "schedule" && (
+      <>
       <div className="stats">
         <div className="stat dark">
           <div className="k"><IcCalendar width={15} height={15} /> {t.weekSessions}</div>
@@ -131,6 +178,8 @@ export function Manage() {
           );
         })}
       </div>
+      </>
+      )}
 
       {detail && (
         <SessionDetail
@@ -147,6 +196,12 @@ export function Manage() {
           session={editor.mode === "edit" ? editor.session : null}
           presetDate={editor.mode === "create" ? editor.date : undefined}
           onClose={() => setEditor({ mode: "closed" })}
+        />
+      )}
+      {typeEditor.mode !== "closed" && (
+        <TypeEditor
+          type={typeEditor.mode === "edit" ? typeEditor.type : null}
+          onClose={() => setTypeEditor({ mode: "closed" })}
         />
       )}
     </div>

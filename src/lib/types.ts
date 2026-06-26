@@ -6,6 +6,14 @@
 
 export type Role = "member" | "instructor" | "manager" | "admin";
 
+export interface NotifyPrefs {
+  push: boolean;
+  email: boolean;
+  whatsapp: boolean;
+  /** Reminder lead time before a session, in hours. */
+  reminderHours: number;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -13,8 +21,12 @@ export interface User {
   role: Role;
   /** Q3: booking is gated on this even before a payment engine exists. */
   membershipActive: boolean;
+  /** Membership tier label + validity (manager-managed in v1). */
+  membershipPlan?: string;
+  membershipValidUntil?: string; // YYYY-MM-DD
   avatarColor: string; // derived chip color
   initials: string;
+  prefs?: NotifyPrefs;
 }
 
 export type ClassCategory =

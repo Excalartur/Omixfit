@@ -37,6 +37,14 @@ to log in as נועה (manager) or an instructor and see the management side.
 - **Recurrence**: generate 1 / 4 / 8 weekly occurrences in one action.
 - Edit / cancel / delete a session; cancelling notifies (toast stand‑in).
 - **Roster** with names + phones and **attendance / no‑show** marking.
+- **Class‑type catalog** (טמפלייטים) — create/edit/delete class types, with a
+  delete‑guard while sessions still reference a type.
+
+**Profile (everyone)**
+- Membership card (plan, status, validity), personal stats (attended / upcoming
+  / favorite style), editable name + phone, notification preferences
+  (push / WhatsApp / email + reminder lead time).
+- Booking success fires a confetti **celebration** micro‑interaction.
 
 **Platform**
 - Installable PWA (manifest, service worker offline shell, generated icons).
@@ -62,6 +70,10 @@ booker names are **staff‑only** (privacy); booking is gated on `membershipActi
 
 ## Iteration status (Ralph loop)
 
-- [x] Scaffold, design system, data layer + booking engine, both experiences, PWA.
-- [ ] **Next:** live spot‑count polish, richer manager reports, ClassType manager,
-      member profile, animation/empty‑state pass, real visual QA in a browser.
+- [x] **i1** — Scaffold, design system, data layer + booking engine, both
+      experiences, PWA. Smoke test (12 checks).
+- [x] **i2** — Member profile + membership card, notification preferences,
+      class‑type catalog manager, booking celebration. Smoke test now 17 checks.
+- [ ] **Next:** real visual QA in a browser (extension not yet connected),
+      manager reports (utilization / no‑show), audit log, accessibility pass,
+      live spot‑count refresh.

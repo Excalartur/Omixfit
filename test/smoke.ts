@@ -6,7 +6,12 @@ import {
   book,
   cancelBooking,
   confirmedCount,
+  deleteClassType,
   getState,
+  memberStats,
+  newTypeId,
+  updateUser,
+  upsertClassType,
   upsertSession,
 } from "../src/lib/store";
 import type { ClassSession } from "../src/lib/types";
@@ -86,6 +91,30 @@ const past: ClassSession = {
 };
 upsertSession(past);
 ok("past session is closed", book(past.id, member.id) === "closed");
+
+// 6. Class-type catalog (Q1 templates)
+const beforeTypes = getState().classTypes.length;
+const tid = newTypeId();
+upsertClassType({
+  id: tid,
+  name: "טסט שיעור",
+  description: "",
+  category: "yoga",
+  defaultCapacity: 10,
+  defaultDurationMin: 45,
+});
+ok("upsertClassType adds a type", getState().classTypes.length === beforeTypes + 1);
+ok("unused type can be deleted", deleteClassType(tid) === true);
+ok(
+  "type referenced by a session cannot be deleted",
+  deleteClassType(getState().sessions[0].classTypeId) === false,
+);
+
+// 7. Profile updates + stats
+updateUser(member.id, { name: "דנה מעודכנת" });
+ok("updateUser changes the name", getState().users.find((u) => u.id === member.id)!.name === "דנה מעודכנת");
+const ms = memberStats(member.id);
+ok("memberStats returns numeric totals", typeof ms.total === "number" && ms.upcoming >= 0);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail > 0) {

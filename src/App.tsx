@@ -4,8 +4,10 @@ import { useStore } from "./lib/store";
 import { Schedule } from "./screens/Schedule";
 import { MyBookings } from "./screens/MyBookings";
 import { Manage } from "./screens/Manage";
+import { Profile } from "./screens/Profile";
 import { UserSwitcher } from "./components/UserSwitcher";
 import { Toaster } from "./components/Toast";
+import { Celebration } from "./components/Celebration";
 import { Avatar } from "./components/common";
 import {
   IcBolt,
@@ -13,13 +15,14 @@ import {
   IcCalendar,
   IcChevR,
   IcGrid,
+  IcUser,
 } from "./components/icons";
 
-type View = "schedule" | "bookings" | "manage";
+type View = "schedule" | "bookings" | "manage" | "profile";
 
 function readHash(): View {
   const h = location.hash.replace("#", "");
-  return h === "bookings" || h === "manage" ? h : "schedule";
+  return h === "bookings" || h === "manage" || h === "profile" ? h : "schedule";
 }
 
 export default function App() {
@@ -50,10 +53,12 @@ export default function App() {
     ? [
         { id: "schedule", label: t.nav.schedule, icon: <IcCalendar /> },
         { id: "manage", label: t.nav.manage, icon: <IcGrid /> },
+        { id: "profile", label: t.nav.profile, icon: <IcUser /> },
       ]
     : [
         { id: "schedule", label: t.nav.schedule, icon: <IcCalendar /> },
         { id: "bookings", label: t.nav.myBookings, icon: <IcBookmark /> },
+        { id: "profile", label: t.nav.profile, icon: <IcUser /> },
       ];
 
   return (
@@ -101,6 +106,7 @@ export default function App() {
         {view === "schedule" && <Schedule />}
         {view === "bookings" && <MyBookings onGoSchedule={() => go("schedule")} />}
         {view === "manage" && <Manage />}
+        {view === "profile" && <Profile onSwitchUser={() => setSwitcher(true)} />}
       </main>
 
       <nav className="tabbar">
@@ -122,6 +128,7 @@ export default function App() {
 
       {switcher && <UserSwitcher onClose={() => setSwitcher(false)} />}
       <Toaster />
+      <Celebration />
     </div>
   );
 }

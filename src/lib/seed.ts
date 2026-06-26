@@ -180,7 +180,18 @@ function u(
 ): User {
   const parts = name.split(" ");
   const initials = (parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "");
-  return { id, name, phone, role, membershipActive: true, avatarColor: color, initials };
+  return {
+    id,
+    name,
+    phone,
+    role,
+    membershipActive: true,
+    membershipPlan: role === "member" ? "מנוי חופשי חודשי" : "צוות",
+    membershipValidUntil: "2026-12-31",
+    avatarColor: color,
+    initials,
+    prefs: { push: true, email: true, whatsapp: true, reminderHours: 2 },
+  };
 }
 
 function ct(
