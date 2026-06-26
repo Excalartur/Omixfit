@@ -125,6 +125,7 @@ export function Reports() {
         {/* popular classes */}
         <div className="report-section">
           <h3>{t.popularClasses}</h3>
+          {r.popular.length === 0 && <p className="muted">{t.reportsNoData}</p>}
           <div className="bars">
             {r.popular.map(({ type, n }) => {
               const meta = CATEGORY_META[type.category];
@@ -147,6 +148,7 @@ export function Reports() {
         {/* top members */}
         <div className="report-section">
           <h3>{t.topMembers}</h3>
+          {r.topMembers.length === 0 && <p className="muted">{t.reportsNoData}</p>}
           <div className="bars">
             {r.topMembers.map(({ user, n }) => (
               <div className="bar-row" key={user.id} style={{ ["--cat-hue" as string]: 80 }}>

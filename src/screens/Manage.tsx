@@ -104,7 +104,17 @@ export function Manage() {
       {tab === "reports" && <Reports />}
       {tab === "members" && <Members />}
 
-      {tab === "catalog" && (
+      {tab === "catalog" && data.classTypes.length === 0 && (
+        <div className="empty">
+          <div className="ico">🏷️</div>
+          <h3>{t.catalogEmpty}</h3>
+          <p>{t.catalogEmptyHint}</p>
+          <button className="btn btn-lime" style={{ marginTop: 14 }} onClick={() => setTypeEditor({ mode: "create" })}>
+            <IcPlus width={18} height={18} /> {t.newTypeTitle}
+          </button>
+        </div>
+      )}
+      {tab === "catalog" && data.classTypes.length > 0 && (
         <div className="catalog">
           {data.classTypes.map((ct) => {
             const meta = CATEGORY_META[ct.category];

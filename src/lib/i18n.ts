@@ -177,6 +177,9 @@ export const t = {
   defaultDur: "משך ברירת מחדל (דק׳)",
   typeInUse: "לא ניתן למחוק — קיימים שיעורים מתוכננים מסוג זה",
   typeSessions: (n: number) => `${n} שיעורים בלוח`,
+  catalogEmpty: "עוד לא הוגדרו סוגי שיעורים",
+  catalogEmptyHint: "הוסף/י סוג שיעור ראשון כדי לבנות את הקטלוג",
+  reportsNoData: "אין עדיין נתונים בתקופה זו",
 
   // generic
   close: "סגירה",

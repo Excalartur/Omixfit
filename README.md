@@ -130,6 +130,10 @@ booker names are **staff‑only** (privacy); booking is gated on `membershipActi
       across cards, grid cells, member rows and the modal — all wrap/grow with no
       overflow or truncation loss. Added `npm run stress` as a durable
       no‑overflow‑under‑long‑content guard (8 checks, mobile + desktop).
+- [x] **i14** — Empty‑state probe (`npm run empty`): no NaN/undefined leaks
+      anywhere, but found 2 real UX gaps — the empty **catalog** rendered blank
+      and the empty **Reports** chart sections had no message. Both now show
+      proper on‑brand empty states with a CTA.
 
 **MVP + v1 coverage of `docs/plan.md` is complete.** Deferred to a true v2 (per
 the §6 decisions): a payments/billing engine, no‑show penalty strikes,
