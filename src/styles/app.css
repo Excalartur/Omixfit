@@ -1406,6 +1406,55 @@
   );
 }
 
+/* ---- error boundary fallback ---------------------------------------------- */
+.error-screen {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--ink-900);
+}
+.error-card {
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: 36px 28px;
+  box-shadow: var(--sh-3);
+}
+.error-card .error-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--lime);
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+  box-shadow: var(--sh-lime);
+}
+.error-card h1 {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+.error-card p {
+  color: var(--text-2);
+  line-height: 1.5;
+  margin: 0 0 22px;
+}
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.error-card small {
+  font-size: 0.74rem;
+  word-break: break-word;
+}
+
 /* ---- audit log ------------------------------------------------------------ */
 .audit {
   display: flex;

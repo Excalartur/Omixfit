@@ -105,6 +105,9 @@ booker names are **staff‑only** (privacy); booking is gated on `membershipActi
 - [x] **i7** — Live clock tick (§5.3): the schedule + My Bookings refresh
       time‑dependent state (booking window closing, sessions rolling into the
       past) without a user interaction.
+- [x] **i8** — Error boundary (§5.6 graceful degradation): a runtime render
+      error shows an on‑brand Hebrew fallback with reload + reset‑data recovery,
+      instead of a blank page.
 
 **MVP + v1 coverage of `docs/plan.md` is complete.** Deferred to a true v2 (per
 the §6 decisions): a payments/billing engine, no‑show penalty strikes,
