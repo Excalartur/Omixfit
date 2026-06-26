@@ -126,6 +126,10 @@ booker names are **staff‑only** (privacy); booking is gated on `membershipActi
       the manager tab bar (scrolls), the day strip (shrinkable columns), and the
       app bar (avatar‑only switcher on narrow). Made the browser tests
       date‑robust (Shabbat/empty‑day safe).
+- [x] **i13** — Edge‑case content stress: injected worst‑case long Hebrew names
+      across cards, grid cells, member rows and the modal — all wrap/grow with no
+      overflow or truncation loss. Added `npm run stress` as a durable
+      no‑overflow‑under‑long‑content guard (8 checks, mobile + desktop).
 
 **MVP + v1 coverage of `docs/plan.md` is complete.** Deferred to a true v2 (per
 the §6 decisions): a payments/billing engine, no‑show penalty strikes,
