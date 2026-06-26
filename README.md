@@ -138,6 +138,10 @@ booker names are **staff‑only** (privacy); booking is gated on `membershipActi
       real issues: **heading‑order** skips, day‑strip buttons failing **label‑in‑
       name** (WCAG 2.5.3), and an invalid **robots.txt**. Result:
       **Perf 94 · A11y 100 · Best Practices 100 · SEO 100**.
+- [x] **i16** — Verified the **PWA offline shell** (§5.2) actually works:
+      `npm run offline` loads the app, warms the service‑worker cache, goes
+      offline, and confirms the shell renders, state hydrates from localStorage,
+      and client‑side nav still works (4 checks).
 
 **MVP + v1 coverage of `docs/plan.md` is complete.** Deferred to a true v2 (per
 the §6 decisions): a payments/billing engine, no‑show penalty strikes,
