@@ -1,6 +1,7 @@
 node_modules/
 dist/
 test/smoke.cjs
+screenshots/
 *.local
 .DS_Store
 *.log

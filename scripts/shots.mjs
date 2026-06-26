@@ -1,0 +1,88 @@
+// Visual QA: drive system Chrome headlessly to screenshot the running app.
+// Usage: node scripts/shots.mjs   (preview server must be on :4173)
+import puppeteer from "puppeteer-core";
+import { mkdirSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const OUT = join(ROOT, "screenshots");
+mkdirSync(OUT, { recursive: true });
+
+const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const BASE = "http://localhost:4173";
+const STORAGE_KEY = "omixfit:v1";
+
+let navSeq = 0; // cache-buster so every (re)load is a real full navigation
+const desktop = { width: 1280, height: 900, deviceScaleFactor: 2 };
+const mobile = { width: 390, height: 844, deviceScaleFactor: 3, isMobile: true };
+
+const browser = await puppeteer.launch({
+  executablePath: CHROME,
+  headless: "new",
+  args: ["--no-sandbox", "--force-color-profile=srgb"],
+});
+
+async function setUser(page, userId) {
+  await page.evaluate(
+    (key, id) => {
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        const d = JSON.parse(raw);
+        d.currentUserId = id;
+        localStorage.setItem(key, JSON.stringify(d));
+      }
+    },
+    STORAGE_KEY,
+    userId,
+  );
+}
+
+async function shot(name, { viewport, hash = "", userId, click, wait = 700 }) {
+  const page = await browser.newPage();
+  await page.setViewport(viewport);
+  const url = (h) => `${BASE}/?r=${navSeq++}#${h}`;
+  // first load seeds + persists localStorage
+  await page.goto(url(hash), { waitUntil: "networkidle2" });
+  await page.waitForSelector(".appbar", { timeout: 8000 });
+  if (userId) {
+    await setUser(page, userId);
+    // Full navigation (unique query) so the app re-inits as the new user with
+    // the correct hash — avoids the in-page redirect rewriting it.
+    await page.goto(url(hash), { waitUntil: "networkidle2" });
+    await page.waitForSelector(".appbar", { timeout: 8000 });
+  }
+  await new Promise((r) => setTimeout(r, wait));
+  if (click) {
+    await page.click(click).catch(() => console.log(`  (no ${click} to click)`));
+    await new Promise((r) => setTimeout(r, 600));
+  }
+  const file = join(OUT, name + ".png");
+  await page.screenshot({ path: file });
+  console.log("  ✓ " + name);
+  await page.close();
+}
+
+console.log("Capturing screenshots…");
+await shot("01-schedule-desktop", { viewport: desktop });
+await shot("02-schedule-mobile", { viewport: mobile });
+await shot("03-detail-desktop", { viewport: desktop, click: ".class-card" });
+await shot("04-bookings-desktop", { viewport: desktop, hash: "bookings" });
+await shot("05-profile-desktop", { viewport: desktop, hash: "profile", userId: "u-avi" });
+await shot("06-manage-desktop", { viewport: desktop, hash: "manage", userId: "u-noa" });
+await shot("07-catalog-desktop", {
+  viewport: desktop,
+  hash: "manage",
+  userId: "u-noa",
+  click: ".seg button:last-child",
+});
+await shot("08-manage-mobile", { viewport: mobile, hash: "manage", userId: "u-noa" });
+await shot("09-reports-desktop", {
+  viewport: desktop,
+  hash: "manage",
+  userId: "u-noa",
+  click: ".seg button:nth-child(3)",
+});
+
+await browser.close();
+console.log("Done → screenshots/");

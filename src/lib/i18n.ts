@@ -107,6 +107,21 @@ export const t = {
   signOut: "התנתקות",
   memberSince: "חבר/ה מאז",
 
+  // reports (plan.md §4.6)
+  reports: "דוחות",
+  reportsTitle: "סקירת ביצועים",
+  reportsRange: "30 הימים האחרונים",
+  popularClasses: "השיעורים המבוקשים",
+  fillByDay: "תפוסה לפי יום",
+  topMembers: "מובילי הנוכחות",
+  attendanceRate: "אחוז נוכחות",
+  noShowRate: "אחוז אי-הגעה",
+  totalAttendance: "כניסות בפועל",
+  activeMembers: "מתאמנים פעילים",
+  avgFill: "תפוסה ממוצעת",
+  visits: (n: number) => `${n} כניסות`,
+  bookingsCount: (n: number) => `${n} הזמנות`,
+
   // catalog (ClassType management — plan.md §4.2)
   catalog: "קטלוג שיעורים",
   scheduleTab: "לוח שבועי",

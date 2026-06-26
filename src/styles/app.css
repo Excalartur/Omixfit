@@ -1238,6 +1238,121 @@
   margin-top: 2px;
 }
 
+/* ---- reports / bar charts ------------------------------------------------- */
+.report-section {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 18px;
+  box-shadow: var(--sh-1);
+  margin-bottom: 16px;
+}
+.report-section > h3 {
+  margin: 0 0 14px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.report-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 820px) {
+  .report-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.bar-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 44px;
+  align-items: center;
+  gap: 12px;
+}
+.bar-row .bl {
+  font-size: 0.86rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.bar-track {
+  height: 12px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, hsl(var(--cat-hue, 80) 85% 55%), hsl(var(--cat-hue, 80) 85% 62%));
+  transition: width 0.5s var(--ease);
+  min-width: 4px;
+}
+.bar-row .bv {
+  text-align: end;
+  font-weight: 700;
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-2);
+}
+.day-bars {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  align-items: end;
+  height: 150px;
+}
+.day-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  justify-content: flex-end;
+}
+.day-bar .db-track {
+  width: 100%;
+  max-width: 38px;
+  background: var(--surface-2);
+  border-radius: 8px 8px 4px 4px;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  overflow: hidden;
+}
+.day-bar .db-fill {
+  width: 100%;
+  background: linear-gradient(180deg, var(--lime), var(--lime-600));
+  border-radius: 8px 8px 0 0;
+  transition: height 0.5s var(--ease);
+  min-height: 3px;
+}
+.day-bar .db-lbl {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--text-2);
+}
+.day-bar .db-val {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+.day-bar.is-shabbat .db-track {
+  background: repeating-linear-gradient(
+    -45deg, var(--surface-2), var(--surface-2) 5px, var(--line) 5px, var(--line) 10px
+  );
+}
+
 /* ---- celebration ---------------------------------------------------------- */
 .confetti {
   position: fixed;

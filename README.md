@@ -15,9 +15,14 @@ npm install
 npm run dev        # http://localhost:5173
 npm run build      # type-check + production build
 npm run preview    # serve the production build on :4173
-npm test           # runtime smoke test of the booking engine
+npm test           # runtime smoke test of the booking engine (18 checks)
 npm run icons      # regenerate PWA icons
+npm run shots      # visual QA — screenshot every screen via headless Chrome
 ```
+
+> **Visual QA:** `scripts/shots.mjs` drives system Chrome (via `puppeteer-core`,
+> no bundled Chromium) against the preview server and writes `screenshots/*.png`
+> for every screen at desktop + mobile widths. Run `npm run preview` first.
 
 The app opens as **דנה פרץ (a member)**. Use the **user switcher** (top‑left)
 to log in as נועה (manager) or an instructor and see the management side.
@@ -39,6 +44,9 @@ to log in as נועה (manager) or an instructor and see the management side.
 - **Roster** with names + phones and **attendance / no‑show** marking.
 - **Class‑type catalog** (טמפלייטים) — create/edit/delete class types, with a
   delete‑guard while sessions still reference a type.
+- **Reports dashboard** (plan.md §4.6) — utilization, attendance vs. no‑show
+  rate, most‑popular classes, attendance‑by‑weekday (Shabbat shown closed),
+  and a member attendance leaderboard.
 
 **Profile (everyone)**
 - Membership card (plan, status, validity), personal stats (attended / upcoming
@@ -74,6 +82,8 @@ booker names are **staff‑only** (privacy); booking is gated on `membershipActi
       experiences, PWA. Smoke test (12 checks).
 - [x] **i2** — Member profile + membership card, notification preferences,
       class‑type catalog manager, booking celebration. Smoke test now 17 checks.
-- [ ] **Next:** real visual QA in a browser (extension not yet connected),
-      manager reports (utilization / no‑show), audit log, accessibility pass,
-      live spot‑count refresh.
+- [x] **i3** — Headless‑Chrome visual QA harness (real screenshots); fixed
+      persist‑on‑load; richer seed (18 members, resolved past attendance);
+      manager Reports dashboard. Smoke test now 18 checks.
+- [ ] **Next:** audit log (§4.6), accessibility pass (focus/aria/contrast on the
+      calendar), live spot‑count refresh, member search for managers.

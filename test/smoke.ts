@@ -42,6 +42,11 @@ for (const s of seed.sessions) {
   if (n > s.capacity) overbooked++;
 }
 ok("no seeded session exceeds capacity", overbooked === 0);
+ok(
+  "past sessions are resolved (attendance data exists)",
+  seed.bookings.some((b) => b.state === "attended") &&
+    seed.bookings.some((b) => b.state === "no_show"),
+);
 ok("seed has sessions this week", seed.sessions.some((s) => {
   const ws = startOfWeek(new Date());
   const keys = new Set(Array.from({ length: 7 }, (_, i) => toKey(addDays(ws, i))));

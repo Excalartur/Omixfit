@@ -10,7 +10,7 @@ import type {
   ClassType,
   User,
 } from "./types";
-import { addDays, startOfWeek, toKey } from "./date";
+import { addDays, fromKey, startOfWeek, toKey } from "./date";
 
 const LOCATION_ID = "loc-main";
 
@@ -25,6 +25,14 @@ const users: User[] = [
   u("u-eli", "אלי נחום", "054-5556677", "member", "#B26BFF"),
   u("u-shira", "שירה גל", "053-8889900", "member", "#3DE0FF"),
   u("u-gil", "גיל אבני", "050-7778899", "member", "#FF6B6B"),
+  u("u-roni", "רוני דהן", "052-4445566", "member", "#FF9F1C"),
+  u("u-lior", "ליאור כץ", "054-7778811", "member", "#2EC4B6"),
+  u("u-maya", "מאיה ברק", "053-1239876", "member", "#E84855"),
+  u("u-omer", "עומר שלו", "050-6543210", "member", "#9B5DE5"),
+  u("u-tal", "טל אביב", "058-3334455", "member", "#00BBF9"),
+  u("u-noaa", "נועם רז", "052-9871234", "member", "#F15BB5"),
+  u("u-yarin", "ירין מור", "054-1112299", "member", "#06D6A0"),
+  u("u-shaked", "שקד לב", "053-7654399", "member", "#FFCA3A"),
 ];
 
 const classTypes: ClassType[] = [
@@ -128,8 +136,12 @@ function buildBookings(sessions: ClassSession[]): Booking[] {
   const memberIds = users
     .filter((u) => u.role === "member" && u.id !== "u-dana")
     .map((u) => u.id);
+  const now = Date.now();
   let seq = 0;
   for (const s of sessions) {
+    const start = fromKey(s.date);
+    start.setMinutes(s.startMin);
+    const isPast = start.getTime() < now;
     // Each session gets a pseudo-random fill level.
     const fill = hashStr(s.id);
     const target = Math.round(fill * s.capacity);
@@ -137,12 +149,19 @@ function buildBookings(sessions: ClassSession[]): Booking[] {
       (a, b) => hashStr(s.id + a) - hashStr(s.id + b),
     );
     for (let i = 0; i < Math.min(target, shuffled.length); i++) {
+      // Resolve past sessions: most attended, a few no-shows — so attendance
+      // reports and the profile's "attended" stat have real data.
+      const state: Booking["state"] = isPast
+        ? hashStr(s.id + shuffled[i] + "att") < 0.12
+          ? "no_show"
+          : "attended"
+        : "confirmed";
       bookings.push({
         id: `b-${seq++}`,
         sessionId: s.id,
         userId: shuffled[i],
-        state: "confirmed",
-        createdAt: Date.now() - (seq * 60000),
+        state,
+        createdAt: now - (seq * 60000),
       });
     }
   }
@@ -166,7 +185,7 @@ export function buildSeed(): AppData {
       maxActiveBookings: 6,
     },
     currentUserId: "u-dana", // start as a member
-    version: 2,
+    version: 3,
   };
 }
 

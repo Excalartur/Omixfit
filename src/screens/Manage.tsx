@@ -15,6 +15,7 @@ import { WeekNav } from "../components/common";
 import { SessionEditor } from "../components/SessionEditor";
 import { SessionDetail } from "../components/SessionDetail";
 import { TypeEditor } from "../components/TypeEditor";
+import { Reports } from "../components/Reports";
 import { IcPlus, IcSpark, IcUsers, IcCalendar } from "../components/icons";
 
 type EditorState =
@@ -24,7 +25,7 @@ type EditorState =
 
 export function Manage() {
   const data = useStore((s) => s);
-  const [tab, setTab] = useState<"schedule" | "catalog">("schedule");
+  const [tab, setTab] = useState<"schedule" | "catalog" | "reports">("schedule");
   const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()));
   const [editor, setEditor] = useState<EditorState>({ mode: "closed" });
   const [detail, setDetail] = useState<ClassSession | null>(null);
@@ -72,11 +73,12 @@ export function Manage() {
           <h1 className="h1">{t.manageTitle}</h1>
           <div className="sub">{data.locations[0].name}</div>
         </div>
-        {tab === "schedule" ? (
+        {tab === "schedule" && (
           <button className="btn btn-lime" onClick={() => setEditor({ mode: "create", date: toKey(days[0]) })}>
             <IcPlus width={18} height={18} /> {t.newSession}
           </button>
-        ) : (
+        )}
+        {tab === "catalog" && (
           <button className="btn btn-lime" onClick={() => setTypeEditor({ mode: "create" })}>
             <IcPlus width={18} height={18} /> {t.newTypeTitle}
           </button>
@@ -90,7 +92,12 @@ export function Manage() {
         <button className={tab === "catalog" ? "on" : ""} onClick={() => setTab("catalog")}>
           {t.catalog}
         </button>
+        <button className={tab === "reports" ? "on" : ""} onClick={() => setTab("reports")}>
+          {t.reports}
+        </button>
       </div>
+
+      {tab === "reports" && <Reports />}
 
       {tab === "catalog" && (
         <div className="catalog">

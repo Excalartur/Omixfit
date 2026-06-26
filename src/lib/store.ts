@@ -25,12 +25,20 @@ function load(): AppData {
       const parsed = JSON.parse(raw) as AppData;
       // Bump CURRENT_VERSION (here + seed) whenever the data shape changes so
       // returning users re-seed instead of rendering against a stale schema.
-      if (parsed && parsed.version === 2) return parsed;
+      if (parsed && parsed.version === 3) return parsed;
     }
   } catch {
     /* ignore corrupt storage */
   }
-  return buildSeed();
+  // Persist the seed on first load so state is stable from the very first visit
+  // (and inspectable in localStorage immediately, not only after a mutation).
+  const seed = buildSeed();
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(seed));
+  } catch {
+    /* private mode — keep working in-memory */
+  }
+  return seed;
 }
 
 let state: AppData = load();
