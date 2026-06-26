@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { CATEGORY_META, t } from "../lib/i18n";
 import { useStore } from "../lib/store";
 import { fromKey, HEB_DAYS_SHORT } from "../lib/date";
+import { AuditLog } from "./AuditLog";
 
 // Manager analytics (plan.md §4.6): utilization, popular classes, no-show rate.
 // Computed over the last 30 days of (now-resolved) sessions.
@@ -185,6 +186,8 @@ export function Reports() {
           ))}
         </div>
       </div>
+
+      <AuditLog />
     </div>
   );
 }

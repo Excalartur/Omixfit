@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { CATEGORY_META, t } from "../lib/i18n";
 import type { ClassCategory, ClassSession } from "../lib/types";
 import { useStore } from "../lib/store";
@@ -24,8 +24,26 @@ export function Schedule() {
   const [activeKey, setActiveKey] = useState(() => toKey(new Date()));
   const [cats, setCats] = useState<Set<ClassCategory>>(new Set());
   const [open, setOpen] = useState<ClassSession | null>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
 
   const days = weekDays(weekStart);
+
+  // Keyboard roving on the day strip. RTL: ArrowRight → earlier day (rightward),
+  // ArrowLeft → later day (leftward). Home/End jump to Sunday/Saturday.
+  function onStripKey(e: React.KeyboardEvent) {
+    const idx = days.findIndex((d) => toKey(d) === activeKey);
+    if (idx < 0) return;
+    let next = idx;
+    if (e.key === "ArrowLeft") next = Math.min(6, idx + 1);
+    else if (e.key === "ArrowRight") next = Math.max(0, idx - 1);
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = 6;
+    else return;
+    e.preventDefault();
+    setActiveKey(toKey(days[next]));
+    const btns = stripRef.current?.querySelectorAll<HTMLButtonElement>("button.daycol");
+    btns?.[next]?.focus();
+  }
 
   // sessions grouped by day key
   const byDay = useMemo(() => {
@@ -84,7 +102,13 @@ export function Schedule() {
       <InstallBanner />
 
       {/* day strip */}
-      <div className="daystrip">
+      <div
+        className="daystrip"
+        role="group"
+        aria-label="בחירת יום"
+        ref={stripRef}
+        onKeyDown={onStripKey}
+      >
         {days.map((d) => {
           const key = toKey(d);
           const n = countFor(key);

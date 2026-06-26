@@ -101,3 +101,17 @@ export function nowMinutesInto(dateKey: string, startMin: number): number {
 export function isShabbat(d: Date): boolean {
   return d.getDay() === 6; // Saturday
 }
+
+/** "לפני 3 שעות" style relative time, Hebrew. */
+export function fmtRelative(ts: number): string {
+  const diff = Date.now() - ts;
+  const min = Math.round(diff / 60000);
+  if (min < 1) return "כעת";
+  if (min < 60) return `לפני ${min} דק׳`;
+  const hr = Math.round(min / 60);
+  if (hr < 24) return `לפני ${hr} שע׳`;
+  const days = Math.round(hr / 24);
+  if (days < 7) return `לפני ${days} ימים`;
+  const d = new Date(ts);
+  return `${d.getDate()} ב${HEB_MONTHS[d.getMonth()]}`;
+}

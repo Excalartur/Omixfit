@@ -168,6 +168,26 @@ function buildBookings(sessions: ClassSession[]): Booking[] {
   return bookings;
 }
 
+function buildAudit(): AppData["audit"] {
+  const now = Date.now();
+  const h = 3600 * 1000;
+  // A few recent manager actions so the log isn't empty on first visit.
+  const e = (
+    n: number,
+    actorId: string,
+    action: AppData["audit"][number]["action"],
+    summary: string,
+    hoursAgo: number,
+  ) => ({ id: `a-seed-${n}`, ts: now - hoursAgo * h, actorId, action, summary });
+  return [
+    e(1, "u-noa", "session_created", "HIIT שורף · ראשון 20:15 (+7 בסדרה)", 2),
+    e(2, "u-noa", "membership_changed", "גיל אבני: מנוי הופעל", 6),
+    e(3, "u-tom", "session_cancelled", "ספינינג אקספרס · שבת 09:00", 26),
+    e(4, "u-noa", "type_updated", "פילאטיס מכשירים", 49),
+    e(5, "u-noa", "role_changed", "יעל כהן: member ← instructor", 72),
+  ];
+}
+
 export function buildSeed(): AppData {
   const sessions = buildSessions();
   const bookings = buildBookings(sessions);
@@ -184,8 +204,9 @@ export function buildSeed(): AppData {
       cancelCutoffHours: 3,
       maxActiveBookings: 6,
     },
+    audit: buildAudit(),
     currentUserId: "u-dana", // start as a member
-    version: 3,
+    version: 4,
   };
 }
 

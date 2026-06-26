@@ -8,13 +8,15 @@
 import { useSyncExternalStore } from "react";
 import type {
   AppData,
+  AuditAction,
+  AuditEntry,
   Booking,
   ClassSession,
   ClassType,
   User,
 } from "./types";
 import { buildSeed } from "./seed";
-import { fromKey } from "./date";
+import { fmtTime, fromKey } from "./date";
 
 const STORAGE_KEY = "omixfit:v1";
 
@@ -25,7 +27,7 @@ function load(): AppData {
       const parsed = JSON.parse(raw) as AppData;
       // Bump CURRENT_VERSION (here + seed) whenever the data shape changes so
       // returning users re-seed instead of rendering against a stale schema.
-      if (parsed && parsed.version === 3) return parsed;
+      if (parsed && parsed.version === 4) return parsed;
     }
   } catch {
     /* ignore corrupt storage */
@@ -163,6 +165,22 @@ function nextId(prefix: string): string {
   return `${prefix}-${(idSeq++).toString(36)}`;
 }
 
+// ---- audit log (plan.md §4.6) ------------------------------------------------
+function auditEntry(action: AuditAction, summary: string): AuditEntry {
+  return {
+    id: nextId("a"),
+    ts: Date.now(),
+    actorId: state.currentUserId,
+    action,
+    summary,
+  };
+}
+
+function sessionLabel(s: ClassSession): string {
+  const type = state.classTypes.find((c) => c.id === s.classTypeId);
+  return `${type?.name ?? "שיעור"} · ${s.date} ${fmtTime(s.startMin)}`;
+}
+
 /** Atomic-ish booking: re-validate against the freshest state, then commit. */
 export function book(sessionId: string, userId: string): BookOutcome {
   const session = state.sessions.find((s) => s.id === sessionId);
@@ -204,7 +222,11 @@ export function upsertSession(session: ClassSession): void {
   const sessions = exists
     ? state.sessions.map((s) => (s.id === session.id ? session : s))
     : [...state.sessions, session];
-  set({ ...state, sessions });
+  const entry = auditEntry(
+    exists ? "session_updated" : "session_created",
+    sessionLabel(session),
+  );
+  set({ ...state, sessions, audit: [entry, ...state.audit] });
 }
 
 export function createSessions(
@@ -219,21 +241,43 @@ export function createSessions(
     const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     newSessions.push({ ...base, id: nextId("s"), date, seriesId });
   }
-  set({ ...state, sessions: [...state.sessions, ...newSessions] });
+  const first = newSessions[0];
+  const entry = auditEntry(
+    "session_created",
+    newSessions.length > 1
+      ? `${sessionLabel(first)} (+${newSessions.length - 1} בסדרה)`
+      : sessionLabel(first),
+  );
+  set({
+    ...state,
+    sessions: [...state.sessions, ...newSessions],
+    audit: [entry, ...state.audit],
+  });
 }
 
 export function cancelSession(sessionId: string): void {
+  const target = state.sessions.find((s) => s.id === sessionId);
   const sessions = state.sessions.map((s) =>
     s.id === sessionId ? { ...s, cancelled: true } : s,
   );
-  set({ ...state, sessions });
+  const entry = auditEntry(
+    "session_cancelled",
+    target ? sessionLabel(target) : sessionId,
+  );
+  set({ ...state, sessions, audit: [entry, ...state.audit] });
 }
 
 export function deleteSession(sessionId: string): void {
+  const target = state.sessions.find((s) => s.id === sessionId);
+  const entry = auditEntry(
+    "session_deleted",
+    target ? sessionLabel(target) : sessionId,
+  );
   set({
     ...state,
     sessions: state.sessions.filter((s) => s.id !== sessionId),
     bookings: state.bookings.filter((b) => b.sessionId !== sessionId),
+    audit: [entry, ...state.audit],
   });
 }
 
@@ -250,10 +294,19 @@ export function setAttendance(
 }
 
 export function updateUser(userId: string, patch: Partial<User>): void {
-  set({
-    ...state,
-    users: state.users.map((u) => (u.id === userId ? { ...u, ...patch } : u)),
-  });
+  const before = state.users.find((u) => u.id === userId);
+  const users = state.users.map((u) => (u.id === userId ? { ...u, ...patch } : u));
+  // Only role / membership changes are audit-worthy (not self profile edits).
+  let entry: AuditEntry | null = null;
+  if (before && patch.role && patch.role !== before.role) {
+    entry = auditEntry("role_changed", `${before.name}: ${before.role} ← ${patch.role}`);
+  } else if (before && patch.membershipActive !== undefined && patch.membershipActive !== before.membershipActive) {
+    entry = auditEntry(
+      "membership_changed",
+      `${before.name}: מנוי ${patch.membershipActive ? "הופעל" : "הושהה"}`,
+    );
+  }
+  set({ ...state, users, audit: entry ? [entry, ...state.audit] : state.audit });
 }
 
 export function upsertClassType(ct: ClassType): void {
@@ -261,13 +314,20 @@ export function upsertClassType(ct: ClassType): void {
   const classTypes = exists
     ? state.classTypes.map((c) => (c.id === ct.id ? ct : c))
     : [...state.classTypes, ct];
-  set({ ...state, classTypes });
+  const entry = auditEntry(exists ? "type_updated" : "type_created", ct.name);
+  set({ ...state, classTypes, audit: [entry, ...state.audit] });
 }
 
 export function deleteClassType(typeId: string): boolean {
   // Refuse if any session references it (keeps the schedule consistent).
   if (state.sessions.some((s) => s.classTypeId === typeId)) return false;
-  set({ ...state, classTypes: state.classTypes.filter((c) => c.id !== typeId) });
+  const target = state.classTypes.find((c) => c.id === typeId);
+  const entry = auditEntry("type_deleted", target?.name ?? typeId);
+  set({
+    ...state,
+    classTypes: state.classTypes.filter((c) => c.id !== typeId),
+    audit: [entry, ...state.audit],
+  });
   return true;
 }
 

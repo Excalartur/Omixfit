@@ -38,7 +38,7 @@ async function setUser(page, userId) {
   );
 }
 
-async function shot(name, { viewport, hash = "", userId, click, then, wait = 700 }) {
+async function shot(name, { viewport, hash = "", userId, click, then, wait = 700, fullPage = false }) {
   const page = await browser.newPage();
   await page.setViewport(viewport);
   const url = (h) => `${BASE}/?r=${navSeq++}#${h}`;
@@ -62,7 +62,7 @@ async function shot(name, { viewport, hash = "", userId, click, then, wait = 700
     await new Promise((r) => setTimeout(r, 600));
   }
   const file = join(OUT, name + ".png");
-  await page.screenshot({ path: file });
+  await page.screenshot({ path: file, fullPage });
   console.log("  ✓ " + name);
   await page.close();
 }
@@ -86,6 +86,7 @@ await shot("09-reports-desktop", {
   hash: "manage",
   userId: "u-noa",
   click: ".seg button:nth-child(3)",
+  fullPage: true,
 });
 await shot("10-members-desktop", {
   viewport: desktop,

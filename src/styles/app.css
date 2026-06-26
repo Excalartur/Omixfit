@@ -1374,6 +1374,60 @@
   );
 }
 
+/* ---- audit log ------------------------------------------------------------ */
+.audit {
+  display: flex;
+  flex-direction: column;
+}
+.audit-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--line);
+}
+.audit-row:last-child {
+  border-bottom: none;
+}
+.audit-row .ai {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  font-size: 0.95rem;
+}
+.audit-row .ab {
+  flex: 1;
+  min-width: 0;
+}
+.audit-row .ab .at {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.audit-row .ab .asum {
+  color: var(--text-2);
+  font-size: 0.84rem;
+  margin-top: 1px;
+}
+.audit-row .ab .actor {
+  color: var(--text-3);
+  font-size: 0.76rem;
+  margin-top: 2px;
+}
+.audit-row .awhen {
+  color: var(--text-3);
+  font-size: 0.74rem;
+  font-weight: 600;
+  white-space: nowrap;
+  flex: none;
+}
+.ai.create { background: #e7fbf3; color: #0a7d52; }
+.ai.update { background: #eef6ff; color: #1c4e80; }
+.ai.cancel { background: #fff0f1; color: var(--danger-ink); }
+.ai.people { background: #efeaff; color: #5b3fd1; }
+
 /* ---- members management --------------------------------------------------- */
 .search {
   position: relative;

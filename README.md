@@ -50,6 +50,9 @@ to log in as נועה (manager) or an instructor and see the management side.
   and a member attendance leaderboard.
 - **Member management** (§4.6 / §4.1) — searchable member list; per‑member sheet
   with role assignment, membership activation toggle, stats, recent activity.
+- **Audit log** (§4.6) — every manager action (create/edit/cancel/delete session
+  or type, role/membership change) is recorded with actor + relative time, shown
+  as a timeline in the Reports tab.
 
 **Profile (everyone)**
 - Membership card (plan, status, validity), personal stats (attended / upcoming
@@ -91,5 +94,12 @@ booker names are **staff‑only** (privacy); booking is gated on `membershipActi
 - [x] **i4** — Member management (search, role assignment, membership toggle);
       accessibility pass to **WCAG 2.1 AA, 0 axe violations** (contrast, skip
       link, focus rings, aria‑current/live, fixed a nested‑interactive card).
-- [ ] **Next:** audit log (§4.6), live spot‑count refresh, waitlist groundwork,
-      empty‑state polish, keyboard arrow‑nav across the calendar day strip.
+- [x] **i5** — Audit log (§4.6: who changed/cancelled what) with live logging on
+      every manager mutation + seeded history; keyboard arrow‑nav across the
+      calendar day strip. Smoke test now 20 checks.
+
+**MVP + v1 coverage of `docs/plan.md` is complete.** Deferred to a true v2 (per
+the §6 decisions): payments engine, waitlist auto‑promotion, no‑show penalty
+strikes, multi‑branch UI, and live WebSocket spot‑counts — all have data‑model
+hooks already in place (`membershipActive`, `waitlisted`/`no_show` states,
+`locationId`).

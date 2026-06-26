@@ -107,6 +107,21 @@ export const t = {
   signOut: "התנתקות",
   memberSince: "חבר/ה מאז",
 
+  // audit log (plan.md §4.6)
+  auditLog: "יומן פעילות",
+  auditEmpty: "אין עדיין פעילות מתועדת",
+  auditActions: {
+    session_created: "יצירת שיעור",
+    session_updated: "עדכון שיעור",
+    session_cancelled: "ביטול שיעור",
+    session_deleted: "מחיקת שיעור",
+    type_created: "סוג שיעור חדש",
+    type_updated: "עדכון סוג שיעור",
+    type_deleted: "מחיקת סוג שיעור",
+    role_changed: "שינוי תפקיד",
+    membership_changed: "שינוי מנוי",
+  } as Record<string, string>,
+
   // reports (plan.md §4.6)
   reports: "דוחות",
   reportsTitle: "סקירת ביצועים",

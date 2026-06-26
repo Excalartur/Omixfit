@@ -115,6 +115,19 @@ ok(
   deleteClassType(getState().sessions[0].classTypeId) === false,
 );
 
+// 6b. Audit log (plan.md §4.6)
+const auditBefore = getState().audit.length;
+upsertClassType({
+  id: newTypeId(),
+  name: "טסט יומן",
+  description: "",
+  category: "boxing",
+  defaultCapacity: 8,
+  defaultDurationMin: 40,
+});
+ok("manager action appends an audit entry", getState().audit.length === auditBefore + 1);
+ok("audit entry records the actor", getState().audit[0].actorId === getState().currentUserId);
+
 // 7. Profile updates + stats
 updateUser(member.id, { name: "דנה מעודכנת" });
 ok("updateUser changes the name", getState().users.find((u) => u.id === member.id)!.name === "דנה מעודכנת");

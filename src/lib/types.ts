@@ -86,6 +86,26 @@ export interface Location {
   name: string;
 }
 
+export type AuditAction =
+  | "session_created"
+  | "session_updated"
+  | "session_cancelled"
+  | "session_deleted"
+  | "type_created"
+  | "type_updated"
+  | "type_deleted"
+  | "role_changed"
+  | "membership_changed";
+
+/** Audit log entry — who changed/cancelled what (plan.md §4.6). */
+export interface AuditEntry {
+  id: string;
+  ts: number;
+  actorId: string;
+  action: AuditAction;
+  summary: string;
+}
+
 export interface Facility {
   name: string;
   /** Booking opens this many days ahead. */
@@ -105,6 +125,7 @@ export interface AppData {
   bookings: Booking[];
   locations: Location[];
   facility: Facility;
+  audit: AuditEntry[];
   currentUserId: string;
   version: number;
 }
