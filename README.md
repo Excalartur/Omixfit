@@ -8,6 +8,18 @@ tap; trainers/managers publish and manage the schedule.
 > runtime UI dependencies. State persists to `localStorage` (a real backend
 > swaps in behind the same store API).
 
+## Screenshots
+
+| Trainee — weekly schedule | One‑tap booking |
+| --- | --- |
+| ![Weekly schedule](docs/media/schedule.png) | ![Booking detail](docs/media/booking.png) |
+
+| Trainer — schedule grid | Trainer — reports |
+| --- | --- |
+| ![Manager week grid](docs/media/manage.png) | ![Reports dashboard](docs/media/reports.png) |
+
+<p align="center"><img src="docs/media/profile.png" alt="Member profile" width="420"></p>
+
 ## Deploy
 
 The app is base‑path aware, so it runs both at a domain root and under a subpath.
@@ -161,6 +173,9 @@ booker names are **staff‑only** (privacy); booking is gated on `membershipActi
       base), plus a GitHub Pages Actions workflow. Verified at both `/` (root,
       all tests green) and `/Omixfit/` (subpath, renders + SW active, 0 failed
       requests).
+- [x] **i18** — Professional repo presentation: curated showcase screenshots
+      (`npm run showcase`) committed to `docs/media/` and embedded in this README
+      so the project shows the real UI at a glance.
 
 **MVP + v1 coverage of `docs/plan.md` is complete.** Deferred to a true v2 (per
 the §6 decisions): a payments/billing engine, no‑show penalty strikes,
