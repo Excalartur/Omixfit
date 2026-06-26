@@ -1,0 +1,6 @@
+node_modules/
+dist/
+test/smoke.cjs
+*.local
+.DS_Store
+*.log

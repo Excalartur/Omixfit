@@ -1,0 +1,98 @@
+// ---------------------------------------------------------------------------
+// Omixfit domain model
+// Mirrors docs/plan.md §3. Deliberately separates ClassType (template) from
+// ClassSession (a single dated occurrence). See plan.md for rationale.
+// ---------------------------------------------------------------------------
+
+export type Role = "member" | "instructor" | "manager" | "admin";
+
+export interface User {
+  id: string;
+  name: string;
+  phone: string;
+  role: Role;
+  /** Q3: booking is gated on this even before a payment engine exists. */
+  membershipActive: boolean;
+  avatarColor: string; // derived chip color
+  initials: string;
+}
+
+export type ClassCategory =
+  | "spinning"
+  | "yoga"
+  | "crossfit"
+  | "pilates"
+  | "boxing"
+  | "strength"
+  | "dance"
+  | "hiit";
+
+export interface ClassType {
+  id: string;
+  name: string;
+  description: string;
+  category: ClassCategory;
+  defaultCapacity: number;
+  defaultDurationMin: number;
+}
+
+export interface ClassSession {
+  id: string;
+  classTypeId: string;
+  /** ISO date, local — the day the session happens. */
+  date: string; // YYYY-MM-DD
+  /** Minutes from midnight, local. */
+  startMin: number;
+  durationMin: number;
+  capacity: number;
+  instructorId: string;
+  /** Q6: kept on every session even with a single branch. */
+  locationId: string;
+  room: string;
+  cancelled?: boolean;
+  /** Set when generated from a recurrence rule. */
+  seriesId?: string;
+}
+
+export type BookingState =
+  | "confirmed"
+  | "waitlisted" // reserved in the model (Q4) — not user-creatable in v1
+  | "cancelled"
+  | "attended"
+  | "no_show";
+
+export interface Booking {
+  id: string;
+  sessionId: string;
+  userId: string;
+  state: BookingState;
+  createdAt: number;
+}
+
+export interface Location {
+  id: string;
+  name: string;
+}
+
+export interface Facility {
+  name: string;
+  /** Booking opens this many days ahead. */
+  bookingWindowDays: number;
+  /** Booking closes this many minutes before start. */
+  bookingClosesBeforeMin: number;
+  /** Cancellation allowed up to this many hours before start. */
+  cancelCutoffHours: number;
+  /** Max concurrent confirmed bookings per member (anti-hoarding). */
+  maxActiveBookings: number;
+}
+
+export interface AppData {
+  users: User[];
+  classTypes: ClassType[];
+  sessions: ClassSession[];
+  bookings: Booking[];
+  locations: Location[];
+  facility: Facility;
+  currentUserId: string;
+  version: number;
+}

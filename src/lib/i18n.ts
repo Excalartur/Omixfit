@@ -1,0 +1,108 @@
+// ---------------------------------------------------------------------------
+// All user-facing copy lives here (plan.md §5.1: route strings through an i18n
+// layer so a second language is a config change, not a rewrite).
+// ---------------------------------------------------------------------------
+
+import type { ClassCategory } from "./types";
+
+export const t = {
+  appName: "אומיקספיט",
+  tagline: "הסטודיו שלך, בכיס שלך",
+
+  nav: {
+    schedule: "לוח שיעורים",
+    myBookings: "ההזמנות שלי",
+    manage: "ניהול לוח",
+    members: "מתאמנים",
+    today: "היום",
+  },
+
+  roles: {
+    member: "מתאמן/ת",
+    instructor: "מדריך/ה",
+    manager: "מנהל/ת",
+    admin: "מנהל/ת מערכת",
+  },
+
+  book: "הזמנת מקום",
+  booked: "מקומך שמור",
+  cancel: "ביטול הזמנה",
+  full: "מלא",
+  joinWaitlist: "הצטרפות לרשימת המתנה",
+  spotsLeft: (n: number) => (n === 1 ? "מקום אחרון!" : `${n} מקומות פנויים`),
+  ofCapacity: (booked: number, cap: number) => `${booked}/${cap}`,
+  closed: "ההרשמה נסגרה",
+  opensIn: "ההרשמה טרם נפתחה",
+  cancelled: "השיעור בוטל",
+  withInstructor: "עם",
+  noClasses: "אין שיעורים ביום זה",
+  noClassesHint: "בחר/י יום אחר או דפדף/י לשבוע הבא",
+  shabbatNote: "שבת — פעילות מצומצמת",
+
+  emptyBookingsTitle: "עוד לא הזמנת שיעורים",
+  emptyBookingsHint: "עבור/י ללוח השיעורים והזמן/י את האימון הראשון שלך",
+  goToSchedule: "אל לוח השיעורים",
+  upcoming: "הקרובים",
+  past: "שיעורים שעברו",
+
+  // booking results
+  bookedToast: "מעולה! המקום שלך שמור 🎉",
+  cancelledToast: "ההזמנה בוטלה",
+  fullToast: "מצטערים, השיעור התמלא",
+  membershipBlocked: "המנוי שלך אינו פעיל — פנה/י לדלפק",
+  limitReached: "הגעת למספר ההזמנות הפעילות המרבי",
+  closedToast: "ההרשמה לשיעור זה נסגרה",
+
+  // manager
+  manageTitle: "ניהול לוח השיעורים",
+  newSession: "שיעור חדש",
+  newType: "סוג שיעור חדש",
+  editSession: "עריכת שיעור",
+  roster: "רשימת נרשמים",
+  capacityLabel: "תפוסה",
+  instructorLabel: "מדריך/ה",
+  roomLabel: "אולם",
+  dateLabel: "תאריך",
+  timeLabel: "שעה",
+  durationLabel: "משך (דקות)",
+  typeLabel: "סוג שיעור",
+  save: "שמירה",
+  saveAndPublish: "שמירה ופרסום",
+  remove: "מחיקה",
+  recurrence: "חזרה שבועית",
+  recurrenceNone: "חד פעמי",
+  recurrenceWeekly: "כל שבוע",
+  recurrenceWeeks: "מספר שבועות",
+  cancelSession: "ביטול שיעור",
+  cancelSessionConfirm: "לבטל את השיעור? כל הנרשמים יקבלו הודעה.",
+  rosterEmpty: "אין עדיין נרשמים",
+  markAttended: "סימון נוכחות",
+  noShow: "לא הגיע/ה",
+  present: "נכח/ה",
+  fillRate: "אחוז תפוסה",
+  totalBooked: "סה״כ נרשמים",
+  weekSessions: "שיעורים השבוע",
+
+  // generic
+  close: "סגירה",
+  confirm: "אישור",
+  back: "חזרה",
+  switchUser: "החלפת משתמש",
+  loginAs: "כניסה בתור",
+  installApp: "התקנת האפליקציה",
+  installHint: "הוסף/י למסך הבית לקבלת התראות וגישה מהירה",
+};
+
+export const CATEGORY_META: Record<
+  ClassCategory,
+  { label: string; hue: number; emoji: string }
+> = {
+  spinning: { label: "ספינינג", hue: 270, emoji: "🚴" },
+  yoga: { label: "יוגה", hue: 160, emoji: "🧘" },
+  crossfit: { label: "קרוספיט", hue: 18, emoji: "🏋️" },
+  pilates: { label: "פילאטיס", hue: 320, emoji: "🤸" },
+  boxing: { label: "אגרוף", hue: 0, emoji: "🥊" },
+  strength: { label: "כוח", hue: 210, emoji: "💪" },
+  dance: { label: "מחול", hue: 295, emoji: "💃" },
+  hiit: { label: "HIIT", hue: 35, emoji: "🔥" },
+};
