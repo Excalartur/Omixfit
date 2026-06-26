@@ -126,6 +126,7 @@ export interface AppData {
   locations: Location[];
   facility: Facility;
   audit: AuditEntry[];
-  currentUserId: string;
+  /** null when logged out (the app shows the login screen). */
+  currentUserId: string | null;
   version: number;
 }

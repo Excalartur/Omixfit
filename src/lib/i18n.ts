@@ -181,6 +181,13 @@ export const t = {
   catalogEmptyHint: "הוסף/י סוג שיעור ראשון כדי לבנות את הקטלוג",
   reportsNoData: "אין עדיין נתונים בתקופה זו",
 
+  // login / session
+  loginTitle: "ברוכים הבאים לאומיקספיט",
+  loginSubtitle: "התחבר/י כדי לראות את לוח השיעורים ולהזמין מקום.",
+  loginDemoNote: "הדגמה — בחר/י משתמש כדי להתחבר. בגרסה החיה: כניסה עם טלפון וקוד SMS.",
+  loggedOutToast: "התנתקת מהמערכת",
+  version: "גרסה",
+
   // generic
   close: "סגירה",
   confirm: "אישור",

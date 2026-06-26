@@ -5,6 +5,7 @@ import { Schedule } from "./screens/Schedule";
 import { MyBookings } from "./screens/MyBookings";
 import { Manage } from "./screens/Manage";
 import { Profile } from "./screens/Profile";
+import { Login } from "./screens/Login";
 import { UserSwitcher } from "./components/UserSwitcher";
 import { Toaster } from "./components/Toast";
 import { Celebration } from "./components/Celebration";
@@ -27,8 +28,8 @@ function readHash(): View {
 
 export default function App() {
   const data = useStore((s) => s);
-  const me = data.users.find((u) => u.id === data.currentUserId)!;
-  const isStaff = me.role !== "member";
+  const me = data.users.find((u) => u.id === data.currentUserId);
+  const isStaff = !!me && me.role !== "member";
   const [view, setView] = useState<View>(readHash);
   const [switcher, setSwitcher] = useState(false);
 
@@ -40,9 +41,13 @@ export default function App() {
 
   // If a staff-only/member-only view doesn't fit the current role, fall back.
   useEffect(() => {
+    if (!me) return;
     if (view === "manage" && !isStaff) go("schedule");
     if (view === "bookings" && isStaff) go("schedule");
-  }, [isStaff, view]);
+  }, [me, isStaff, view]);
+
+  // Signed out → show the login screen (and nothing that assumes a user).
+  if (!me) return <Login />;
 
   function go(v: View) {
     setView(v);

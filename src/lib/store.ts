@@ -255,7 +255,8 @@ function auditEntry(action: AuditAction, summary: string): AuditEntry {
   return {
     id: nextId("a"),
     ts: Date.now(),
-    actorId: state.currentUserId,
+    // Manager mutations only run while signed in, so this is always a real id.
+    actorId: state.currentUserId ?? "",
     action,
     summary,
   };
@@ -346,6 +347,11 @@ export function joinWaitlist(sessionId: string, userId: string): WaitlistOutcome
 
 export function setCurrentUser(userId: string): void {
   set({ ...state, currentUserId: userId });
+}
+
+/** Sign out — clears the session so the app shows the login screen. */
+export function logout(): void {
+  set({ ...state, currentUserId: null });
 }
 
 // ---- manager mutations -------------------------------------------------------

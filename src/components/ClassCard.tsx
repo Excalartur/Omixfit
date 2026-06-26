@@ -24,12 +24,13 @@ export function ClassCard({
   const instructor = data.users.find((u) => u.id === session.instructorId)!;
   const booked = confirmedCount(session.id, data);
   const left = session.capacity - booked;
-  const action = actionFor(session, data.currentUserId, data);
+  const me = data.users.find((u) => u.id === data.currentUserId)!;
+  const action = actionFor(session, me.id, data);
   const mine = action.kind === "booked";
   const onWaitlist = action.kind === "waitlisted";
   const wlCount = waitlistCount(session.id, data);
 
-  const isMember = data.users.find((u) => u.id === data.currentUserId)!.role === "member";
+  const isMember = me.role === "member";
 
   const summary = `${type.name}, ${fmtTime(session.startMin)}, ${
     session.cancelled ? t.cancelled : left <= 0 ? t.full : t.spotsLeft(left)

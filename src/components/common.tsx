@@ -1,7 +1,23 @@
 import { CATEGORY_META, t } from "../lib/i18n";
 import type { ClassCategory, User } from "../lib/types";
 import { fmtWeekRange, HEB_MONTHS } from "../lib/date";
+import { buildTimeLabel, VERSION_LABEL } from "../lib/version";
 import { IcChevL, IcChevR } from "./icons";
+
+// Tiny build-identity line so anyone can see which commit is deployed
+// (hover for the build time). Rendered in the profile + login footers.
+export function VersionTag({ className = "" }: { className?: string }) {
+  const built = buildTimeLabel();
+  return (
+    <div
+      className={`version-tag ${className}`.trim()}
+      dir="ltr"
+      title={built ? `${t.version} · ${built}` : t.version}
+    >
+      {t.version} {VERSION_LABEL}
+    </div>
+  );
+}
 
 // Pick dark or white initials by whichever has the higher WCAG contrast against
 // the avatar background — keeps initials legible (AA) on any palette color.

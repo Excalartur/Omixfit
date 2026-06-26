@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { CATEGORY_META, t } from "../lib/i18n";
 import type { ClassCategory, NotifyPrefs } from "../lib/types";
-import { memberStats, updateUser, useStore } from "../lib/store";
-import { Avatar } from "../components/common";
+import { logout, memberStats, updateUser, useStore } from "../lib/store";
+import { Avatar, VersionTag } from "../components/common";
 import { Sheet } from "../components/Sheet";
 import { toast } from "../components/Toast";
 import { IcBolt, IcCheck, IcSpark, IcCalendar, IcBookmark } from "../components/icons";
@@ -119,13 +119,22 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
         </div>
       </div>
 
-      <button
-        className="btn btn-ghost"
-        style={{ marginTop: 20 }}
-        onClick={onSwitchUser}
-      >
-        {t.switchUser} / {t.signOut}
-      </button>
+      <div className="row gap-3 wrap" style={{ marginTop: 20 }}>
+        <button className="btn btn-ghost grow" onClick={onSwitchUser}>
+          {t.switchUser}
+        </button>
+        <button
+          className="btn btn-danger grow"
+          onClick={() => {
+            logout();
+            toast(t.loggedOutToast, "info");
+          }}
+        >
+          {t.signOut}
+        </button>
+      </div>
+
+      <VersionTag className="profile-version" />
 
       {editing && <ProfileEditor onClose={() => setEditing(false)} />}
     </div>

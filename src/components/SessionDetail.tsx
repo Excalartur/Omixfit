@@ -32,7 +32,7 @@ export function SessionDetail({
   const meta = CATEGORY_META[type.category];
   const instructor = data.users.find((u) => u.id === session.instructorId)!;
   const booked = confirmedCount(session.id, data);
-  const action = actionFor(session, data.currentUserId, data);
+  const action = actionFor(session, me.id, data);
   const mine = action.kind === "booked";
   const onWaitlist = action.kind === "waitlisted";
   const isStaff = me.role !== "member";
@@ -50,7 +50,7 @@ export function SessionDetail({
     .map((b) => ({ b, user: data.users.find((u) => u.id === b.userId)! }));
 
   function doBook() {
-    const r = book(session.id, data.currentUserId);
+    const r = book(session.id, me.id);
     if (r === "ok") {
       toast(t.bookedToast, "ok");
       celebrate();
@@ -61,7 +61,7 @@ export function SessionDetail({
     else if (r === "closed") toast(t.closedToast, "err");
   }
   function doCancel() {
-    const { promotedUserId } = cancelBooking(session.id, data.currentUserId);
+    const { promotedUserId } = cancelBooking(session.id, me.id);
     toast(t.cancelledToast, "info");
     if (promotedUserId) {
       const promoted = data.users.find((u) => u.id === promotedUserId);
@@ -69,13 +69,13 @@ export function SessionDetail({
     }
   }
   function doJoinWaitlist() {
-    const r = joinWaitlist(session.id, data.currentUserId);
+    const r = joinWaitlist(session.id, me.id);
     if (r === "ok") toast(t.waitlistJoinedToast, "ok");
     else if (r === "membership") toast(t.membershipBlocked, "err");
     else if (r === "closed") toast(t.closedToast, "err");
   }
   function doLeaveWaitlist() {
-    cancelBooking(session.id, data.currentUserId);
+    cancelBooking(session.id, me.id);
     toast(t.waitlistLeftToast, "info");
   }
 
