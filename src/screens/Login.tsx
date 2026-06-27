@@ -2,8 +2,9 @@ import { useState } from "react";
 import { t } from "../lib/i18n";
 import { firebaseConfigured } from "../lib/firebaseConfig";
 import { VersionTag } from "../components/common";
+import { OmixMark } from "../components/Brand";
 import { Toaster, toast } from "../components/Toast";
-import { IcBolt, IcChevR } from "../components/icons";
+import { IcChevR } from "../components/icons";
 
 type Mode = "signin" | "signup";
 
@@ -44,8 +45,8 @@ export function Login({ onBack }: { onBack?: () => void }) {
             {t.back}
           </button>
         )}
-        <span className="login-logo">
-          <IcBolt width={30} height={30} style={{ color: "var(--ink-900)" }} />
+        <span className="brand-emblem">
+          <OmixMark size={56} />
         </span>
         <h1>{t.loginTitle}</h1>
         <p className="login-sub">{t.loginSubtitle}</p>

@@ -2382,3 +2382,7 @@
 .timer-done { font-size: 4rem; }
 .timer-totals { display: flex; gap: 22px; color: var(--on-ink-2); font-weight: 600; font-variant-numeric: tabular-nums; }
 .timer-controls { display: flex; gap: 10px; width: min(92vw, 460px); }
+
+/* OMIX emblem leading page headers (login / onboarding / splash) */
+.brand-emblem { display: grid; place-items: center; margin: 0 auto 12px; }
+.app-splash .omix-mark { animation: app-pulse 1.1s var(--ease) infinite; }

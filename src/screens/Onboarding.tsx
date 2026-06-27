@@ -2,8 +2,9 @@ import { useState } from "react";
 import { t } from "../lib/i18n";
 import { submitHealthForm } from "../lib/store";
 import { VersionTag } from "../components/common";
+import { OmixMark } from "../components/Brand";
 import { Toaster, toast } from "../components/Toast";
-import { IcBolt, IcCheck } from "../components/icons";
+import { IcCheck } from "../components/icons";
 import type { HealthForm as HF, User } from "../lib/types";
 
 const QS = ["q1", "q2", "q3", "q4", "q5", "q6", "q7"] as const;
@@ -28,8 +29,8 @@ function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="onboard">
       <div className="onboard-card">
-        <span className="login-logo">
-          <IcBolt width={30} height={30} style={{ color: "var(--ink-900)" }} />
+        <span className="brand-emblem">
+          <OmixMark size={52} />
         </span>
         {children}
         <button className="link-btn onboard-signout" onClick={signOut}>
@@ -100,8 +101,8 @@ function HealthDeclaration({ user }: { user: User }) {
   return (
     <div className="onboard onboard-form">
       <div className="onboard-card onboard-wide">
-        <span className="login-logo">
-          <IcBolt width={30} height={30} style={{ color: "var(--ink-900)" }} />
+        <span className="brand-emblem">
+          <OmixMark size={52} />
         </span>
         <h1>{H.title}</h1>
         <p className="login-sub">{H.subtitle}</p>

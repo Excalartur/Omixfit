@@ -9,13 +9,12 @@ import { Login } from "./screens/Login";
 import { Landing } from "./screens/Landing";
 import { Onboarding } from "./screens/Onboarding";
 import { UserSwitcher } from "./components/UserSwitcher";
-import { OmixLogo, JerusalemClock } from "./components/Brand";
+import { OmixLogo, OmixMark, JerusalemClock } from "./components/Brand";
 import { IntervalTimer } from "./components/IntervalTimer";
 import { Toaster } from "./components/Toast";
 import { Celebration } from "./components/Celebration";
 import { Avatar } from "./components/common";
 import {
-  IcBolt,
   IcBookmark,
   IcCalendar,
   IcChevR,
@@ -84,9 +83,7 @@ export default function App() {
     if (!authResolved || signedIn) {
       return (
         <div className="app-splash" role="status" aria-label="טוען">
-          <span className="app-splash-logo">
-            <IcBolt width={30} height={30} style={{ color: "var(--ink-900)" }} />
-          </span>
+          <OmixMark size={64} />
         </div>
       );
     }
@@ -128,7 +125,7 @@ export default function App() {
       </a>
       <header className="appbar">
         <div className="brand">
-          <OmixLogo size={26} />
+          <OmixLogo size={34} />
         </div>
 
         <JerusalemClock />
