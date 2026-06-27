@@ -113,15 +113,19 @@ from anywhere, including store callbacks, without prop-drilling.
 `src/vite-env.d.ts` and read through `src/lib/version.ts`, surfaced in the UI by the
 `VersionTag` component. This is how the deployed site reports which commit is live.
 
-**Base-path awareness.** `base` comes from `VITE_BASE` (default `/`; the Pages workflow
-sets `/<repo>/`). Anything that references built assets, the service worker, manifest,
+**Base-path awareness.** `base` comes from `VITE_BASE` (default `/`, which is what
+Firebase Hosting serves from; set it to `/<subpath>/` only if hosting under a subpath).
+Anything that references built assets, the service worker, manifest,
 or icons must resolve relative to `import.meta.env.BASE_URL` (see `src/main.tsx`'s SW
 registration), so the app works at both `/` and a subpath.
 
 ## Conventions
 
-- Commits land **directly on `master`**; pushing to `master` triggers the GitHub Pages
-  deploy (`.github/workflows/deploy.yml`, builds with `VITE_BASE=/<repo>/`).
+- Commits land **directly on `master`**. Deploy is **Firebase Hosting**, run manually:
+  `npm run deploy` (`= npm run build && firebase deploy --only hosting`; config in
+  `firebase.json` / `.firebaserc`, project `omixfit-be3ff`). The build embeds the
+  Firebase web config from `.env.local` — no deploy secrets (the web config isn't
+  sensitive). There is **no** CI deploy workflow.
 - `docs/plan.md` is the source of truth for product behavior; its open questions Q1–Q8
   are already decided and baked in (see the README's "Architecture" note). The README
   also keeps a per-iteration changelog.

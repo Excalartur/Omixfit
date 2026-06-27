@@ -20,19 +20,21 @@ tap; trainers/managers publish and manage the schedule.
 
 <p align="center"><img src="docs/media/profile.png" alt="Member profile" width="420"></p>
 
-## Deploy
+## Deploy — Firebase Hosting
 
-The app is base‑path aware, so it runs both at a domain root and under a subpath.
+The site is hosted on **Firebase Hosting** (config in [`firebase.json`](firebase.json) /
+[`.firebaserc`](.firebaserc)). One-time: `npx firebase-tools login`. Then every deploy is:
 
-- **GitHub Pages (zero‑config):** enable Pages in repo *Settings → Pages →
-  Source: GitHub Actions*. The included [`deploy.yml`](.github/workflows/deploy.yml)
-  builds with `VITE_BASE=/<repo>/` on every push to `master` and publishes — the
-  site goes live at `https://<user>.github.io/<repo>/`.
-- **Netlify / Vercel / any static host:** point it at the repo; build `npm run
-  build`, publish `dist/`. Served from root, so no base path needed.
+```bash
+npm run deploy     # = npm run build && firebase deploy --only hosting
+```
 
-All paths (assets, service worker, manifest, icons) resolve relative to the
-deploy base, verified at both `/` and `/Omixfit/`.
+The build embeds the Firebase config from `.env.local`, so there are no separate
+deploy secrets — the web config isn't sensitive (it ships in the client bundle by
+design). Firebase Hosting serves from the domain root, and its `*.web.app` /
+`*.firebaseapp.com` domains are automatically trusted by Firebase Auth, so there's
+no authorized-domain step. The app is also base‑path aware (`VITE_BASE`) if you ever
+serve it from a subpath instead.
 
 ## Run it
 
@@ -73,9 +75,13 @@ account sheet (top app-bar avatar).
 Firebase, so the preview build must embed your config (`.env.local` set, then
 `npm run build`) and the demo accounts must exist in the project. Create
 `noa@`, `yael@`, `dana@`, `avi@omixfit.app` with the shared password
-`Omixfit-demo-1` (or set `OMIXFIT_TEST_PASSWORD`). For the **live deploy**, add
-the six `VITE_FIREBASE_*` values as repo **Actions secrets** and add your
-`<user>.github.io` domain under Firebase Auth → Settings → Authorized domains.
+`Omixfit-demo-1` (or set `OMIXFIT_TEST_PASSWORD`).
+
+> **What's in the cloud, and what isn't.** Only **auth** (the user accounts:
+> email + password) lives on Firebase's servers. All **domain data** — bookings,
+> the schedule, profiles, roles/membership — lives in the browser's
+> `localStorage`, so it does **not** sync across devices or browsers. Making that
+> data real and shared is a Firestore migration (not yet done).
 
 ## What works today
 
