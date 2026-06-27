@@ -119,7 +119,7 @@ export function Login({ onBack }: { onBack?: () => void }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={isSignup ? 8 : 6}
             />
           </div>
           <button

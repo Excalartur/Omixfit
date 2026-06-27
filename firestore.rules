@@ -1,20 +1,56 @@
 rules_version = '2';
 
-// Omixfit Firestore rules (Spark / free plan).
+// OMIX Firestore security rules (Spark / free plan).
 //
-// Every read and write requires a signed-in user. Roles (manager/instructor vs
-// member) are enforced in the UI; they are NOT enforced here because un-forgeable
-// role checks need the role baked into the auth token (Firebase custom claims),
-// which requires a Cloud Function on the Blaze plan. When you move to Blaze,
-// replace the blanket write rule below with per-collection role checks, e.g.
-//   allow write: if request.auth.token.role in ['manager','instructor'];
+// Every read/write requires a signed-in user. On top of that we add hardening
+// that does NOT depend on a server-verified role (Spark can't do that):
+//   • the admin role can never be granted or edited from a client (console-only)
+//   • the audit log is append-only (entries can't be altered or deleted)
+//   • user/meta docs can't be deleted; unknown paths are denied
+//
+// LIMITATION: because roles aren't server-verifiable on Spark, these rules can't
+// stop a determined *signed-in* user from over-reading or editing data they
+// shouldn't (e.g. another member's profile). Full per-role authorization +
+// protecting the health forms needs Firebase custom claims, which require the
+// Blaze plan + a Cloud Function. See README. When on Blaze, replace the broad
+// signed-in writes below with role/ownership checks.
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() {
-      return request.auth != null;
+    function signedIn() { return request.auth != null; }
+    // A client may never create or set the admin role…
+    function notSettingAdmin() {
+      return !('role' in request.resource.data) || request.resource.data.role != 'admin';
     }
-    match /{document=**} {
-      allow read, write: if signedIn();
+    // …nor modify an existing admin account.
+    function notEditingAdmin() {
+      return resource == null || resource.data.role != 'admin';
     }
+
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && notSettingAdmin();
+      allow update: if signedIn() && notSettingAdmin() && notEditingAdmin();
+      allow delete: if false;
+    }
+
+    match /sessions/{id}   { allow read, write: if signedIn(); }
+    match /classTypes/{id} { allow read, write: if signedIn(); }
+    match /bookings/{id}   { allow read, write: if signedIn(); }
+    match /locations/{id}  { allow read, write: if signedIn(); }
+
+    // Audit log — append-only: created + read, never changed or removed.
+    match /audit/{id} {
+      allow read, create: if signedIn();
+      allow update, delete: if false;
+    }
+
+    // Seed marker + facility settings — readable/writable, never deletable.
+    match /meta/{doc} {
+      allow read, create, update: if signedIn();
+      allow delete: if false;
+    }
+
+    // Anything not matched above is denied.
+    match /{document=**} { allow read, write: if false; }
   }
 }
