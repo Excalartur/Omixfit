@@ -7,6 +7,7 @@ import { Manage } from "./screens/Manage";
 import { Profile } from "./screens/Profile";
 import { Login } from "./screens/Login";
 import { Landing } from "./screens/Landing";
+import { Onboarding } from "./screens/Onboarding";
 import { UserSwitcher } from "./components/UserSwitcher";
 import { Toaster } from "./components/Toast";
 import { Celebration } from "./components/Celebration";
@@ -92,6 +93,12 @@ export default function App() {
     ) : (
       <Landing onEnter={() => setAuthView("login")} />
     );
+  }
+
+  // Signed in but not yet approved → onboarding (health form, then "awaiting
+  // approval"). Approval flips this to the app live via the Firestore listener.
+  if (me.approvalStatus && me.approvalStatus !== "approved") {
+    return <Onboarding user={me} />;
   }
 
   function go(v: View) {

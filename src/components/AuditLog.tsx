@@ -13,6 +13,8 @@ const ICONS: Record<AuditAction, { cls: string; glyph: string }> = {
   type_deleted: { cls: "cancel", glyph: "🗑" },
   role_changed: { cls: "people", glyph: "★" },
   membership_changed: { cls: "people", glyph: "✓" },
+  member_approved: { cls: "create", glyph: "✓" },
+  member_rejected: { cls: "cancel", glyph: "✕" },
 };
 
 export function AuditLog({ limit = 20 }: { limit?: number }) {

@@ -14,6 +14,25 @@ export interface NotifyPrefs {
   reminderHours: number;
 }
 
+/** New registrants must be approved by staff before they can use the app. */
+export type ApprovalStatus = "pending" | "approved" | "rejected";
+
+/** PAR-Q-style pre-exercise health declaration + terms, signed at registration. */
+export interface HealthForm {
+  /** Each is a yes/no answer to a standard pre-activity screening question. */
+  q1: boolean; // heart condition — activity only on doctor's advice
+  q2: boolean; // chest pain during physical activity
+  q3: boolean; // chest pain at rest in the last month
+  q4: boolean; // loses balance from dizziness / loses consciousness
+  q5: boolean; // bone/joint problem worsened by activity
+  q6: boolean; // medication for blood pressure / heart
+  q7: boolean; // any other reason not to do physical activity
+  notes: string; // free-text health notes
+  termsAccepted: boolean;
+  signedName: string; // typed signature
+  submittedAt: number;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -21,6 +40,14 @@ export interface User {
   /** Firebase Auth identity. Sign-in matches a user by email (case-insensitive). */
   email?: string;
   role: Role;
+  /**
+   * Registration gate. Seeded/legacy users are `approved`. A fresh sign-up is
+   * `pending` until staff approves (then `membershipActive` is turned on).
+   * Undefined is treated as `approved` for backward compatibility.
+   */
+  approvalStatus?: ApprovalStatus;
+  /** The signed health declaration + terms (present once the registrant submits). */
+  healthForm?: HealthForm;
   /** Q3: booking is gated on this even before a payment engine exists. */
   membershipActive: boolean;
   /** Membership tier label + validity (manager-managed in v1). */
@@ -104,7 +131,9 @@ export type AuditAction =
   | "type_updated"
   | "type_deleted"
   | "role_changed"
-  | "membership_changed";
+  | "membership_changed"
+  | "member_approved"
+  | "member_rejected";
 
 /** Audit log entry — who changed/cancelled what (plan.md §4.6). */
 export interface AuditEntry {

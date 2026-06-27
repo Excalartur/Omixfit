@@ -36,12 +36,14 @@ import * as engine from "./engine";
 import { buildSeed } from "./seed";
 import { fmtTime, fromKey } from "./date";
 import type {
+  ApprovalStatus,
   AuditAction,
   AuditEntry,
   Booking,
   ClassSession,
   ClassType,
   Facility,
+  HealthForm,
   Location,
   User,
 } from "./types";
@@ -177,7 +179,10 @@ export async function resolveAuthUser(
     name,
     phone: "",
     email: email.trim(),
+    // Auto-registration ALWAYS creates a plain member, pending staff approval —
+    // there is no app path to instructor/manager/admin.
     role: "member",
+    approvalStatus: "pending",
     membershipActive: false,
     avatarColor: AVATAR_COLORS[hashCode(email) % AVATAR_COLORS.length],
     initials: initialsOf(name),
@@ -185,6 +190,32 @@ export async function resolveAuthUser(
   };
   await setDoc(doc(db, "users", uid), user);
   setCurrentUser(uid);
+}
+
+/** Registrant submits their signed health declaration (stays pending). */
+export async function submitHealthForm(
+  userId: string,
+  form: HealthForm,
+): Promise<void> {
+  await updateDoc(doc(db, "users", userId), {
+    healthForm: form as unknown as Record<string, unknown>,
+  });
+}
+
+/** Staff approves/rejects a registrant. Admin accounts are never editable. */
+export async function setApproval(
+  userId: string,
+  status: ApprovalStatus,
+): Promise<void> {
+  const before = getState().users.find((u) => u.id === userId);
+  if (before?.role === "admin") return; // admin is off-limits to the app
+  const patch: Partial<User> = { approvalStatus: status };
+  if (status === "approved") patch.membershipActive = true; // approval activates membership
+  await updateDoc(doc(db, "users", userId), patch as Record<string, unknown>);
+  await audit(
+    status === "approved" ? "member_approved" : "member_rejected",
+    before?.name ?? userId,
+  );
 }
 
 // ---- audit ------------------------------------------------------------------
@@ -397,6 +428,10 @@ export async function updateUser(
   patch: Partial<User>,
 ): Promise<void> {
   const before = getState().users.find((u) => u.id === userId);
+  // The admin account can never be modified through the app, and no app action
+  // may ever grant the admin role (admin is console-only).
+  if (before?.role === "admin") return;
+  if (patch.role === "admin") delete patch.role;
   await updateDoc(doc(db, "users", userId), patch as Record<string, unknown>);
   if (before && patch.role && patch.role !== before.role) {
     await audit("role_changed", `${before.name}: ${before.role} ← ${patch.role}`);

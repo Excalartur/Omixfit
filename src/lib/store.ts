@@ -124,6 +124,12 @@ export const upsertClassType = (ct: ClassType) =>
   backend().then((b) => b.upsertClassType(ct));
 export const deleteClassType = (typeId: string) =>
   backend().then((b) => b.deleteClassType(typeId));
+export const submitHealthForm = (userId: string, form: import("./types").HealthForm) =>
+  backend().then((b) => b.submitHealthForm(userId, form));
+export const setApproval = (
+  userId: string,
+  status: import("./types").ApprovalStatus,
+) => backend().then((b) => b.setApproval(userId, status));
 
 /** Start the Firestore listeners + one-time seed (called once from App). */
 export const initData = () => backend().then((b) => b.initFirestore());

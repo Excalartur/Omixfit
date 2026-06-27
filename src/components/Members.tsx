@@ -5,6 +5,7 @@ import {
   classTypeOf,
   memberStats,
   sessionStartDate,
+  setApproval,
   updateUser,
   useStore,
 } from "../lib/store";
@@ -30,6 +31,11 @@ export function Members() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState<User | null>(null);
 
+  const pending = useMemo(
+    () => data.users.filter((u) => u.approvalStatus === "pending"),
+    [data.users],
+  );
+
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return [...data.users]
@@ -44,6 +50,34 @@ export function Members() {
 
   return (
     <div>
+      {pending.length > 0 && (
+        <div className="approvals-box">
+          <div className="approvals-head">
+            <span className="approvals-dot" aria-hidden="true" />
+            <b>{t.approvals.title}</b>
+            <span className="approvals-count">{t.approvals.pendingCount(pending.length)}</span>
+          </div>
+          <div className="member-list">
+            {pending.map((u) => (
+              <button key={u.id} className="member-row" onClick={() => setOpen(u)}>
+                <Avatar user={u} size={40} />
+                <span className="mr-body">
+                  <span className="mr-name">
+                    {u.name}
+                    {u.healthForm &&
+                      (["q1", "q2", "q3", "q4", "q5", "q6", "q7"] as const).some(
+                        (k) => u.healthForm![k],
+                      ) && <span className="tag flag">{t.approvals.healthFlag}</span>}
+                  </span>
+                  <span className="mr-sub" dir="ltr">{u.email || u.phone}</span>
+                </span>
+                <span className="tag pending">{t.approvals.statusPending}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="search">
         <IcSearch aria-hidden="true" />
         <input
@@ -108,7 +142,25 @@ function MemberDetail({ userId, onClose }: { userId: string; onClose: () => void
       .slice(0, 5);
   }, [data, u.id]);
 
-  const roles: Role[] = ["member", "instructor", "manager", "admin"];
+  // Admin is intentionally NOT assignable from the app (console-only).
+  const roles: Role[] = ["member", "instructor", "manager"];
+  const isAdmin = u.role === "admin";
+  const hf = u.healthForm;
+
+  async function decide(status: "approved" | "rejected") {
+    await setApproval(u.id, status);
+    if (status === "approved") {
+      toast(t.approvals.approvedToast(u.name), "ok");
+      if (u.email) {
+        const subject = encodeURIComponent(t.approvals.emailSubject(t.appName));
+        const body = encodeURIComponent(t.approvals.emailBody(u.name, t.appName));
+        window.open(`mailto:${u.email}?subject=${subject}&body=${body}`);
+      }
+    } else {
+      toast(t.approvals.rejectedToast(u.name), "info");
+    }
+    onClose();
+  }
 
   const hero = (
     <div className="detail-hero" style={{ background: "radial-gradient(120% 140% at 100% 0%, #1c2430, #0b0e13 60%)" }}>
@@ -143,42 +195,87 @@ function MemberDetail({ userId, onClose }: { userId: string; onClose: () => void
         <MiniStat v={st.total} k={t.totalCount} />
       </div>
 
-      {/* role management (plan.md §4.1 — admin assigns roles) */}
-      <div className="field">
-        <label>{t.changeRole}</label>
-        <div className="filterbar" style={{ margin: 0 }}>
-          {roles.map((r) => (
-            <button
-              key={r}
-              className={`filter-chip ${u.role === r ? "on" : ""}`}
-              onClick={() => {
-                updateUser(u.id, { role: r });
-                toast(`${u.name} · ${t.roles[r]}`, "ok");
-              }}
-            >
-              {t.roles[r]}
+      {/* pending registration → health declaration + approve / reject */}
+      {u.approvalStatus === "pending" && (
+        <div className="approval-panel">
+          <div className="approval-bar">
+            <span className="tag pending">{t.approvals.statusPending}</span>
+            {hf && <small className="muted">{t.approvals.submittedAt}: {new Date(hf.submittedAt).toLocaleDateString("he-IL")}</small>}
+          </div>
+          {hf ? (
+            <>
+              <h3 className="h2" style={{ margin: "10px 0 6px" }}>{t.approvals.healthTitle}</h3>
+              <ul className="health-summary">
+                {(["q1", "q2", "q3", "q4", "q5", "q6", "q7"] as const).map((k) => (
+                  <li key={k} className={hf[k] ? "yes" : "no"}>
+                    <span>{t.health[k]}</span>
+                    <b>{hf[k] ? t.health.yes : t.health.no}</b>
+                  </li>
+                ))}
+              </ul>
+              <p className="health-summary-notes">
+                <b>{t.health.notesLabel}:</b> {hf.notes || t.approvals.noNotes}
+              </p>
+              <p className="health-summary-sign" dir="rtl">
+                ✍︎ {hf.signedName}
+              </p>
+            </>
+          ) : (
+            <p className="muted">{t.health.subtitle}</p>
+          )}
+          <div className="row gap-2 wrap" style={{ marginTop: 12 }}>
+            <button className="btn btn-lime grow" onClick={() => decide("approved")}>
+              {t.approvals.approve}
             </button>
-          ))}
+            <button className="btn btn-danger btn-sm" onClick={() => decide("rejected")}>
+              {t.approvals.reject}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* membership gating (Q3) */}
-      <div className="pref-row" style={{ borderTop: "1px solid var(--line)", borderBottom: "none" }}>
-        <div className="pr-main">
-          <b>{t.membershipActiveLabel}</b>
-          <small>{u.membershipPlan} · {t.validUntil} {u.membershipValidUntil}</small>
-        </div>
-        <button
-          className={`switch ${u.membershipActive ? "on" : ""}`}
-          role="switch"
-          aria-checked={u.membershipActive}
-          aria-label={t.membershipActiveLabel}
-          onClick={() => {
-            updateUser(u.id, { membershipActive: !u.membershipActive });
-            toast(u.membershipActive ? t.setInactive : t.setActive, "info");
-          }}
-        />
-      </div>
+      {isAdmin ? (
+        <p className="admin-locked" role="note">🔒 {t.approvals.adminLocked}</p>
+      ) : (
+        <>
+          {/* role management (plan.md §4.1 — staff assigns roles; not admin) */}
+          <div className="field">
+            <label>{t.changeRole}</label>
+            <div className="filterbar" style={{ margin: 0 }}>
+              {roles.map((r) => (
+                <button
+                  key={r}
+                  className={`filter-chip ${u.role === r ? "on" : ""}`}
+                  onClick={() => {
+                    updateUser(u.id, { role: r });
+                    toast(`${u.name} · ${t.roles[r]}`, "ok");
+                  }}
+                >
+                  {t.roles[r]}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* membership gating (Q3) */}
+          <div className="pref-row" style={{ borderTop: "1px solid var(--line)", borderBottom: "none" }}>
+            <div className="pr-main">
+              <b>{t.membershipActiveLabel}</b>
+              <small>{u.membershipPlan} · {t.validUntil} {u.membershipValidUntil}</small>
+            </div>
+            <button
+              className={`switch ${u.membershipActive ? "on" : ""}`}
+              role="switch"
+              aria-checked={u.membershipActive}
+              aria-label={t.membershipActiveLabel}
+              onClick={() => {
+                updateUser(u.id, { membershipActive: !u.membershipActive });
+                toast(u.membershipActive ? t.setInactive : t.setActive, "info");
+              }}
+            />
+          </div>
+        </>
+      )}
 
       {/* recent activity */}
       <div>

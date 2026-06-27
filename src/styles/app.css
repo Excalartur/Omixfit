@@ -1658,7 +1658,7 @@
 .tag.role-instructor { background: #efeaff; color: #5b3fd1; }
 .tag.role-manager { background: #e7fbf3; color: #0a7d56; }
 .tag.role-admin { background: #fff0e6; color: #b3540a; }
-.tag.inactive { background: #fff0f1; color: var(--danger); }
+.tag.inactive { background: #fff0f1; color: var(--danger-ink, #c0392b); }
 
 /* ---- celebration ---------------------------------------------------------- */
 .confetti {
@@ -2107,4 +2107,154 @@
   .landing-features {
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+/* ===========================================================================
+   Registration onboarding: health declaration + approval waiting
+   =========================================================================== */
+.onboard {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow-y: auto;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(214, 255, 61, 0.18), transparent 60%),
+    var(--ink-900);
+}
+.onboard-form { place-items: start center; }
+.onboard-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: 30px 26px 20px;
+  box-shadow: var(--sh-3);
+  text-align: center;
+}
+.onboard-card.onboard-wide { max-width: 560px; text-align: start; }
+.onboard-wide .login-logo { margin-inline: 0; }
+.onboard-card h1 { margin: 14px 0 6px; font-size: 1.4rem; font-weight: 900; letter-spacing: -0.02em; }
+.onboard-badge {
+  display: inline-block;
+  background: var(--lime);
+  color: var(--ink-900);
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  margin-bottom: 6px;
+}
+.onboard-h2 { font-size: 1.05rem; font-weight: 800; margin: 22px 0 4px; }
+.onboard-qintro { color: var(--text-2); font-size: 0.88rem; margin: 0 0 12px; }
+.onboard-signout { display: block; margin: 18px auto 4px; color: var(--text-3); }
+
+/* health questions */
+.health-qs { display: flex; flex-direction: column; gap: 10px; }
+.health-q {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+.hq-text { font-size: 0.9rem; line-height: 1.4; }
+.hq-toggle { display: flex; gap: 6px; flex-shrink: 0; }
+.hq-toggle button {
+  min-width: 52px;
+  padding: 8px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text-2);
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.hq-toggle button.on.yes { background: #fff0f1; border-color: var(--danger); color: var(--danger-ink); }
+.hq-toggle button.on.no { background: var(--ink-900); border-color: var(--ink-900); color: #fff; }
+.health-flag {
+  margin: 12px 0 0;
+  padding: 11px 13px;
+  border-radius: var(--r-md);
+  background: rgba(255, 90, 90, 0.12);
+  color: var(--danger-ink, #c0392b);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+.health-terms { color: var(--text-2); font-size: 0.84rem; line-height: 1.55; margin: 6px 0 12px; }
+.health-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.health-check input { position: absolute; opacity: 0; width: 0; height: 0; }
+.hc-box {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--line-strong);
+  display: grid;
+  place-items: center;
+  color: var(--ink-900);
+  transition: background 0.15s, border-color 0.15s;
+}
+.health-check input:checked + .hc-box { background: var(--lime); border-color: var(--lime); }
+.health-check input:focus-visible + .hc-box { box-shadow: 0 0 0 3px rgba(17, 22, 29, 0.12); }
+.onboard-wide textarea.input { resize: vertical; }
+
+/* staff: pending-approval list + per-member approval panel */
+.approvals-box {
+  border: 1px solid var(--lime);
+  background: linear-gradient(180deg, rgba(214, 255, 61, 0.08), transparent);
+  border-radius: var(--r-lg);
+  padding: 12px;
+  margin-bottom: 18px;
+}
+.approvals-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 0.95rem; }
+.approvals-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime-600); }
+.approvals-count { margin-inline-start: auto; color: var(--text-2); font-size: 0.82rem; font-weight: 600; }
+.tag.pending { background: #fff6da; color: #8a6d00; }
+.tag.flag { background: #fff0f1; color: var(--danger-ink, #c0392b); }
+.approval-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 14px;
+  background: var(--surface-2);
+  margin: 4px 0 8px;
+}
+.approval-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.health-summary { list-style: none; margin: 0 0 8px; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.health-summary li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 10px;
+  border-radius: var(--r-sm, 8px);
+  background: var(--surface);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+.health-summary li.yes b { color: var(--danger-ink, #c0392b); }
+.health-summary li.no b { color: var(--text-3); }
+.health-summary-notes { font-size: 0.85rem; color: var(--text-2); margin: 0 0 4px; }
+.health-summary-sign { font-size: 0.95rem; font-weight: 700; margin: 0; }
+.admin-locked {
+  margin: 8px 0;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  border: 1px dashed var(--line-strong);
+  color: var(--text-2);
+  font-size: 0.88rem;
+  text-align: center;
 }

@@ -15,6 +15,9 @@ import { addDays, fromKey, startOfWeek, toKey } from "./date";
 const LOCATION_ID = "loc-main";
 
 const users: User[] = [
+  // Top-privilege admin. The app never grants this role and never lets it be
+  // edited from the UI — set/manage it only in the Firebase console.
+  u("u-admin", "מנהל/ת המערכת", "050-0000000", "admin", "#11161D"),
   u("u-noa", "נועה אלון", "050-1112233", "manager", "#D6FF3D"),
   u("u-yael", "יעל כהן", "052-7654321", "instructor", "#8E7BFF"),
   u("u-tom", "תום לוי", "054-3219876", "instructor", "#FF8A3D"),
@@ -230,6 +233,8 @@ function u(
     // with this address in Firebase Auth to log in as that seeded user/role.
     email: `${id.replace(/^u-/, "")}@omixfit.app`,
     role,
+    // Seeded users are pre-approved; only fresh sign-ups go through approval.
+    approvalStatus: "approved" as const,
     membershipActive: true,
     membershipPlan: role === "member" ? "מנוי חופשי חודשי" : "צוות",
     membershipValidUntil: "2026-12-31",
