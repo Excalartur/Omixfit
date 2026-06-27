@@ -6,3 +6,5 @@ screenshots/
 .DS_Store
 *.log
 .firebase/
+functions/node_modules/
+functions/.env

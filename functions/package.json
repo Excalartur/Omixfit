@@ -1,0 +1,11 @@
+{
+  "name": "omix-functions",
+  "description": "OMIX Cloud Functions — server-verified roles (custom claims)",
+  "private": true,
+  "engines": { "node": "20" },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^5.1.1"
+  }
+}
