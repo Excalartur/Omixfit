@@ -8,3 +8,4 @@ screenshots/
 .firebase/
 functions/node_modules/
 functions/.env
+/Logo/

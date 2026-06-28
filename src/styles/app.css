@@ -2263,7 +2263,8 @@
    OMIX brand lockup + live Jerusalem clock + interval timer
    =========================================================================== */
 .omix-logo { display: inline-flex; align-items: center; gap: 9px; }
-.omix-mark { display: block; flex-shrink: 0; }
+.omix-mark { display: block; flex-shrink: 0; border-radius: 8px; object-fit: cover; }
+.brand-emblem .omix-mark { border-radius: 14px; box-shadow: var(--sh-2); }
 .omix-word {
   font-weight: 900;
   letter-spacing: 0.14em;
