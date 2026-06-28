@@ -9,6 +9,7 @@ import {
   updateUser,
   useStore,
 } from "../lib/store";
+import { clientActivityLight } from "../lib/engine";
 import { fmtDayHeading, fmtTime } from "../lib/date";
 import { Avatar } from "./common";
 import { Sheet } from "./Sheet";
@@ -89,6 +90,11 @@ export function Members() {
         />
       </div>
 
+      <div className="lights-legend">
+        <span><i className="light light-green" /> {t.lights.green}</span>
+        <span><i className="light light-orange" /> {t.lights.orange}</span>
+        <span><i className="light light-red" /> {t.lights.red}</span>
+      </div>
       <p className="muted" style={{ margin: "0 0 12px", fontSize: ".85rem" }}>
         {t.allMembers(filtered.length)}
       </p>
@@ -104,6 +110,13 @@ export function Members() {
             const st = memberStats(u.id, data);
             return (
               <button key={u.id} className="member-row" onClick={() => setOpen(u)}>
+                {u.role === "member" && (
+                  <span
+                    className={`light light-${clientActivityLight(u.id, data)}`}
+                    title={t.lights.title}
+                    aria-label={t.lights[clientActivityLight(u.id, data)]}
+                  />
+                )}
                 <Avatar user={u} size={42} />
                 <span className="mr-body">
                   <span className="mr-name">
@@ -195,14 +208,20 @@ function MemberDetail({ userId, onClose }: { userId: string; onClose: () => void
         <MiniStat v={st.total} k={t.totalCount} />
       </div>
 
-      {/* registration details */}
-      {(u.gender || u.age || u.address) && (
-        <ul className="member-details">
-          {u.gender && <li><span>{t.health.genderLabel}</span><b>{t.health.genders[u.gender]}</b></li>}
-          {u.age ? <li><span>{t.health.ageLabel}</span><b>{u.age}</b></li> : null}
-          {u.address && <li><span>{t.health.addressLabel}</span><b>{u.address}</b></li>}
-        </ul>
-      )}
+      {/* full registration / contact details */}
+      <ul className="member-details">
+        {u.email && <li><span>{t.emailLabel}</span><b dir="ltr">{u.email}</b></li>}
+        <li><span>{t.phone}</span><b dir="ltr">{u.phone || "-"}</b></li>
+        {u.gender && <li><span>{t.health.genderLabel}</span><b>{t.health.genders[u.gender]}</b></li>}
+        {u.age ? <li><span>{t.health.ageLabel}</span><b>{u.age}</b></li> : null}
+        {u.address && <li><span>{t.health.addressLabel}</span><b>{u.address}</b></li>}
+        {u.role === "member" && (
+          <li>
+            <span>{t.lights.title}</span>
+            <b><i className={`light light-${clientActivityLight(u.id, data)}`} /> {t.lights[clientActivityLight(u.id, data)]}</b>
+          </li>
+        )}
+      </ul>
 
       {/* pending registration → health declaration + approve / reject */}
       {u.approvalStatus === "pending" && (

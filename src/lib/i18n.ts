@@ -348,8 +348,38 @@ export const t = {
     sayGo: "קדימה",
   },
 
-  // live Jerusalem clock
+  // live Israel clock
   jerusalem: "ירושלים",
+
+  // fun avatar personas (chosen in the profile)
+  avatarSkin: {
+    title: "האווטאר שלי",
+    hint: "בחר/י דמות עם קצת אופי 😄",
+    none: "ללא - ראשי תיבות",
+    saved: "האווטאר עודכן",
+  },
+  avatarSkins: [
+    { emoji: "💪", label: "באתי לשנות חיים" },
+    { emoji: "🔥", label: "על אש" },
+    { emoji: "⚡", label: "בלתי ניתן/ת לעצירה" },
+    { emoji: "🦾", label: "מכונת אימונים" },
+    { emoji: "🏆", label: "אלוף/ה" },
+    { emoji: "🚀", label: "לירח ובחזרה" },
+    { emoji: "🧘", label: "מצב זן" },
+    { emoji: "🐢", label: "לאט אבל בטוח" },
+    { emoji: "😴", label: "במצב עצלן/ית" },
+    { emoji: "😅", label: "בא/ה לנסות" },
+    { emoji: "🥵", label: "שורד/ת אימונים" },
+    { emoji: "🍕", label: "אוהב/ת לאכול" },
+  ] as { emoji: string; label: string }[],
+
+  // client engagement traffic light
+  lights: {
+    title: "מד פעילות",
+    green: "פעיל/ה - אימון ב-14 הימים האחרונים",
+    orange: "מאט/ה - 15 עד 35 ימים",
+    red: "בסיכון - 35+ ימים או טרם הגיע/ה",
+  } as Record<string, string>,
 
   // finance / revenue (admin)
   finance: {

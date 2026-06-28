@@ -37,19 +37,20 @@ function readableInk(hex: string): string {
 }
 
 export function Avatar({ user, size = 34 }: { user: User; size?: number }) {
+  const skin = user.avatarSkin;
   return (
     <span
       className="avatar"
       style={{
-        background: user.avatarColor,
+        background: skin ? "var(--surface-2)" : user.avatarColor,
         color: readableInk(user.avatarColor),
         width: size,
         height: size,
-        fontSize: size * 0.4,
+        fontSize: skin ? size * 0.56 : size * 0.4,
       }}
       title={user.name}
     >
-      {user.initials}
+      {skin || user.initials}
     </span>
   );
 }

@@ -185,6 +185,14 @@ export async function resolveAuthUser(
   await initFirestore();
   const e = email.trim().toLowerCase();
   const owner = OWNER_EMAILS.includes(e); // the two business owners → admins
+  const prefix = email.split("@")[0];
+  // The name chosen at sign-up (stashed before the auth listener fired).
+  let stashed: string | null = null;
+  try {
+    stashed = sessionStorage.getItem("omix:signupName");
+    sessionStorage.removeItem("omix:signupName");
+  } catch { /* no sessionStorage */ }
+  const chosenName = stashed?.trim() || displayName?.trim() || prefix || email;
 
   // Existing account (mirror first, then a query). Promote an owner to admin
   // if they aren't already (idempotent).
@@ -193,20 +201,27 @@ export async function resolveAuthUser(
     (await getDocs(query(col.users, where("email", "==", email.trim())))).docs
       .map((d) => d.data() as User)[0];
   if (existing) {
+    const patch: Record<string, unknown> = {};
     if (owner && existing.role !== "admin") {
-      // Promote to admin; never let a hiccup here block the sign-in.
-      await updateDoc(doc(db, "users", existing.id), {
-        role: "admin",
-        approvalStatus: "approved",
-        membershipActive: true,
-      }).catch(() => {});
+      patch.role = "admin";
+      patch.approvalStatus = "approved";
+      patch.membershipActive = true;
+    }
+    // Heal a name that's still just the email prefix (e.g. owners who skipped
+    // onboarding) when we now have a real name.
+    if (existing.name === prefix && chosenName !== prefix) {
+      patch.name = chosenName;
+      patch.initials = initialsOf(chosenName);
+    }
+    if (Object.keys(patch).length) {
+      await updateDoc(doc(db, "users", existing.id), patch).catch(() => {});
     }
     return setCurrentUser(existing.id);
   }
 
   // New account: an owner is created as an approved admin; everyone else is a
   // plain member pending approval (no app path to instructor/manager/admin).
-  const name = displayName?.trim() || email.split("@")[0] || email;
+  const name = chosenName;
   const user: User = {
     id: uid,
     name,

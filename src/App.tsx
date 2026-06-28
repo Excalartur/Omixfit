@@ -8,6 +8,8 @@ import { Profile } from "./screens/Profile";
 import { Login } from "./screens/Login";
 import { Landing } from "./screens/Landing";
 import { Onboarding } from "./screens/Onboarding";
+import { Members } from "./components/Members";
+import { Finance } from "./components/Finance";
 import { UserSwitcher } from "./components/UserSwitcher";
 import { OmixLogo, OmixMark, IsraelClock } from "./components/Brand";
 import { IntervalTimer } from "./components/IntervalTimer";
@@ -20,19 +22,34 @@ import {
   IcChevR,
   IcGrid,
   IcUser,
+  IcUsers,
 } from "./components/icons";
 
-type View = "schedule" | "bookings" | "manage" | "profile";
+const IcCoins = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
+    strokeLinecap="round" strokeLinejoin="round" width={24} height={24} {...p}>
+    <ellipse cx="12" cy="6" rx="8" ry="3" />
+    <path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6" />
+    <path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" />
+  </svg>
+);
+
+type View = "schedule" | "bookings" | "manage" | "clients" | "finance" | "profile";
+const VIEWS = ["bookings", "manage", "clients", "finance", "profile"];
 
 function readHash(): View {
   const h = location.hash.replace("#", "");
-  return h === "bookings" || h === "manage" || h === "profile" ? h : "schedule";
+  return (VIEWS.includes(h) ? h : "schedule") as View;
 }
 
 export default function App() {
   const data = useStore((s) => s);
   const me = data.users.find((u) => u.id === data.currentUserId);
   const isStaff = !!me && me.role !== "member";
+  const canFinance = me?.role === "admin" || me?.role === "manager";
+  const pendingCount = isStaff
+    ? data.users.filter((u) => u.approvalStatus === "pending").length
+    : 0;
   const [view, setView] = useState<View>(readHash);
   const [switcher, setSwitcher] = useState(false);
   const [timerOpen, setTimerOpen] = useState(false);
@@ -73,9 +90,10 @@ export default function App() {
   // If a staff-only/member-only view doesn't fit the current role, fall back.
   useEffect(() => {
     if (!me) return;
-    if (view === "manage" && !isStaff) go("schedule");
+    if ((view === "manage" || view === "clients") && !isStaff) go("schedule");
+    if (view === "finance" && !canFinance) go("schedule");
     if (view === "bookings" && isStaff) go("schedule");
-  }, [me, isStaff, view]);
+  }, [me, isStaff, canFinance, view]);
 
   // Resolving the session, or signed in but cloud data still streaming in →
   // show a splash rather than flashing the logged-out screens.
@@ -107,10 +125,14 @@ export default function App() {
     history.replaceState(null, "", `#${v}`);
   }
 
-  const nav: { id: View; label: string; icon: JSX.Element }[] = isStaff
+  const nav: { id: View; label: string; icon: JSX.Element; badge?: number }[] = isStaff
     ? [
         { id: "schedule", label: t.nav.schedule, icon: <IcCalendar /> },
         { id: "manage", label: t.nav.manage, icon: <IcGrid /> },
+        { id: "clients", label: t.nav.members, icon: <IcUsers />, badge: pendingCount },
+        ...(canFinance
+          ? [{ id: "finance" as View, label: t.finance.tab, icon: <IcCoins /> }]
+          : []),
         { id: "profile", label: t.nav.profile, icon: <IcUser /> },
       ]
     : [
@@ -129,8 +151,6 @@ export default function App() {
           <OmixLogo size={34} />
         </div>
 
-        <IsraelClock />
-
         <nav className="appbar-nav" aria-label="ניווט ראשי">
           {nav.map((n) => (
             <a
@@ -145,11 +165,14 @@ export default function App() {
             >
               {n.icon}
               {n.label}
+              {n.badge ? <span className="nav-badge">{n.badge}</span> : null}
             </a>
           ))}
         </nav>
 
         <div className="appbar-spacer" />
+
+        <IsraelClock />
 
         {isStaff && (
           <button
@@ -176,6 +199,22 @@ export default function App() {
         {view === "schedule" && <Schedule />}
         {view === "bookings" && <MyBookings onGoSchedule={() => go("schedule")} />}
         {view === "manage" && <Manage />}
+        {view === "clients" && isStaff && (
+          <div className="page">
+            <div className="page-head">
+              <div>
+                <h1 className="h1">{t.membersTitle}</h1>
+                <div className="sub">{data.locations[0]?.name}</div>
+              </div>
+            </div>
+            <Members />
+          </div>
+        )}
+        {view === "finance" && canFinance && (
+          <div className="page">
+            <Finance />
+          </div>
+        )}
         {view === "profile" && <Profile onSwitchUser={() => setSwitcher(true)} />}
       </main>
 
@@ -191,7 +230,10 @@ export default function App() {
               go(n.id);
             }}
           >
-            {n.icon}
+            <span className="tab-ico">
+              {n.icon}
+              {n.badge ? <span className="nav-badge">{n.badge}</span> : null}
+            </span>
             {n.label}
           </a>
         ))}

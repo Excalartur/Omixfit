@@ -2445,3 +2445,39 @@
 .member-details { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .member-details li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 12px; background: var(--surface-2); border-radius: var(--r-md); font-size: 0.88rem; }
 .member-details span { color: var(--text-2); }
+
+/* pending-approval nav badge */
+.nav-badge {
+  display: inline-grid; place-items: center;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  background: var(--danger); color: #fff;
+  border-radius: 999px; font-size: 0.7rem; font-weight: 800;
+  margin-inline-start: 5px; line-height: 1;
+}
+.tabbar .tab-ico { position: relative; display: inline-flex; }
+.tabbar .tab-ico .nav-badge { position: absolute; top: -7px; inset-inline-end: -11px; margin: 0; }
+
+/* client engagement traffic light */
+.light {
+  display: inline-block; width: 11px; height: 11px; border-radius: 50%;
+  flex-shrink: 0; box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
+}
+.light-green  { background: #28b463; box-shadow: 0 0 0 3px rgba(40,180,99,0.18); }
+.light-orange { background: #e8920c; box-shadow: 0 0 0 3px rgba(232,146,12,0.18); }
+.light-red    { background: #e04434; box-shadow: 0 0 0 3px rgba(224,68,52,0.18); }
+.lights-legend { display: flex; gap: 14px; flex-wrap: wrap; margin: 0 0 12px; font-size: 0.8rem; color: var(--text-2); }
+.lights-legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* avatar persona picker (profile) */
+.skin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.skin {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 12px 6px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-md); cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.skin:hover { border-color: var(--line-strong); }
+.skin.on { border-color: var(--gold); background: var(--surface-2); box-shadow: 0 0 0 2px var(--lime-glow); }
+.skin-emoji { font-size: 1.7rem; line-height: 1; }
+.skin-initials { font-size: 1.1rem; font-weight: 800; color: var(--text-2); }
+.skin small { font-size: 0.7rem; color: var(--text-2); text-align: center; line-height: 1.2; }

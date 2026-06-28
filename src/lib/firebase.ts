@@ -64,8 +64,12 @@ export async function signUp(
   name: string,
 ): Promise<void> {
   if (!auth) throw new Error("auth/not-configured");
-  const cred = await createUserWithEmailAndPassword(auth, email.trim(), password);
   const display = name.trim();
+  // Stash the chosen name: the auth listener (which creates the Firestore user)
+  // can fire before updateProfile lands, so resolveAuthUser reads this to avoid
+  // falling back to the email prefix.
+  if (display) try { sessionStorage.setItem("omix:signupName", display); } catch { /**/ }
+  const cred = await createUserWithEmailAndPassword(auth, email.trim(), password);
   if (display) await updateProfile(cred.user, { displayName: display });
 }
 

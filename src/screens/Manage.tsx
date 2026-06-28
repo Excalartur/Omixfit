@@ -16,8 +16,6 @@ import { SessionEditor } from "../components/SessionEditor";
 import { SessionDetail } from "../components/SessionDetail";
 import { TypeEditor } from "../components/TypeEditor";
 import { Reports } from "../components/Reports";
-import { Members } from "../components/Members";
-import { Finance } from "../components/Finance";
 import { IcPlus, IcSpark, IcUsers, IcCalendar } from "../components/icons";
 
 type EditorState =
@@ -25,12 +23,11 @@ type EditorState =
   | { mode: "create"; date: string }
   | { mode: "edit"; session: ClassSession };
 
+// Trainer management — the schedule grid, class-type catalogue and reports.
+// Clients + Finance are their own top-level sections now.
 export function Manage() {
   const data = useStore((s) => s);
-  const me = data.users.find((u) => u.id === data.currentUserId);
-  // Finance is sensitive (revenue) → admin + manager only, not instructors.
-  const canFinance = me?.role === "admin" || me?.role === "manager";
-  const [tab, setTab] = useState<"schedule" | "catalog" | "reports" | "members" | "finance">("schedule");
+  const [tab, setTab] = useState<"schedule" | "catalog" | "reports">("schedule");
   const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()));
   const [editor, setEditor] = useState<EditorState>({ mode: "closed" });
   const [detail, setDetail] = useState<ClassSession | null>(null);
@@ -100,19 +97,9 @@ export function Manage() {
         <button className={tab === "reports" ? "on" : ""} onClick={() => setTab("reports")}>
           {t.reports}
         </button>
-        <button className={tab === "members" ? "on" : ""} onClick={() => setTab("members")}>
-          {t.membersTab}
-        </button>
-        {canFinance && (
-          <button className={tab === "finance" ? "on" : ""} onClick={() => setTab("finance")}>
-            {t.finance.tab}
-          </button>
-        )}
       </div>
 
       {tab === "reports" && <Reports />}
-      {tab === "members" && <Members />}
-      {tab === "finance" && canFinance && <Finance />}
 
       {tab === "catalog" && data.classTypes.length === 0 && (
         <div className="empty">

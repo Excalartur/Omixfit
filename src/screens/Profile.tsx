@@ -22,6 +22,10 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
   function setPref(patch: Partial<NotifyPrefs>) {
     updateUser(me.id, { prefs: { ...prefs, ...patch } });
   }
+  function pickSkin(emoji: string) {
+    updateUser(me.id, { avatarSkin: emoji });
+    toast(t.avatarSkin.saved, "ok");
+  }
 
   const fav = stats.favorite as ClassCategory | null;
 
@@ -77,6 +81,26 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
           k={t.favoriteCat}
           v={fav ? `${CATEGORY_META[fav].emoji} ${CATEGORY_META[fav].label}` : "-"}
         />
+      </div>
+
+      {/* avatar persona */}
+      <h2 className="h2" style={{ marginBottom: 4 }}>{t.avatarSkin.title}</h2>
+      <p className="muted" style={{ fontSize: ".82rem", margin: "0 0 10px" }}>{t.avatarSkin.hint}</p>
+      <div className="skin-grid" style={{ marginBottom: 22 }}>
+        <button className={`skin ${!me.avatarSkin ? "on" : ""}`} onClick={() => pickSkin("")}>
+          <span className="skin-emoji skin-initials">{me.initials}</span>
+          <small>{t.avatarSkin.none}</small>
+        </button>
+        {t.avatarSkins.map((s) => (
+          <button
+            key={s.emoji}
+            className={`skin ${me.avatarSkin === s.emoji ? "on" : ""}`}
+            onClick={() => pickSkin(s.emoji)}
+          >
+            <span className="skin-emoji">{s.emoji}</span>
+            <small>{s.label}</small>
+          </button>
+        ))}
       </div>
 
       {/* notifications */}

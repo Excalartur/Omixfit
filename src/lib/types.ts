@@ -61,6 +61,8 @@ export interface User {
   membershipValidUntil?: string; // YYYY-MM-DD
   avatarColor: string; // derived chip color
   initials: string;
+  /** Optional fun avatar persona (an emoji) shown instead of the initials. */
+  avatarSkin?: string;
   prefs?: NotifyPrefs;
 }
 

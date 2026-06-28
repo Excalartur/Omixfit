@@ -334,3 +334,24 @@ export function clientValueScores(s: AppData) {
     })
     .sort((a, b) => b.score - a.score || b.revenue - a.revenue);
 }
+
+/**
+ * Per-client engagement "traffic light" from attendance recency:
+ *   green  = trained in the last 14 days (active/regular)
+ *   orange = 15-35 days (slowing down)
+ *   red    = 35+ days or never (at risk of churning)
+ */
+export function clientActivityLight(userId: string, s: AppData): "green" | "orange" | "red" {
+  const last = s.bookings
+    .filter((b) => b.userId === userId && b.state === "attended")
+    .map((b) => {
+      const sess = s.sessions.find((x) => x.id === b.sessionId);
+      return sess ? sessionStartDate(sess).getTime() : 0;
+    })
+    .reduce((a, b) => Math.max(a, b), 0);
+  if (!last) return "red";
+  const days = (Date.now() - last) / 864e5;
+  if (days <= 14) return "green";
+  if (days <= 35) return "orange";
+  return "red";
+}
