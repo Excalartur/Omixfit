@@ -149,6 +149,10 @@ data.payments = [
 const rev = engine.revenueSummary(data);
 ok("revenueSummary totals payments", rev.total === 420 && rev.count === 3);
 ok("revenueSummary breaks down by kind", rev.byKind.get("zoom") === 240 && rev.byKind.get("personal") === 180);
+// Isolate the ranking on spend: the value score blends revenue (60%) with
+// attendance (40%), and the seed's attendance is date-relative, so neutralize it
+// here to keep this assertion about the top spender deterministic.
+data.bookings = data.bookings.filter((b) => b.state !== "attended");
 const vs = engine.clientValueScores(data);
 ok("clientValueScores ranks the top spender first", vs[0].user.id === member.id && vs[0].revenue === 300);
 ok("value score is 0–100", vs.every((x) => x.score >= 0 && x.score <= 100));

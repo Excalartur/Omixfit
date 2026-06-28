@@ -8,7 +8,7 @@ import {
   deleteService,
   newServiceId,
 } from "../lib/store";
-import { clientValueScores, revenueSummary } from "../lib/engine";
+import { clientBalances, clientValueScores, revenueSummary } from "../lib/engine";
 import { Avatar } from "./common";
 import { Sheet } from "./Sheet";
 import { toast } from "./Toast";
@@ -17,7 +17,7 @@ const KINDS: ServiceKind[] = ["personal", "group", "zoom", "therapy", "injury"];
 const BILLINGS: BillingModel[] = ["package", "subscription", "session"];
 
 export function Finance() {
-  const [tab, setTab] = useState<"overview" | "services">("overview");
+  const [tab, setTab] = useState<"overview" | "balances" | "services">("overview");
   const [payOpen, setPayOpen] = useState(false);
   const [editSvc, setEditSvc] = useState<Service | null | "new">(null);
 
@@ -27,16 +27,17 @@ export function Finance() {
         <button role="tab" aria-selected={tab === "overview"} className={tab === "overview" ? "on" : ""} onClick={() => setTab("overview")}>
           {t.finance.overview}
         </button>
+        <button role="tab" aria-selected={tab === "balances"} className={tab === "balances" ? "on" : ""} onClick={() => setTab("balances")}>
+          {t.finance.balancesTab}
+        </button>
         <button role="tab" aria-selected={tab === "services"} className={tab === "services" ? "on" : ""} onClick={() => setTab("services")}>
           {t.finance.servicesTab}
         </button>
       </div>
 
-      {tab === "overview" ? (
-        <Overview onRecord={() => setPayOpen(true)} />
-      ) : (
-        <Services onEdit={(s) => setEditSvc(s)} onNew={() => setEditSvc("new")} />
-      )}
+      {tab === "overview" && <Overview onRecord={() => setPayOpen(true)} />}
+      {tab === "balances" && <Balances onRecord={() => setPayOpen(true)} />}
+      {tab === "services" && <Services onEdit={(s) => setEditSvc(s)} onNew={() => setEditSvc("new")} />}
 
       {payOpen && <RecordPaymentSheet onClose={() => setPayOpen(false)} />}
       {editSvc && (
@@ -133,6 +134,48 @@ function Overview({ onRecord }: { onRecord: () => void }) {
   );
 }
 
+function Balances({ onRecord }: { onRecord: () => void }) {
+  const data = useStore((s) => s);
+  const balances = useMemo(() => clientBalances(data), [data]);
+  return (
+    <div>
+      <div className="page-head" style={{ marginBottom: 14 }}>
+        <div>
+          <h2 className="h2" style={{ margin: 0 }}>{t.finance.balancesTitle}</h2>
+          <p className="sub">{t.finance.balancesSub}</p>
+        </div>
+        <button className="btn btn-lime" onClick={onRecord}>+ {t.finance.recordPayment}</button>
+      </div>
+      {balances.length === 0 ? (
+        <p className="muted">{t.finance.noBalances}</p>
+      ) : (
+        <div className="bal-list">
+          {balances.map((b) => {
+            const pct = b.purchased ? Math.max(0, Math.min(100, (b.remaining / b.purchased) * 100)) : 0;
+            const left = Math.max(0, b.remaining);
+            const tone = b.remaining <= 0 ? "red" : b.remaining <= 2 ? "orange" : "green";
+            return (
+              <div className="bal-row" key={b.user.id}>
+                <Avatar user={b.user} size={40} />
+                <div className="bal-body">
+                  <div className="bal-name">
+                    {b.user.name}
+                    <span className={`bal-count tone-${tone}`}>{t.finance.remainingN(left)}</span>
+                  </div>
+                  <div className="bal-track">
+                    <div className={`bal-fill tone-${tone}`} style={{ width: `${pct}%` }} />
+                  </div>
+                  <small className="bal-sub">{t.finance.ofPurchased(b.used, b.purchased)}</small>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function Kpi({ label, value, big }: { label: string; value: string; big?: boolean }) {
   return (
     <div className={`fin-kpi ${big ? "big" : ""}`}>
@@ -197,6 +240,7 @@ function RecordPaymentSheet({ onClose }: { onClose: () => void }) {
       serviceName: svc.name,
       kind: svc.kind,
       amount: Number(amount) || 0,
+      units: svc.billing === "package" ? svc.units : undefined,
       date: Date.now(),
       note: note.trim() || undefined,
     };

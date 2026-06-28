@@ -166,6 +166,8 @@ export interface Payment {
   serviceName: string; // denormalized so it survives service edits/deletes
   kind: ServiceKind;
   amount: number; // ₪
+  /** Sessions added to the client's balance by this sale (package billing). */
+  units?: number;
   date: number; // epoch ms
   note?: string;
   actorId: string;

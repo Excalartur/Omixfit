@@ -6,7 +6,7 @@
 // free except the local id counter used by the apply* reference transforms.
 // ---------------------------------------------------------------------------
 
-import type { AppData, Booking, ClassSession, ClassType } from "./types";
+import type { AppData, Booking, ClassSession, ClassType, User } from "./types";
 import { fromKey } from "./date";
 
 export function sessionStartDate(session: ClassSession): Date {
@@ -354,4 +354,30 @@ export function clientActivityLight(userId: string, s: AppData): "green" | "oran
   if (days <= 14) return "green";
   if (days <= 35) return "orange";
   return "red";
+}
+
+export interface ClientBalance {
+  user: User;
+  purchased: number; // total package sessions bought
+  used: number; // attended sessions (consumed)
+  remaining: number; // purchased − used (may go ≤ 0 → needs a top-up)
+}
+
+/**
+ * Live per-client package balance. Every package sale adds its `units`; every
+ * attended session consumes one. Sorted lowest-remaining first so the clients
+ * who need to renew surface at the top.
+ */
+export function clientBalances(s: AppData): ClientBalance[] {
+  return s.users
+    .filter((u) => u.role === "member")
+    .map((u) => {
+      const purchased = s.payments
+        .filter((p) => p.userId === u.id && p.units)
+        .reduce((a, p) => a + (p.units || 0), 0);
+      const used = s.bookings.filter((b) => b.userId === u.id && b.state === "attended").length;
+      return { user: u, purchased, used, remaining: purchased - used };
+    })
+    .filter((b) => b.purchased > 0)
+    .sort((a, b) => a.remaining - b.remaining);
 }
