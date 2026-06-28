@@ -155,6 +155,10 @@ const AVATAR_COLORS = [
   "#D6FF3D", "#8E7BFF", "#FF8A3D", "#27E0B0", "#FF5A8A",
   "#5AC8FF", "#FFD23D", "#B26BFF", "#3DE0FF", "#FF6B6B",
 ];
+
+// The business owners — these (and only these) verified emails become admins on
+// sign-in. Kept in sync with firestore.rules `isOwnerEmail()`.
+const OWNER_EMAILS = ["guy.lifshitz98@gmail.com", "omerido20@gmail.com"];
 function initialsOf(name: string): string {
   const parts = name.trim().split(/\s+/);
   return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
@@ -180,24 +184,37 @@ export async function resolveAuthUser(
 ): Promise<void> {
   await initFirestore();
   const e = email.trim().toLowerCase();
-  const fromMirror = getState().users.find((u) => u.email?.toLowerCase() === e);
-  if (fromMirror) return setCurrentUser(fromMirror.id);
+  const owner = OWNER_EMAILS.includes(e); // the two business owners → admins
 
-  const snap = await getDocs(query(col.users, where("email", "==", email.trim())));
-  const found = snap.docs.map((d) => d.data() as User)[0];
-  if (found) return setCurrentUser(found.id);
+  // Existing account (mirror first, then a query). Promote an owner to admin
+  // if they aren't already (idempotent).
+  const existing =
+    getState().users.find((u) => u.email?.toLowerCase() === e) ??
+    (await getDocs(query(col.users, where("email", "==", email.trim())))).docs
+      .map((d) => d.data() as User)[0];
+  if (existing) {
+    if (owner && existing.role !== "admin") {
+      // Promote to admin; never let a hiccup here block the sign-in.
+      await updateDoc(doc(db, "users", existing.id), {
+        role: "admin",
+        approvalStatus: "approved",
+        membershipActive: true,
+      }).catch(() => {});
+    }
+    return setCurrentUser(existing.id);
+  }
 
+  // New account: an owner is created as an approved admin; everyone else is a
+  // plain member pending approval (no app path to instructor/manager/admin).
   const name = displayName?.trim() || email.split("@")[0] || email;
   const user: User = {
     id: uid,
     name,
     phone: "",
     email: email.trim(),
-    // Auto-registration ALWAYS creates a plain member, pending staff approval —
-    // there is no app path to instructor/manager/admin.
-    role: "member",
-    approvalStatus: "pending",
-    membershipActive: false,
+    role: owner ? "admin" : "member",
+    approvalStatus: owner ? "approved" : "pending",
+    membershipActive: owner,
     avatarColor: AVATAR_COLORS[hashCode(email) % AVATAR_COLORS.length],
     initials: initialsOf(name),
     prefs: { push: true, email: true, whatsapp: false, reminderHours: 2 },

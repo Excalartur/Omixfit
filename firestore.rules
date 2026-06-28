@@ -17,6 +17,13 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
+    // The business owners — only these verified emails may hold/grant the admin
+    // role (kept in sync with firestore.ts OWNER_EMAILS).
+    function isOwnerEmail() {
+      return signedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email.lower() in ['guy.lifshitz98@gmail.com', 'omerido20@gmail.com'];
+    }
     // A client may never create or set the admin role…
     function notSettingAdmin() {
       return !('role' in request.resource.data) || request.resource.data.role != 'admin';
@@ -28,8 +35,12 @@ service cloud.firestore {
 
     match /users/{uid} {
       allow read: if signedIn();
-      allow create: if signedIn() && notSettingAdmin();
-      allow update: if signedIn() && notSettingAdmin() && notEditingAdmin();
+      // Owners may write admin docs / grant admin; everyone else may not touch
+      // the admin role at all.
+      allow create: if signedIn() && (notSettingAdmin() || isOwnerEmail());
+      allow update: if signedIn()
+        && (notSettingAdmin() || isOwnerEmail())
+        && (notEditingAdmin() || isOwnerEmail());
       allow delete: if false;
     }
 

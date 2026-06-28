@@ -95,9 +95,10 @@ export default function App() {
     );
   }
 
-  // Signed in but not yet approved → onboarding (health form, then "awaiting
-  // approval"). Approval flips this to the app live via the Firestore listener.
-  if (me.approvalStatus && me.approvalStatus !== "approved") {
+  // Only members go through approval (health form → "awaiting approval"). Staff
+  // (instructor/manager/admin) are provisioned by trusted parties, so they skip
+  // it. Approval flips a member into the app live via the Firestore listener.
+  if (me.role === "member" && me.approvalStatus && me.approvalStatus !== "approved") {
     return <Onboarding user={me} />;
   }
 
