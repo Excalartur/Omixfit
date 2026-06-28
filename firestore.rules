@@ -65,10 +65,16 @@ service cloud.firestore {
       allow read, write: if isOwnerEmail();
     }
 
+    // Google Calendar OAuth refresh token — NO client may read/write it; only
+    // the Cloud Functions (admin SDK, which bypasses rules) touch it.
+    match /meta/calendar {
+      allow read, write: if false;
+    }
+
     // Seed marker + facility settings — readable/writable, never deletable.
-    // (subscriptions is excluded above so the line below can't expose it.)
+    // (subscriptions + calendar are excluded above so the line below can't expose them.)
     match /meta/{doc} {
-      allow read, create, update: if signedIn() && doc != "subscriptions";
+      allow read, create, update: if signedIn() && doc != "subscriptions" && doc != "calendar";
       allow delete: if false;
     }
 
