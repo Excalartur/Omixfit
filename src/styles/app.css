@@ -14,8 +14,9 @@
   top: 0;
   z-index: 40;
   height: var(--header-h);
-  background: var(--ink-900);
-  color: var(--on-ink);
+  background: var(--surface);
+  color: var(--text);
+  border-bottom: 1px solid var(--line);
   display: flex;
   align-items: center;
   padding-inline: clamp(14px, 3vw, 28px);
@@ -66,15 +67,15 @@
   gap: 8px;
   padding: 9px 15px;
   border-radius: var(--r-pill);
-  color: var(--on-ink-2);
+  color: var(--text-2);
   font-weight: 600;
   font-size: 0.92rem;
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
 }
 .appbar-nav a:hover {
-  color: var(--on-ink);
-  background: var(--ink-700);
+  color: var(--text);
+  background: var(--surface-2);
 }
 .appbar-nav a.active {
   color: var(--ink-900);
@@ -90,16 +91,16 @@
   align-items: center;
   gap: 10px;
   padding: 6px 8px 6px 14px;
-  background: var(--ink-700);
-  border: 1px solid var(--ink-500);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
   border-radius: var(--r-pill);
-  color: var(--on-ink);
+  color: var(--text);
   font-weight: 600;
   font-size: 0.88rem;
   transition: border-color 0.15s, background 0.15s;
 }
 .userswitch:hover {
-  border-color: var(--lime);
+  border-color: var(--gold);
 }
 .userswitch .who {
   display: flex;
@@ -108,7 +109,7 @@
   line-height: 1.15;
 }
 .userswitch .who small {
-  color: var(--lime);
+  color: var(--gold-600);
   font-size: 0.72rem;
   font-weight: 600;
 }
@@ -2263,25 +2264,26 @@
    OMIX brand lockup + live Jerusalem clock + interval timer
    =========================================================================== */
 .omix-logo { display: inline-flex; align-items: center; gap: 9px; }
-.omix-mark { display: block; flex-shrink: 0; border-radius: 8px; object-fit: cover; }
-.brand-emblem .omix-mark { border-radius: 14px; box-shadow: var(--sh-2); }
+.omix-mark { display: block; flex-shrink: 0; object-fit: contain; }
 .omix-word {
   font-weight: 900;
   letter-spacing: 0.14em;
   font-size: 1.18rem;
-  color: var(--gold);
+  color: var(--gold-600);
   padding-inline-start: 2px;
 }
+/* the marketing landing hero stays dark → brighter gold wordmark there */
+.landing-bar .omix-word { color: var(--gold); }
 
 /* live Israel clock - time only (app bar, visual top-left) */
 .jclock {
   font-variant-numeric: tabular-nums;
   font-weight: 800;
   font-size: 1rem;
-  color: var(--gold);
+  color: var(--gold-600);
   padding-inline: 11px;
   margin-inline-end: 4px;
-  border-inline-start: 1px solid var(--ink-600);
+  border-inline-start: 1px solid var(--line);
 }
 @media (max-width: 560px) {
   .jclock { padding-inline: 7px; font-size: 0.85rem; }

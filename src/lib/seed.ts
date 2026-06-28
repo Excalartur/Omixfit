@@ -211,9 +211,9 @@ export function buildSeed(): AppData {
     bookings,
     services,
     payments: [],
-    locations: [{ id: LOCATION_ID, name: "אומיקספיט · הסניף הראשי" }],
+    locations: [{ id: LOCATION_ID, name: "Omix · הסניף הראשי" }],
     facility: {
-      name: "אומיקספיט",
+      name: "Omix",
       bookingWindowDays: 14,
       bookingClosesBeforeMin: 30,
       cancelCutoffHours: 3,

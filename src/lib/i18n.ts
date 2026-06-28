@@ -6,7 +6,7 @@
 import type { ClassCategory } from "./types";
 
 export const t = {
-  appName: "OMIX",
+  appName: "Omix",
   tagline: "הסטודיו שלך, בכיס שלך",
 
   nav: {
@@ -184,7 +184,7 @@ export const t = {
   reportsNoData: "אין עדיין נתונים בתקופה זו",
 
   // login / session
-  loginTitle: "ברוכים הבאים ל-OMIX",
+  loginTitle: "ברוכים הבאים ל-Omix",
   loginSubtitle: "התחבר/י כדי לראות את לוח השיעורים ולהזמין מקום.",
   loginDemoNote: "משתמש חדש? צור/צרי חשבון - תיווצר חברות מתאמן/ת חדשה.",
   loggedOutToast: "התנתקת מהמערכת",
@@ -215,7 +215,7 @@ export const t = {
       "לוח שיעורים שבועי, הזמנת מקום בלחיצה אחת ורשימת המתנה חכמה - למתאמנים שרוצים להתאמן, ולמדריכים שמנהלים את הסטודיו.",
     cta: "כניסה למערכת",
     secondary: "כבר רשומים? כניסה",
-    featuresTitle: "למה OMIX",
+    featuresTitle: "למה Omix",
     f1Title: "הזמנה בלחיצה",
     f1Body: "בוחרים שיעור ושומרים מקום מיד - עם בר תפוסה חי שמראה כמה מקומות נשארו.",
     f2Title: "לוח שבועי בעברית",

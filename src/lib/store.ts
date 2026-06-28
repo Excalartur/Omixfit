@@ -23,7 +23,7 @@ const EMPTY: AppData = {
   services: [],
   payments: [],
   facility: {
-    name: "אומיקספיט",
+    name: "Omix",
     bookingWindowDays: 14,
     bookingClosesBeforeMin: 30,
     cancelCutoffHours: 3,
