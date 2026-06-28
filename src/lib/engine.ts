@@ -291,3 +291,46 @@ export function applyCancel(
   }
   return { bookings: next, promotedUserId };
 }
+
+// ---- revenue & client scoring (the trainer's business) ----------------------
+
+/** Total / last-30-days revenue and a breakdown by service kind. */
+export function revenueSummary(s: AppData) {
+  const monthAgo = Date.now() - 30 * 864e5;
+  let total = 0;
+  let month = 0;
+  const byKind = new Map<string, number>();
+  for (const p of s.payments) {
+    total += p.amount;
+    if (p.date >= monthAgo) month += p.amount;
+    byKind.set(p.kind, (byKind.get(p.kind) ?? 0) + p.amount);
+  }
+  return { total, month, byKind, count: s.payments.length };
+}
+
+/**
+ * Combined value score per member (0–100): 60% normalized revenue + 40%
+ * normalized engagement (sessions attended). Sorted high→low.
+ */
+export function clientValueScores(s: AppData) {
+  const revByUser = new Map<string, number>();
+  for (const p of s.payments)
+    revByUser.set(p.userId, (revByUser.get(p.userId) ?? 0) + p.amount);
+  const attByUser = new Map<string, number>();
+  for (const b of s.bookings)
+    if (b.state === "attended")
+      attByUser.set(b.userId, (attByUser.get(b.userId) ?? 0) + 1);
+  const maxRev = Math.max(1, ...revByUser.values());
+  const maxAtt = Math.max(1, ...attByUser.values());
+  return s.users
+    .filter((u) => u.role === "member")
+    .map((user) => {
+      const revenue = revByUser.get(user.id) ?? 0;
+      const attended = attByUser.get(user.id) ?? 0;
+      const score = Math.round(
+        ((revenue / maxRev) * 0.6 + (attended / maxAtt) * 0.4) * 100,
+      );
+      return { user, revenue, attended, score };
+    })
+    .sort((a, b) => b.score - a.score || b.revenue - a.revenue);
+}

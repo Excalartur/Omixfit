@@ -45,6 +45,8 @@ import type {
   Facility,
   HealthForm,
   Location,
+  Payment,
+  Service,
   User,
 } from "./types";
 
@@ -61,6 +63,8 @@ const col = {
   sessions: collection(db, "sessions"),
   bookings: collection(db, "bookings"),
   locations: collection(db, "locations"),
+  services: collection(db, "services"),
+  payments: collection(db, "payments"),
   audit: collection(db, "audit"),
 };
 
@@ -89,6 +93,12 @@ function startListeners(): void {
   onSnapshot(col.locations, (s) =>
     hydrate({ locations: s.docs.map((d) => d.data() as Location) }),
   );
+  onSnapshot(col.services, (s) =>
+    hydrate({ services: s.docs.map((d) => d.data() as Service) }),
+  );
+  onSnapshot(col.payments, (s) =>
+    hydrate({ payments: s.docs.map((d) => d.data() as Payment) }),
+  );
   onSnapshot(col.audit, (s) =>
     hydrate({
       audit: s.docs
@@ -112,6 +122,7 @@ async function seedIfEmpty(): Promise<void> {
   for (const s of seed.sessions) ops.push(["sessions", s.id, withCounters(s, seed.bookings)]);
   for (const b of seed.bookings) ops.push(["bookings", b.id, b]);
   for (const l of seed.locations) ops.push(["locations", l.id, l]);
+  for (const sv of seed.services) ops.push(["services", sv.id, sv]);
   for (const a of seed.audit) ops.push(["audit", a.id, a]);
   // Firestore batches are capped at 500 writes — chunk (+1 for the marker).
   for (let i = 0; i < ops.length; i += 400) {
@@ -460,4 +471,25 @@ export async function deleteClassType(typeId: string): Promise<boolean> {
   await deleteDoc(doc(db, "classTypes", typeId));
   await audit("type_deleted", target?.name ?? typeId);
   return true;
+}
+
+// ---- services & payments (revenue) ------------------------------------------
+export async function upsertService(s: Service): Promise<void> {
+  await setDoc(doc(db, "services", s.id), s);
+}
+
+export async function deleteService(id: string): Promise<void> {
+  await deleteDoc(doc(db, "services", id));
+}
+
+export async function recordPayment(
+  p: Omit<Payment, "id" | "actorId">,
+): Promise<void> {
+  const ref = doc(col.payments);
+  const payment: Payment = { ...p, id: ref.id, actorId: getState().currentUserId ?? "" };
+  await setDoc(ref, payment);
+}
+
+export async function deletePayment(id: string): Promise<void> {
+  await deleteDoc(doc(db, "payments", id));
 }

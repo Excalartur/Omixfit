@@ -20,6 +20,8 @@ const EMPTY: AppData = {
   sessions: [],
   bookings: [],
   locations: [],
+  services: [],
+  payments: [],
   facility: {
     name: "אומיקספיט",
     bookingWindowDays: 14,
@@ -126,6 +128,16 @@ export const deleteClassType = (typeId: string) =>
   backend().then((b) => b.deleteClassType(typeId));
 export const submitHealthForm = (userId: string, form: import("./types").HealthForm) =>
   backend().then((b) => b.submitHealthForm(userId, form));
+export const upsertService = (s: import("./types").Service) =>
+  backend().then((b) => b.upsertService(s));
+export const deleteService = (id: string) =>
+  backend().then((b) => b.deleteService(id));
+export const recordPayment = (
+  p: Omit<import("./types").Payment, "id" | "actorId">,
+) => backend().then((b) => b.recordPayment(p));
+export const deletePayment = (id: string) =>
+  backend().then((b) => b.deletePayment(id));
+export const newServiceId = () => engine.genId("svc");
 export const setApproval = (
   userId: string,
   status: import("./types").ApprovalStatus,

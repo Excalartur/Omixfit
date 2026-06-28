@@ -122,6 +122,47 @@ export interface Location {
   name: string;
 }
 
+// ---- services & revenue (the trainer's business) ---------------------------
+
+/** The kinds of service the trainer sells. Therapy/injury are future offerings. */
+export type ServiceKind =
+  | "personal"
+  | "group"
+  | "zoom"
+  | "therapy"
+  | "injury";
+
+/** How a service is billed. */
+export type BillingModel = "package" | "subscription" | "session";
+
+/** A sellable service the trainer manages (name, price, billing). */
+export interface Service {
+  id: string;
+  name: string;
+  kind: ServiceKind;
+  billing: BillingModel;
+  /** Price in ₪ — per package / per month / per session depending on `billing`. */
+  price: number;
+  /** Sessions included (package billing only). */
+  units?: number;
+  /** Auto-generate a free Jitsi video room for online (zoom-kind) sessions. */
+  online?: boolean;
+  active: boolean;
+}
+
+/** A recorded sale/payment — the unit of revenue. */
+export interface Payment {
+  id: string;
+  userId: string;
+  serviceId: string;
+  serviceName: string; // denormalized so it survives service edits/deletes
+  kind: ServiceKind;
+  amount: number; // ₪
+  date: number; // epoch ms
+  note?: string;
+  actorId: string;
+}
+
 export type AuditAction =
   | "session_created"
   | "session_updated"
@@ -162,6 +203,8 @@ export interface AppData {
   sessions: ClassSession[];
   bookings: Booking[];
   locations: Location[];
+  services: Service[];
+  payments: Payment[];
   facility: Facility;
   audit: AuditEntry[];
   /** null when logged out (the app shows the login screen). */

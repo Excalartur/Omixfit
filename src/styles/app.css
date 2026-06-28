@@ -2386,3 +2386,60 @@
 /* OMIX emblem leading page headers (login / onboarding / splash) */
 .brand-emblem { display: grid; place-items: center; margin: 0 auto 12px; }
 .app-splash .omix-mark { animation: app-pulse 1.1s var(--ease) infinite; }
+
+/* ===========================================================================
+   Finance / revenue (admin)
+   =========================================================================== */
+.fin-kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 8px; }
+.fin-kpi {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: 16px 18px; display: flex; flex-direction: column; gap: 4px;
+}
+.fin-kpi.big { background: var(--ink-900); color: var(--on-ink); border-color: var(--ink-900); }
+.fin-kpi-val { font-size: 1.7rem; font-weight: 900; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.fin-kpi.big .fin-kpi-val { color: var(--gold); }
+.fin-kpi-label { font-size: 0.82rem; font-weight: 600; color: var(--text-2); }
+.fin-kpi.big .fin-kpi-label { color: var(--on-ink-2); }
+.fin-h { margin: 22px 0 10px; font-size: 1.05rem; }
+
+.fin-bars { display: flex; flex-direction: column; gap: 9px; }
+.fin-bar-row { display: flex; align-items: center; gap: 10px; }
+.fin-bar-label { width: 92px; flex-shrink: 0; font-size: 0.85rem; font-weight: 600; }
+.fin-bar-track { flex: 1; height: 12px; background: var(--surface-2); border-radius: var(--r-pill); overflow: hidden; }
+.fin-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--olive)); border-radius: var(--r-pill); }
+.fin-bar-val { width: 84px; text-align: end; font-weight: 800; font-variant-numeric: tabular-nums; font-size: 0.9rem; }
+
+.fin-leaders, .fin-pays { display: flex; flex-direction: column; gap: 8px; }
+.fin-leader, .fin-pay {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 10px 12px;
+}
+.fin-rank { width: 22px; text-align: center; font-weight: 900; color: var(--text-3); }
+.fin-leader-name, .fin-pay-main { flex: 1; min-width: 0; display: flex; flex-direction: column; font-weight: 700; }
+.fin-leader-name small, .fin-pay-main small { font-weight: 500; font-size: 0.78rem; color: var(--text-2); }
+.fin-score {
+  background: var(--gold); color: var(--ink-900); font-weight: 900;
+  min-width: 38px; text-align: center; padding: 4px 8px; border-radius: var(--r-pill); font-variant-numeric: tabular-nums;
+}
+.fin-pay-amt { font-variant-numeric: tabular-nums; font-weight: 800; color: var(--ok-ink); }
+
+.svc-list { display: flex; flex-direction: column; gap: 8px; }
+.svc-row {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 14px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.svc-row:hover { border-color: var(--line-strong); background: var(--surface-2); }
+.svc-row.off { opacity: 0.6; }
+.svc-main { flex: 1; min-width: 0; display: flex; flex-direction: column; font-weight: 700; }
+.svc-main small { font-weight: 500; font-size: 0.78rem; color: var(--text-2); }
+.svc-price { font-variant-numeric: tabular-nums; font-weight: 900; font-size: 1.05rem; }
+
+/* service-kind tags */
+.tag.kind-personal { background: #f6ecd2; color: #8a6a1f; }
+.tag.kind-group    { background: #e8efdd; color: #4d6a2e; }
+.tag.kind-zoom     { background: #e3f1fb; color: #1f6391; }
+.tag.kind-therapy  { background: #efeaff; color: #5b3fd1; }
+.tag.kind-injury   { background: #ffe9e3; color: #b3461f; }
+
+.switch-cb { width: 22px; height: 22px; accent-color: var(--gold); flex-shrink: 0; }

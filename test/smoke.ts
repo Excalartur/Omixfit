@@ -140,6 +140,19 @@ ok("past session is closed", book(past.id, member.id) === "closed");
 const ms = engine.memberStats(member.id, data);
 ok("memberStats returns numeric totals", typeof ms.total === "number" && ms.upcoming >= 0);
 
+// 7. Revenue + client value scoring
+data.payments = [
+  { id: "p1", userId: member.id, serviceId: "svc-zoom", serviceName: "זום", kind: "zoom", amount: 120, date: Date.now(), actorId: "u-actor" },
+  { id: "p2", userId: member.id, serviceId: "svc-personal-1", serviceName: "אישי", kind: "personal", amount: 180, date: Date.now(), actorId: "u-actor" },
+  { id: "p3", userId: member2.id, serviceId: "svc-zoom", serviceName: "זום", kind: "zoom", amount: 120, date: Date.now(), actorId: "u-actor" },
+];
+const rev = engine.revenueSummary(data);
+ok("revenueSummary totals payments", rev.total === 420 && rev.count === 3);
+ok("revenueSummary breaks down by kind", rev.byKind.get("zoom") === 240 && rev.byKind.get("personal") === 180);
+const vs = engine.clientValueScores(data);
+ok("clientValueScores ranks the top spender first", vs[0].user.id === member.id && vs[0].revenue === 300);
+ok("value score is 0–100", vs.every((x) => x.score >= 0 && x.score <= 100));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 if (fail > 0) {
   // @ts-expect-error node global

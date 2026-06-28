@@ -37,6 +37,9 @@ service cloud.firestore {
     match /classTypes/{id} { allow read, write: if signedIn(); }
     match /bookings/{id}   { allow read, write: if signedIn(); }
     match /locations/{id}  { allow read, write: if signedIn(); }
+    // Revenue data (services + payments). On Blaze these tighten to staff-only.
+    match /services/{id}   { allow read, write: if signedIn(); }
+    match /payments/{id}   { allow read, write: if signedIn(); }
 
     // Audit log — append-only: created + read, never changed or removed.
     match /audit/{id} {
