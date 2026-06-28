@@ -3,11 +3,10 @@ import { t } from "../lib/i18n";
 import { VersionTag } from "../components/common";
 import { OmixLogo, OmixMark } from "../components/Brand";
 
-// Contact targets — PLACEHOLDERS. Swap for the real WhatsApp number / Instagram
-// handle / email once provided.
-const WHATSAPP = "https://wa.me/972500000000";
-const INSTAGRAM = "https://instagram.com/";
-const EMAIL = "mailto:";
+// Contact targets. Email pending (business address being set up).
+const WHATSAPP = "https://wa.me/972507954902";
+const INSTAGRAM = "https://instagram.com/omer_lifshitz";
+const EMAIL = ""; // TODO: business email, once created
 
 // Reveal-on-scroll: fade sections up as they enter the viewport.
 function useReveal() {
@@ -118,7 +117,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
             <div className="lp-contact-links">
               <a className="lp-contact-link" href={WHATSAPP} target="_blank" rel="noreferrer">{L.whatsapp}</a>
               <a className="lp-contact-link" href={INSTAGRAM} target="_blank" rel="noreferrer">{L.instagram}</a>
-              <a className="lp-contact-link" href={EMAIL}>{L.email}</a>
+              {EMAIL && <a className="lp-contact-link" href={EMAIL}>{L.email}</a>}
             </div>
           </div>
         </div>
