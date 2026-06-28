@@ -2742,3 +2742,23 @@
 .spine-sec .btn { align-self: flex-start; }
 .spine-scroll { margin-top: 26px; font-size: .8rem; color: #a9842f; font-weight: 700; letter-spacing: .1em; }
 @media (max-width: 640px) { .spine-sec { max-width: 100%; } }
+
+/* glassmorphic package cards (spine landing) */
+.spine-sec.packages { max-width: 720px; }
+.glass-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 20px;
+  perspective: 900px; transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition: transform .2s ease; transform-style: preserve-3d;
+}
+.glass-card {
+  display: flex; flex-direction: column; gap: 3px; padding: 22px 20px; border-radius: 18px;
+  background: rgba(255,255,255,0.42);
+  backdrop-filter: blur(13px) saturate(1.1); -webkit-backdrop-filter: blur(13px) saturate(1.1);
+  border: 1px solid rgba(255,255,255,0.75); box-shadow: 0 10px 30px rgba(140,106,31,0.12);
+  transition: transform .25s ease, box-shadow .25s; transform: translateZ(0);
+}
+.glass-card:hover { transform: translateZ(20px) scale(1.03); box-shadow: 0 18px 46px rgba(140,106,31,0.24); }
+.glass-card.feat { background: linear-gradient(160deg, rgba(200,162,74,0.32), rgba(255,255,255,0.5)); border-color: rgba(200,162,74,0.65); }
+.gc-num { font-size: 2.6rem; font-weight: 900; color: #241c12; line-height: 1; }
+.gc-unit { font-size: .82rem; color: #5a4f3f; font-weight: 600; }
+.gc-tag { margin-top: 8px; font-size: .76rem; font-weight: 800; color: #a9842f; letter-spacing: .04em; }
