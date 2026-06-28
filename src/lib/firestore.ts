@@ -3,12 +3,12 @@
 // firestore SDK; it's code-split (store.ts dynamic-imports it) so it stays off
 // the critical bundle. Responsibilities:
 //   • stream every collection in via onSnapshot → store.hydrate (live, multi-
-//     client sync — this is what makes data real and shared across devices)
+//     client sync - this is what makes data real and shared across devices)
 //   • seed the database once, if empty
 //   • run the booking mutations; capacity is enforced atomically with a
 //     per-session counter inside a transaction (plan.md §4.4)
 // Roles are gated in the UI; firestore.rules enforces sign-in + booking
-// ownership (un-forgeable roles need Blaze + custom claims — see README).
+// ownership (un-forgeable roles need Blaze + custom claims - see README).
 // ---------------------------------------------------------------------------
 
 import { getApps, initializeApp } from "firebase/app";
@@ -127,7 +127,7 @@ async function seedIfEmpty(): Promise<void> {
   for (const l of seed.locations) ops.push(["locations", l.id, l]);
   for (const sv of seed.services) ops.push(["services", sv.id, sv]);
   for (const a of seed.audit) ops.push(["audit", a.id, a]);
-  // Firestore batches are capped at 500 writes — chunk (+1 for the marker).
+  // Firestore batches are capped at 500 writes - chunk (+1 for the marker).
   for (let i = 0; i < ops.length; i += 400) {
     const batch = writeBatch(db);
     for (const [c, id, data] of ops.slice(i, i + 400)) batch.set(doc(db, c, id), data);
@@ -156,7 +156,7 @@ const AVATAR_COLORS = [
   "#5AC8FF", "#FFD23D", "#B26BFF", "#3DE0FF", "#FF6B6B",
 ];
 
-// The business owners — these (and only these) verified emails become admins on
+// The business owners - these (and only these) verified emails become admins on
 // sign-in. Kept in sync with firestore.rules `isOwnerEmail()`.
 const OWNER_EMAILS = ["guy.lifshitz98@gmail.com", "omerido20@gmail.com"];
 function initialsOf(name: string): string {

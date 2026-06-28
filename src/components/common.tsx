@@ -20,7 +20,7 @@ export function VersionTag({ className = "" }: { className?: string }) {
 }
 
 // Pick dark or white initials by whichever has the higher WCAG contrast against
-// the avatar background — keeps initials legible (AA) on any palette color.
+// the avatar background - keeps initials legible (AA) on any palette color.
 function readableInk(hex: string): string {
   const h = hex.replace("#", "");
   const ch = (i: number) => {
@@ -29,7 +29,7 @@ function readableInk(hex: string): string {
   };
   const L = 0.2126 * ch(0) + 0.7152 * ch(2) + 0.0722 * ch(4);
   // Use a fixed near-black for the dark ink (luminance ~0.006) so the contrast
-  // math matches the colour actually rendered — independent of the (warmer)
+  // math matches the colour actually rendered - independent of the (warmer)
   // --ink-900 chrome token.
   const cDark = (L + 0.05) / (0.006 + 0.05);
   const cWhite = 1.05 / (L + 0.05);

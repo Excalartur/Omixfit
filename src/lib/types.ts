@@ -20,7 +20,7 @@ export type ApprovalStatus = "pending" | "approved" | "rejected";
 /** PAR-Q-style pre-exercise health declaration + terms, signed at registration. */
 export interface HealthForm {
   /** Each is a yes/no answer to a standard pre-activity screening question. */
-  q1: boolean; // heart condition — activity only on doctor's advice
+  q1: boolean; // heart condition - activity only on doctor's advice
   q2: boolean; // chest pain during physical activity
   q3: boolean; // chest pain at rest in the last month
   q4: boolean; // loses balance from dizziness / loses consciousness
@@ -86,7 +86,7 @@ export interface ClassType {
 export interface ClassSession {
   id: string;
   classTypeId: string;
-  /** ISO date, local — the day the session happens. */
+  /** ISO date, local - the day the session happens. */
   date: string; // YYYY-MM-DD
   /** Minutes from midnight, local. */
   startMin: number;
@@ -110,7 +110,7 @@ export interface ClassSession {
 
 export type BookingState =
   | "confirmed"
-  | "waitlisted" // reserved in the model (Q4) — not user-creatable in v1
+  | "waitlisted" // reserved in the model (Q4) - not user-creatable in v1
   | "cancelled"
   | "attended"
   | "no_show";
@@ -147,7 +147,7 @@ export interface Service {
   name: string;
   kind: ServiceKind;
   billing: BillingModel;
-  /** Price in ₪ — per package / per month / per session depending on `billing`. */
+  /** Price in ₪ - per package / per month / per session depending on `billing`. */
   price: number;
   /** Sessions included (package billing only). */
   units?: number;
@@ -156,7 +156,7 @@ export interface Service {
   active: boolean;
 }
 
-/** A recorded sale/payment — the unit of revenue. */
+/** A recorded sale/payment - the unit of revenue. */
 export interface Payment {
   id: string;
   userId: string;
@@ -182,7 +182,7 @@ export type AuditAction =
   | "member_approved"
   | "member_rejected";
 
-/** Audit log entry — who changed/cancelled what (plan.md §4.6). */
+/** Audit log entry - who changed/cancelled what (plan.md §4.6). */
 export interface AuditEntry {
   id: string;
   ts: number;

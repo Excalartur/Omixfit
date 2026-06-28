@@ -3,7 +3,7 @@ import { t } from "../lib/i18n";
 import { IcBolt } from "./icons";
 
 // Graceful degradation (plan.md §5.6): a runtime error in any screen renders a
-// friendly, on-brand fallback instead of a blank page — with a reload and a
+// friendly, on-brand fallback instead of a blank page - with a reload and a
 // "reset local data" escape hatch in case persisted state is the cause.
 interface State {
   error: Error | null;
@@ -31,7 +31,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
           </span>
           <h1>משהו השתבש</h1>
           <p>
-            אירעה תקלה זמנית בטעינת המסך. אפשר לרענן ולנסות שוב — הנתונים שלך
+            אירעה תקלה זמנית בטעינת המסך. אפשר לרענן ולנסות שוב - הנתונים שלך
             נשמרים מקומית.
           </p>
           <div className="error-actions">

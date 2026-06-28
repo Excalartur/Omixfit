@@ -75,7 +75,7 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
         <Stat
           icon={<IcSpark width={15} height={15} />}
           k={t.favoriteCat}
-          v={fav ? `${CATEGORY_META[fav].emoji} ${CATEGORY_META[fav].label}` : "—"}
+          v={fav ? `${CATEGORY_META[fav].emoji} ${CATEGORY_META[fav].label}` : "-"}
         />
       </div>
 
@@ -83,7 +83,7 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
       <div className="card" style={{ padding: "6px 18px 14px" }}>
         <h2 className="h2" style={{ margin: "14px 0 4px" }}>{t.notifications}</h2>
         <p className="muted" style={{ fontSize: ".82rem", margin: "0 0 6px" }}>
-          וואטסאפ הוא הערוץ המוביל בישראל — מומלץ להשאיר פעיל.
+          וואטסאפ הוא הערוץ המוביל בישראל - מומלץ להשאיר פעיל.
         </p>
         <PrefRow
           label={t.notifyPush}

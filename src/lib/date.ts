@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Date helpers — Israeli convention: week starts Sunday.
+// Date helpers - Israeli convention: week starts Sunday.
 // All dates are handled as local YYYY-MM-DD strings to avoid timezone drift.
 // ---------------------------------------------------------------------------
 

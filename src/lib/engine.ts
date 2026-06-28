@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Pure booking engine — no React, no Firebase, no persistence. Just the domain
+// Pure booking engine - no React, no Firebase, no persistence. Just the domain
 // rules (plan.md §4.3/§4.4) as functions over an AppData snapshot, so they're
 // trivially unit-testable (test/smoke.ts) and reusable by both the in-memory
 // store selectors and the Firestore backend. Everything here is side-effect
@@ -112,7 +112,7 @@ function activeBookingCount(userId: string, s: AppData): number {
   ).length;
 }
 
-// What action a member can take on a session — drives the booking UI.
+// What action a member can take on a session - drives the booking UI.
 export type ActionState =
   | { kind: "book" }
   | { kind: "booked" }

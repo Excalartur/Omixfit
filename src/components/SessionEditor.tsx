@@ -201,7 +201,7 @@ export function SessionEditor({ session, presetDate, onClose }: Props) {
           </div>
           {weeks > 1 && (
             <p className="muted" style={{ fontSize: ".82rem", margin: "2px 0 0" }}>
-              ייווצרו {weeks} מופעים — אחד בכל שבוע באותו יום ושעה.
+              ייווצרו {weeks} מופעים - אחד בכל שבוע באותו יום ושעה.
             </p>
           )}
         </div>

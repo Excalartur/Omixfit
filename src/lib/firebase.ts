@@ -4,7 +4,7 @@
 // This is the ONLY module that imports the firebase SDK. The domain store
 // (store.ts) stays firebase-free so the booking-engine smoke test keeps
 // bundling for node. Config comes from VITE_FIREBASE_* env vars (see
-// .env.example) — the web config is not secret, but env-injecting it keeps the
+// .env.example) - the web config is not secret, but env-injecting it keeps the
 // repo host-agnostic and lets the Pages build use repo variables.
 // ---------------------------------------------------------------------------
 
@@ -87,18 +87,18 @@ export function authErrorMessage(err: unknown): string {
     case "auth/weak-password":
       return "הסיסמה חייבת להכיל לפחות 6 תווים";
     case "auth/email-already-in-use":
-      return "כתובת האימייל כבר רשומה — נסה/י להתחבר";
+      return "כתובת האימייל כבר רשומה - נסה/י להתחבר";
     case "auth/invalid-credential":
     case "auth/wrong-password":
     case "auth/user-not-found":
       return "אימייל או סיסמה שגויים";
     case "auth/too-many-requests":
-      return "יותר מדי ניסיונות — נסה/י שוב מאוחר יותר";
+      return "יותר מדי ניסיונות - נסה/י שוב מאוחר יותר";
     case "auth/network-request-failed":
-      return "בעיית רשת — בדוק/י את החיבור";
+      return "בעיית רשת - בדוק/י את החיבור";
     case "auth/not-configured":
       return "התחברות אינה מוגדרת (חסר Firebase config)";
     default:
-      return "ההתחברות נכשלה — נסה/י שוב";
+      return "ההתחברות נכשלה - נסה/י שוב";
   }
 }

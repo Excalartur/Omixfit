@@ -184,7 +184,7 @@ export function SessionDetail({
       {mine && (
         <div className="note info">
           <span className="ni">✅</span>
-          {t.booked} — נשמח לראותך! ביטול אפשרי עד {data.facility.cancelCutoffHours} שעות לפני.
+          {t.booked} - נשמח לראותך! ביטול אפשרי עד {data.facility.cancelCutoffHours} שעות לפני.
         </div>
       )}
 
@@ -195,7 +195,7 @@ export function SessionDetail({
         </div>
       )}
 
-      {/* Roster — staff only (privacy Q2: members see counts, not names) */}
+      {/* Roster - staff only (privacy Q2: members see counts, not names) */}
       {isStaff && (
         <div>
           <div className="row gap-2" style={{ marginBottom: 8 }}>

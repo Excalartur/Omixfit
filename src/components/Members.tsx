@@ -15,7 +15,7 @@ import { Sheet } from "./Sheet";
 import { toast } from "./Toast";
 import { IcUsers, IcCheck, IcClose } from "./icons";
 
-// Magnifier icon (local — not in the shared set)
+// Magnifier icon (local - not in the shared set)
 const IcSearch = (p: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
     strokeLinecap="round" strokeLinejoin="round" {...p}>
@@ -247,7 +247,7 @@ function MemberDetail({ userId, onClose }: { userId: string; onClose: () => void
         <p className="admin-locked" role="note">🔒 {t.approvals.adminLocked}</p>
       ) : (
         <>
-          {/* role management (plan.md §4.1 — staff assigns roles; not admin) */}
+          {/* role management (plan.md §4.1 - staff assigns roles; not admin) */}
           <div className="field">
             <label>{t.changeRole}</label>
             <div className="filterbar" style={{ margin: 0 }}>

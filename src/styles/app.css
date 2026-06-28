@@ -369,7 +369,7 @@
   width: 5px;
   background: hsl(var(--cat-hue) 90% 55%);
 }
-/* Stretched cover button — fills the card, opens detail. Sits beneath the
+/* Stretched cover button - fills the card, opens detail. Sits beneath the
    inner content so the real Book button (z-index) stays clickable. */
 .cc-cover {
   position: absolute;
@@ -2272,7 +2272,7 @@
   padding-inline-start: 2px;
 }
 
-/* live Israel clock — time only (app bar, visual top-left) */
+/* live Israel clock - time only (app bar, visual top-left) */
 .jclock {
   font-variant-numeric: tabular-nums;
   font-weight: 800;

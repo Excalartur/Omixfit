@@ -8,7 +8,7 @@ import { IcClose } from "./icons";
 // stations × (work / rest), big countdown, a progress ring, and spoken Hebrew
 // cues (work / rest / halfway / last station / done) via the browser's built-in
 // SpeechSynthesis, plus a 3-2-1 beep. Everything is derived from a single
-// `elapsed` counter so it never drifts. Self-contained — no store, no Firebase.
+// `elapsed` counter so it never drifts. Self-contained - no store, no Firebase.
 // ---------------------------------------------------------------------------
 
 type Phase = "prep" | "work" | "rest";
@@ -126,7 +126,7 @@ export function IntervalTimer({ onClose }: { onClose: () => void }) {
       say(t.timer.sayHalfway);
       beep(880, 0.25);
     }
-    // "BIP BIP BIP" — the last 5 seconds of every work/rest segment.
+    // "BIP BIP BIP" - the last 5 seconds of every work/rest segment.
     if (seg && remaining <= 5 && remaining >= 1) beep(remaining === 1 ? 1000 : 820, remaining === 1 ? 0.2 : 0.12);
   }, [elapsed]); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -37,7 +37,7 @@ export function AuditLog({ limit = 20 }: { limit?: number }) {
                 <span className="ab">
                   <span className="at">{t.auditActions[en.action]}</span>
                   <span className="asum">{en.summary}</span>
-                  <span className="actor">{actor?.name ?? "—"}</span>
+                  <span className="actor">{actor?.name ?? "-"}</span>
                 </span>
                 <span className="awhen">{fmtRelative(en.ts)}</span>
               </div>

@@ -140,7 +140,7 @@ export function TypeEditor({
           {inUse > 0 ? (
             <div className="note warn">
               <span className="ni">⚠️</span>
-              {t.typeSessions(inUse)} — לא ניתן למחוק עד שכל השיעורים יוסרו.
+              {t.typeSessions(inUse)} - לא ניתן למחוק עד שכל השיעורים יוסרו.
             </div>
           ) : (
             <button

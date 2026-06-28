@@ -4,7 +4,7 @@
 // Firestore is the source of truth; `firestore.ts` streams snapshots in via
 // onSnapshot and calls hydrate(). Components read synchronously through
 // useStore(selector) against this mirror (so reads stay sync and cheap), and
-// call the async mutations below — thin wrappers that delegate to the
+// call the async mutations below - thin wrappers that delegate to the
 // code-split Firestore backend (dynamic import keeps it off the critical bundle
 // AND keeps this module free of the firebase SDK, so the node smoke test, which
 // imports the pure engine, never pulls firebase in).
@@ -69,7 +69,7 @@ export function setCurrentUser(userId: string): void {
   emit();
 }
 
-/** Sign out — clears the session so the app shows the login screen. */
+/** Sign out - clears the session so the app shows the login screen. */
 export function logout(): void {
   state = { ...state, currentUserId: null };
   emit();

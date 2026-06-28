@@ -5,7 +5,7 @@ import { IcBolt, IcCalendar, IcCheck, IcGrid, IcUser } from "../components/icons
 
 // Marketing landing page for new / unregistered visitors. Shown by <App /> in the
 // logged-out state; the CTAs hand off to the sign-in picker (onEnter). Real
-// registration is phone + SMS OTP (plan.md §4.1) — not built in the demo.
+// registration is phone + SMS OTP (plan.md §4.1) - not built in the demo.
 export function Landing({ onEnter }: { onEnter: () => void }) {
   const L = t.landing;
   const features = [

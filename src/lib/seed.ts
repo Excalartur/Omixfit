@@ -16,7 +16,7 @@ const LOCATION_ID = "loc-main";
 
 const users: User[] = [
   // Top-privilege admin. The app never grants this role and never lets it be
-  // edited from the UI — set/manage it only in the Firebase console.
+  // edited from the UI - set/manage it only in the Firebase console.
   u("u-admin", "מנהל/ת המערכת", "050-0000000", "admin", "#11161D"),
   u("u-noa", "נועה אלון", "050-1112233", "manager", "#D6FF3D"),
   u("u-yael", "יעל כהן", "052-7654321", "instructor", "#8E7BFF"),
@@ -44,7 +44,7 @@ const classTypes: ClassType[] = [
   ct("ct-yoga", "ויניאסה יוגה", "yoga", 14, 60,
     "זרימה רציפה בין תנוחות לשחרור הגוף והנשימה. מתאים לכל הרמות."),
   ct("ct-cross", "קרוספיט WOD", "crossfit", 16, 60,
-    "אימון פונקציונלי משתנה — כוח, סיבולת ומטבוליק בעצימות גבוהה."),
+    "אימון פונקציונלי משתנה - כוח, סיבולת ומטבוליק בעצימות גבוהה."),
   ct("ct-pil", "פילאטיס מכשירים", "pilates", 10, 50,
     "חיזוק שרירי הליבה ושיפור היציבה בעבודה מדויקת ושקטה."),
   ct("ct-box", "אגרוף לכושר", "boxing", 20, 50,
@@ -54,7 +54,7 @@ const classTypes: ClassType[] = [
   ct("ct-hiit", "HIIT שורף", "hiit", 22, 40,
     "אינטרוולים קצרים ועצימים. מקסימום שריפה במינימום זמן."),
   ct("ct-dance", "מחול אירובי", "dance", 24, 55,
-    "ריקוד, קרדיו וכיף — אימון שלא מרגישים שהוא אימון."),
+    "ריקוד, קרדיו וכיף - אימון שלא מרגישים שהוא אימון."),
 ];
 
 // Weekly template: [dayOfWeek (0=Sun), startMin, classTypeId, instructorId, room]
@@ -152,7 +152,7 @@ function buildBookings(sessions: ClassSession[]): Booking[] {
       (a, b) => hashStr(s.id + a) - hashStr(s.id + b),
     );
     for (let i = 0; i < Math.min(target, shuffled.length); i++) {
-      // Resolve past sessions: most attended, a few no-shows — so attendance
+      // Resolve past sessions: most attended, a few no-shows - so attendance
       // reports and the profile's "attended" stat have real data.
       const state: Booking["state"] = isPast
         ? hashStr(s.id + shuffled[i] + "att") < 0.12
@@ -191,7 +191,7 @@ function buildAudit(): AppData["audit"] {
   ];
 }
 
-// Starter service catalogue — editable in the app. Prices are placeholders (₪).
+// Starter service catalogue - editable in the app. Prices are placeholders (₪).
 const services: AppData["services"] = [
   { id: "svc-personal-pack", name: "אימון אישי · חבילה", kind: "personal", billing: "package", price: 1500, units: 10, active: true },
   { id: "svc-personal-1", name: "אימון אישי בודד", kind: "personal", billing: "session", price: 180, active: true },
@@ -220,7 +220,7 @@ export function buildSeed(): AppData {
       maxActiveBookings: 6,
     },
     audit: buildAudit(),
-    // Logged out by default — Firebase Auth (App.tsx) sets the current user once
+    // Logged out by default - Firebase Auth (App.tsx) sets the current user once
     // a session resolves; until then the Login screen renders.
     currentUserId: null,
     version: 6,

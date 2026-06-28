@@ -14,6 +14,6 @@ export const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-/** True once a real project config is present — guards against a blank deploy. */
+/** True once a real project config is present - guards against a blank deploy. */
 export const firebaseConfigured =
   !!firebaseConfig.apiKey && !!firebaseConfig.authDomain;

@@ -95,8 +95,8 @@ export function Schedule() {
         </div>
         <WeekNav
           weekStart={weekStart}
-          onPrev={() => goWeek(-1)} /* "שבוע קודם" — earlier in time */
-          onNext={() => goWeek(1)} /* "שבוע הבא" — later in time */
+          onPrev={() => goWeek(-1)} /* "שבוע קודם" - earlier in time */
+          onNext={() => goWeek(1)} /* "שבוע הבא" - later in time */
           onToday={goToday}
         />
       </div>
@@ -128,8 +128,8 @@ export function Schedule() {
                   an sr-only span adds the full, unabbreviated description. */}
               <span className="dow">{HEB_DAYS_SHORT[d.getDay()]}</span>
               <span className="dnum">{d.getDate()}</span>
-              <span className="cnt">{n > 0 ? `${n} ש׳` : "—"}</span>
-              <span className="sr-only"> — {fmtDayHeading(d)}, {n} שיעורים</span>
+              <span className="cnt">{n > 0 ? `${n} ש׳` : "-"}</span>
+              <span className="sr-only"> - {fmtDayHeading(d)}, {n} שיעורים</span>
             </button>
           );
         })}

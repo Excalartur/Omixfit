@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { t } from "../lib/i18n";
 
-// OMIX emblem — an approximation of the brand mark (a gold beaded strand crossed
+// OMIX emblem - an approximation of the brand mark (a gold beaded strand crossed
 // by an olive leaf). Recolors via CSS vars. Swap for the exact artwork by
 // dropping a file in /public and pointing this at an <img>.
 export function OmixMark({ size = 30 }: { size?: number }) {
-  // Gold spine/strand crossing an olive leaf — the curve x at a given y (used to
+  // Gold spine/strand crossing an olive leaf - the curve x at a given y (used to
   // centre the vertebrae beads on the gold strand).
   const goldX = (y: number) => 46 - ((y - 10) / 44) * 28;
   const beads = [16, 22, 28, 34, 40, 46];
@@ -44,7 +44,7 @@ export function OmixMark({ size = 30 }: { size?: number }) {
   );
 }
 
-/** Full OMIX lockup — emblem + wordmark — for the app bar and landing. */
+/** Full OMIX lockup - emblem + wordmark - for the app bar and landing. */
 export function OmixLogo({ size = 30, className = "" }: { size?: number; className?: string }) {
   return (
     <span className={`omix-logo ${className}`}>
@@ -54,7 +54,7 @@ export function OmixLogo({ size = 30, className = "" }: { size?: number; classNa
   );
 }
 
-/** Live Israel (Asia/Jerusalem) wall clock — time only. */
+/** Live Israel (Asia/Jerusalem) wall clock - time only. */
 export function IsraelClock({ className = "" }: { className?: string }) {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {

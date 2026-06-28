@@ -1,7 +1,7 @@
 // ---------------------------------------------------------------------------
 // Deployed-build identity. Values are stamped at build time by Vite `define`
 // (see vite.config.ts) so the running site can show exactly which commit is
-// live — useful when verifying a GitHub Pages deploy went out.
+// live - useful when verifying a GitHub Pages deploy went out.
 // ---------------------------------------------------------------------------
 
 export const APP_VERSION: string =

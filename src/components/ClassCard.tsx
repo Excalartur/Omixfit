@@ -52,7 +52,7 @@ export function ClassCard({
       <button
         className="cc-cover"
         onClick={() => onOpen(session)}
-        aria-label={`פרטים והרשמה — ${summary}`}
+        aria-label={`פרטים והרשמה - ${summary}`}
       />
       <div className="cc-top">
         <div className="cc-time">

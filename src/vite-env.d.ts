@@ -5,7 +5,7 @@ declare const __APP_VERSION__: string;
 declare const __BUILD_SHA__: string;
 declare const __BUILD_TIME__: string;
 
-// Firebase web config — supplied via .env.local (see .env.example).
+// Firebase web config - supplied via .env.local (see .env.example).
 interface ImportMetaEnv {
   readonly VITE_FIREBASE_API_KEY?: string;
   readonly VITE_FIREBASE_AUTH_DOMAIN?: string;

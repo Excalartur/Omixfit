@@ -4,7 +4,7 @@ import { Sheet } from "./Sheet";
 import { Avatar, VersionTag } from "./common";
 import { toast } from "./Toast";
 
-// Account sheet. With real Firebase auth there's no user-switching — to see a
+// Account sheet. With real Firebase auth there's no user-switching - to see a
 // different role you sign out and sign in with that account. Kept the same
 // entry point (the app-bar avatar) so the rest of the app is unchanged.
 export function UserSwitcher({ onClose }: { onClose: () => void }) {

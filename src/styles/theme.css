@@ -1,11 +1,11 @@
 /* ===========================================================================
-   Omixfit design system — sporty, premium, high-energy.
+   Omixfit design system - sporty, premium, high-energy.
    Dark "ink" chrome + electric-lime brand accent. Light, airy content.
    RTL-first: uses logical properties (inline-start/end) throughout.
    =========================================================================== */
 
 :root {
-  /* brand — OMIX: gold + olive green on warm cream (from the studio logo).
+  /* brand - OMIX: gold + olive green on warm cream (from the studio logo).
      The legacy `--lime*` token names now hold the gold accent so the whole
      token-driven UI recolors at once (kept the names to avoid churn). */
   --gold: #c89b3c;
@@ -21,33 +21,33 @@
   --teal: #27e0b0;
   --sky: #5ac8ff;
 
-  /* ink scale — warm espresso chrome to match the logo's dark ground */
+  /* ink scale - warm espresso chrome to match the logo's dark ground */
   --ink-900: #191510;
   --ink-800: #1f1a12;
   --ink-700: #28221a;
   --ink-600: #342c20;
   --ink-500: #4a3f2e;
 
-  /* surfaces — warm cream */
+  /* surfaces - warm cream */
   --bg: #f6f1e6;
   --surface: #fffefb;
   --surface-2: #faf5ea;
   --line: #ece4d2;
   --line-strong: #ddd2ba;
 
-  /* text — warm, kept dark to hold WCAG AA on the cream surfaces */
+  /* text - warm, kept dark to hold WCAG AA on the cream surfaces */
   --text: #1c1711;
   --text-2: #5b5343;
-  /* --text-3 tuned to meet WCAG AA (≥4.5:1 on cream surfaces) — IS 5568 */
+  /* --text-3 tuned to meet WCAG AA (≥4.5:1 on cream surfaces) - IS 5568 */
   --text-3: #6a6151;
   --on-ink: #f4ead2;
   --on-ink-2: #c2b591;
 
-  /* status — bright fills for bars/icons */
+  /* status - bright fills for bars/icons */
   --ok: #1fb574;
   --warn: #f0a020;
   --danger: #ec3f4d;
-  /* status — darker variants for TEXT, meet WCAG AA (≥4.5:1 on white) */
+  /* status - darker variants for TEXT, meet WCAG AA (≥4.5:1 on white) */
   --ok-ink: #0a7d52;
   --warn-ink: #8a5300;
   --danger-ink: #c4202e;
@@ -114,7 +114,7 @@ textarea {
 }
 
 /* Accessibility: visible focus ring for every interactive element, and a
-   skip-to-content link (IS 5568 / WCAG 2.0 AA — plan.md §5.5). */
+   skip-to-content link (IS 5568 / WCAG 2.0 AA - plan.md §5.5). */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,

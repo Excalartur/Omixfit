@@ -55,7 +55,7 @@ function Overview({ onRecord }: { onRecord: () => void }) {
     [data.payments],
   );
   const maxKind = Math.max(1, ...sum.byKind.values());
-  const userName = (id: string) => data.users.find((u) => u.id === id)?.name ?? "—";
+  const userName = (id: string) => data.users.find((u) => u.id === id)?.name ?? "-";
 
   return (
     <div className="fin">

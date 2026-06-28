@@ -36,9 +36,9 @@ export const t = {
     n === 0 ? "תהיה/י הראשון/ה בתור" : `${n} מתאמנים לפניך בתור`,
   waitlistCountLabel: (n: number) => `${n} בהמתנה`,
   leaveWaitlist: "יציאה מרשימת ההמתנה",
-  waitlistJoinedToast: "נוספת לרשימת ההמתנה — נעדכן כשיתפנה מקום",
+  waitlistJoinedToast: "נוספת לרשימת ההמתנה - נעדכן כשיתפנה מקום",
   waitlistLeftToast: "יצאת מרשימת ההמתנה",
-  promotedOtherToast: (name: string) => `התפנה מקום — ${name} קודמ/ה מההמתנה`,
+  promotedOtherToast: (name: string) => `התפנה מקום - ${name} קודמ/ה מההמתנה`,
   promotedYouToast: "יש מקום! קודמת מרשימת ההמתנה לשיעור 🎉",
   waitlistNote: "השיעור מלא. הצטרף/י לרשימת ההמתנה ונעדכן ברגע שמתפנה מקום.",
   spotsLeft: (n: number) => (n === 1 ? "מקום אחרון!" : `${n} מקומות פנויים`),
@@ -49,7 +49,7 @@ export const t = {
   withInstructor: "עם",
   noClasses: "אין שיעורים ביום זה",
   noClassesHint: "בחר/י יום אחר או דפדף/י לשבוע הבא",
-  shabbatNote: "שבת — פעילות מצומצמת",
+  shabbatNote: "שבת - פעילות מצומצמת",
 
   emptyBookingsTitle: "עוד לא הזמנת שיעורים",
   emptyBookingsHint: "עבור/י ללוח השיעורים והזמן/י את האימון הראשון שלך",
@@ -61,7 +61,7 @@ export const t = {
   bookedToast: "מעולה! המקום שלך שמור 🎉",
   cancelledToast: "ההזמנה בוטלה",
   fullToast: "מצטערים, השיעור התמלא",
-  membershipBlocked: "המנוי שלך אינו פעיל — פנה/י לדלפק",
+  membershipBlocked: "המנוי שלך אינו פעיל - פנה/י לדלפק",
   limitReached: "הגעת למספר ההזמנות הפעילות המרבי",
   closedToast: "ההרשמה לשיעור זה נסגרה",
 
@@ -167,7 +167,7 @@ export const t = {
   upcomingShort: "קרובים",
   callMember: "התקשרות",
 
-  // catalog (ClassType management — plan.md §4.2)
+  // catalog (ClassType management - plan.md §4.2)
   catalog: "קטלוג שיעורים",
   scheduleTab: "לוח שבועי",
   newTypeTitle: "סוג שיעור חדש",
@@ -177,7 +177,7 @@ export const t = {
   typeCategory: "קטגוריה",
   defaultCap: "תפוסת ברירת מחדל",
   defaultDur: "משך ברירת מחדל (דק׳)",
-  typeInUse: "לא ניתן למחוק — קיימים שיעורים מתוכננים מסוג זה",
+  typeInUse: "לא ניתן למחוק - קיימים שיעורים מתוכננים מסוג זה",
   typeSessions: (n: number) => `${n} שיעורים בלוח`,
   catalogEmpty: "עוד לא הוגדרו סוגי שיעורים",
   catalogEmptyHint: "הוסף/י סוג שיעור ראשון כדי לבנות את הקטלוג",
@@ -186,7 +186,7 @@ export const t = {
   // login / session
   loginTitle: "ברוכים הבאים לאומיקספיט",
   loginSubtitle: "התחבר/י כדי לראות את לוח השיעורים ולהזמין מקום.",
-  loginDemoNote: "משתמש חדש? צור/צרי חשבון — תיווצר חברות מתאמן/ת חדשה.",
+  loginDemoNote: "משתמש חדש? צור/צרי חשבון - תיווצר חברות מתאמן/ת חדשה.",
   loggedOutToast: "התנתקת מהמערכת",
   welcomeBack: (name: string) => `ברוך/ה שובך, ${name}`,
   version: "גרסה",
@@ -203,27 +203,27 @@ export const t = {
   authWorking: "רגע…",
   noAccountPrompt: "אין לך חשבון?",
   haveAccountPrompt: "כבר יש לך חשבון?",
-  authNotConfigured: "התחברות אינה זמינה — חסר Firebase config. ראה/י .env.example.",
+  authNotConfigured: "התחברות אינה זמינה - חסר Firebase config. ראה/י .env.example.",
   account: "החשבון שלי",
 
   // landing page (new / unregistered visitors)
   landing: {
     signIn: "כניסה",
-    kicker: "הזמנת שיעורים וניהול לוח — בעברית מלאה",
+    kicker: "הזמנת שיעורים וניהול לוח - בעברית מלאה",
     title: "כל האימונים שלך, במקום אחד",
     subtitle:
-      "לוח שיעורים שבועי, הזמנת מקום בלחיצה אחת ורשימת המתנה חכמה — למתאמנים שרוצים להתאמן, ולמדריכים שמנהלים את הסטודיו.",
+      "לוח שיעורים שבועי, הזמנת מקום בלחיצה אחת ורשימת המתנה חכמה - למתאמנים שרוצים להתאמן, ולמדריכים שמנהלים את הסטודיו.",
     cta: "כניסה למערכת",
     secondary: "כבר רשומים? כניסה",
     featuresTitle: "למה אומיקספיט",
     f1Title: "הזמנה בלחיצה",
-    f1Body: "בוחרים שיעור ושומרים מקום מיד — עם בר תפוסה חי שמראה כמה מקומות נשארו.",
+    f1Body: "בוחרים שיעור ושומרים מקום מיד - עם בר תפוסה חי שמראה כמה מקומות נשארו.",
     f2Title: "לוח שבועי בעברית",
     f2Body: "שבוע שמתחיל ביום ראשון, תאריכים עבריים וניווט קל בין השבועות, מותאם לנייד.",
     f3Title: "רשימת המתנה חכמה",
     f3Body: "השיעור מלא? מצטרפים להמתנה ומתקדמים אוטומטית ברגע שמתפנה מקום.",
     f4Title: "ניהול למדריכים",
-    f4Body: "פרסום הלוח, רשימות נוכחות ודוחות תפוסה — הכול בצד אחד, פשוט וברור.",
+    f4Body: "פרסום הלוח, רשימות נוכחות ודוחות תפוסה - הכול בצד אחד, פשוט וברור.",
     audienceTitle: "למי זה מתאים",
     traineeTitle: "למתאמנים",
     traineeBody: "ראו מה יש השבוע, שמרו מקום בלחיצה והגיעו מוכנים לאימון.",
@@ -235,7 +235,7 @@ export const t = {
 
   // registration: health declaration + terms (PAR-Q)
   health: {
-    title: "הרשמה — פרטים והצהרת בריאות",
+    title: "הרשמה - פרטים והצהרת בריאות",
     subtitle:
       "כדי להשלים את ההרשמה ולשמור על בטיחותך, נבקש למלא פרטים אישיים והצהרת בריאות קצרה. החשבון יופעל לאחר אישור הצוות.",
     sectionDetails: "פרטים אישיים",
@@ -262,11 +262,11 @@ export const t = {
     notesLabel: "הערות או מידע רפואי נוסף (לא חובה)",
     notesPlaceholder: "פציעות, רגישויות, היריון, תרופות…",
     flagged:
-      "סימנת ״כן״ על אחת מהשאלות — מומלץ להתייעץ עם רופא לפני תחילת האימונים. הצוות יבחן את הבקשה.",
+      "סימנת ״כן״ על אחת מהשאלות - מומלץ להתייעץ עם רופא לפני תחילת האימונים. הצוות יבחן את הבקשה.",
     termsText:
       "אני מצהיר/ה כי הפרטים נכונים, מודע/ת לכך שפעילות גופנית כרוכה בסיכון, ומתחייב/ת לפעול לפי הנחיות הצוות. ידוע לי שביטול הזמנה אפשרי עד למועד הקבוע בתקנון.",
     termsCheckbox: "קראתי ואני מאשר/ת את הצהרת הבריאות ותנאי השימוש",
-    signLabel: "חתימה — שם מלא",
+    signLabel: "חתימה - שם מלא",
     signPlaceholder: "השם המלא שלך",
     submit: "שליחת הבקשה לאישור",
     submitting: "שולח…",
@@ -279,8 +279,8 @@ export const t = {
   pending: {
     title: "הבקשה שלך התקבלה! 🎉",
     body: (app: string) =>
-      `תודה שנרשמת ל${app}. הצהרת הבריאות שלך נשלחה לצוות לאישור — נעדכן אותך במייל ברגע שהחשבון יאושר (בדרך כלל תוך יום עסקים).`,
-    hint: "אפשר לסגור את החלון ולחזור מאוחר יותר — נשמור לך את המקום.",
+      `תודה שנרשמת ל${app}. הצהרת הבריאות שלך נשלחה לצוות לאישור - נעדכן אותך במייל ברגע שהחשבון יאושר (בדרך כלל תוך יום עסקים).`,
+    hint: "אפשר לסגור את החלון ולחזור מאוחר יותר - נשמור לך את המקום.",
     badge: "ממתין לאישור",
   },
   rejected: {
@@ -298,7 +298,7 @@ export const t = {
     submittedAt: "נשלח",
     approve: "אישור והפעלת מנוי",
     reject: "דחייה",
-    approvedToast: (name: string) => `${name} אושר/ה — נפתח מייל לשליחה`,
+    approvedToast: (name: string) => `${name} אושר/ה - נפתח מייל לשליחה`,
     rejectedToast: (name: string) => `הבקשה של ${name} נדחתה`,
     statusPending: "ממתין לאישור",
     statusApproved: "מאושר",
@@ -308,7 +308,7 @@ export const t = {
     emailSubject: (app: string) => `החשבון שלך ב${app} אושר ✅`,
     emailBody: (name: string, app: string) =>
       `שלום ${name},\n\nשמחים לעדכן שחשבונך ב${app} אושר! אפשר להתחבר ולהזמין את האימון הראשון.\n\nנתראה בסטודיו,\nצוות ${app}`,
-    adminLocked: "חשבון מנהל/ת מערכת — לא ניתן לעריכה מתוך האפליקציה",
+    adminLocked: "חשבון מנהל/ת מערכת - לא ניתן לעריכה מתוך האפליקציה",
   },
 
   // interval / circuit training timer (live)
@@ -377,7 +377,7 @@ export const t = {
     paymentSaved: "התשלום נרשם ✓",
     serviceSaved: "השירות נשמר",
     serviceDeleted: "השירות נמחק",
-    noPayments: "אין עדיין תשלומים — הירשמ/י תשלום ראשון",
+    noPayments: "אין עדיין תשלומים - הירשמ/י תשלום ראשון",
     noServices: "עוד לא הוגדרו שירותים",
     scoreLabel: "ציון ערך",
     revenueLabel: "הכנסה",
@@ -388,7 +388,7 @@ export const t = {
     price: "מחיר",
     units: "שיעורים בחבילה",
     activeLabel: "שירות פעיל",
-    onlineLabel: "אונליין — חדר וידאו (Jitsi)",
+    onlineLabel: "אונליין - חדר וידאו (Jitsi)",
     deleteService: "מחיקת שירות",
     needClientService: "יש לבחור מתאמן/ת ושירות",
     kinds: {
