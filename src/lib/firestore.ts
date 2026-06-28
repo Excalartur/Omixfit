@@ -459,10 +459,17 @@ export async function updateUser(
   patch: Partial<User>,
 ): Promise<void> {
   const before = getState().users.find((u) => u.id === userId);
-  // The admin account can never be modified through the app, and no app action
-  // may ever grant the admin role (admin is console-only).
-  if (before?.role === "admin") return;
-  if (patch.role === "admin") delete patch.role;
+  const isSelf = userId === getState().currentUserId;
+  // An admin may edit their OWN profile (name/phone/prefs/…), but no one can
+  // demote/de-approve an admin and others can't touch an admin doc at all.
+  if (before?.role === "admin") {
+    if (!isSelf) return;
+    delete patch.role;
+    delete patch.approvalStatus;
+    delete patch.membershipActive;
+  }
+  if (patch.role === "admin") delete patch.role; // no app action grants admin
+  if (Object.keys(patch).length === 0) return;
   await updateDoc(doc(db, "users", userId), patch as Record<string, unknown>);
   if (before && patch.role && patch.role !== before.role) {
     await audit("role_changed", `${before.name}: ${before.role} ← ${patch.role}`);

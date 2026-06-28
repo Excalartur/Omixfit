@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { t } from "../lib/i18n";
+import { IsraelClock } from "./Brand";
 import { IcClose } from "./icons";
 
 // ---------------------------------------------------------------------------
@@ -123,8 +124,10 @@ export function IntervalTimer({ onClose }: { onClose: () => void }) {
     if (!halfRef.current && total > 0 && elapsed >= Math.floor(total / 2) && elapsed < total) {
       halfRef.current = true;
       say(t.timer.sayHalfway);
+      beep(880, 0.25);
     }
-    if (seg && remaining <= 3 && remaining >= 1) beep(remaining === 1 ? 520 : 700, 0.1);
+    // "BIP BIP BIP" — the last 5 seconds of every work/rest segment.
+    if (seg && remaining <= 5 && remaining >= 1) beep(remaining === 1 ? 1000 : 820, remaining === 1 ? 0.2 : 0.12);
   }, [elapsed]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -148,6 +151,12 @@ export function IntervalTimer({ onClose }: { onClose: () => void }) {
   }, [running]);
 
   function start() {
+    // Init/resume audio inside the click gesture so beeps + speech are allowed.
+    try {
+      const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ac = (audioRef.current ||= new Ctx());
+      void ac.resume?.();
+    } catch { /* no audio */ }
     setSegs(buildSegs(cfg));
     setElapsed(0);
     halfRef.current = false;
@@ -183,6 +192,7 @@ export function IntervalTimer({ onClose }: { onClose: () => void }) {
     <div className={`timer-screen phase-${phaseClass}`} role="dialog" aria-label={t.timer.title}>
       <header className="timer-top">
         <strong>{t.timer.title}</strong>
+        <IsraelClock className="timer-clock" />
         <div className="timer-top-actions">
           <button
             className="iconbtn"

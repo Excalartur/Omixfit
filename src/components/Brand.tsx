@@ -54,8 +54,8 @@ export function OmixLogo({ size = 30, className = "" }: { size?: number; classNa
   );
 }
 
-/** Live Jerusalem (Asia/Jerusalem) wall clock for the trainer. */
-export function JerusalemClock() {
+/** Live Israel (Asia/Jerusalem) wall clock — time only. */
+export function IsraelClock({ className = "" }: { className?: string }) {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -68,9 +68,8 @@ export function JerusalemClock() {
     second: "2-digit",
   });
   return (
-    <div className="jclock" title={t.jerusalem}>
-      <span className="jclock-city">{t.jerusalem}</span>
-      <time dir="ltr">{time}</time>
-    </div>
+    <time className={`jclock ${className}`} dir="ltr" title={t.jerusalem}>
+      {time}
+    </time>
   );
 }

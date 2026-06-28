@@ -235,9 +235,18 @@ export const t = {
 
   // registration: health declaration + terms (PAR-Q)
   health: {
-    title: "הצהרת בריאות ותנאי שימוש",
+    title: "הרשמה — פרטים והצהרת בריאות",
     subtitle:
-      "כדי לשמור על בטיחותך, נבקש למלא הצהרת בריאות קצרה לפני האימון הראשון. החשבון יופעל לאחר אישור הצוות.",
+      "כדי להשלים את ההרשמה ולשמור על בטיחותך, נבקש למלא פרטים אישיים והצהרת בריאות קצרה. החשבון יופעל לאחר אישור הצוות.",
+    sectionDetails: "פרטים אישיים",
+    fullNameLabel: "שם מלא",
+    genderLabel: "מין",
+    genders: { female: "אישה", male: "גבר", other: "אחר/מעדיפ/ה לא לציין" } as Record<string, string>,
+    selectGender: "בחר/י…",
+    ageLabel: "גיל",
+    phoneLabel: "טלפון",
+    addressLabel: "כתובת",
+    needDetails: "יש למלא שם, מין, גיל, טלפון וכתובת",
     sectionQ: "שאלון בריאות",
     sectionTerms: "תנאי שימוש",
     qIntro: "ענה/י על השאלות הבאות בכנות:",

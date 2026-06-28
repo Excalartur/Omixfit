@@ -9,7 +9,7 @@ import { Login } from "./screens/Login";
 import { Landing } from "./screens/Landing";
 import { Onboarding } from "./screens/Onboarding";
 import { UserSwitcher } from "./components/UserSwitcher";
-import { OmixLogo, OmixMark, JerusalemClock } from "./components/Brand";
+import { OmixLogo, OmixMark, IsraelClock } from "./components/Brand";
 import { IntervalTimer } from "./components/IntervalTimer";
 import { Toaster } from "./components/Toast";
 import { Celebration } from "./components/Celebration";
@@ -129,7 +129,7 @@ export default function App() {
           <OmixLogo size={34} />
         </div>
 
-        <JerusalemClock />
+        <IsraelClock />
 
         <nav className="appbar-nav" aria-label="ניווט ראשי">
           {nav.map((n) => (

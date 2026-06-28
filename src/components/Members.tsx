@@ -195,6 +195,15 @@ function MemberDetail({ userId, onClose }: { userId: string; onClose: () => void
         <MiniStat v={st.total} k={t.totalCount} />
       </div>
 
+      {/* registration details */}
+      {(u.gender || u.age || u.address) && (
+        <ul className="member-details">
+          {u.gender && <li><span>{t.health.genderLabel}</span><b>{t.health.genders[u.gender]}</b></li>}
+          {u.age ? <li><span>{t.health.ageLabel}</span><b>{u.age}</b></li> : null}
+          {u.address && <li><span>{t.health.addressLabel}</span><b>{u.address}</b></li>}
+        </ul>
+      )}
+
       {/* pending registration → health declaration + approve / reject */}
       {u.approvalStatus === "pending" && (
         <div className="approval-panel">

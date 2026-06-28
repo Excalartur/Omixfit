@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { t } from "../lib/i18n";
-import { submitHealthForm } from "../lib/store";
+import { updateUser } from "../lib/store";
 import { VersionTag } from "../components/common";
 import { OmixMark } from "../components/Brand";
 import { Toaster, toast } from "../components/Toast";
 import { IcCheck } from "../components/icons";
-import type { HealthForm as HF, User } from "../lib/types";
+import type { Gender, HealthForm as HF, User } from "../lib/types";
+
+function initialsOf(name: string): string {
+  const p = name.trim().split(/\s+/);
+  return ((p[0]?.[0] ?? "") + (p[1]?.[0] ?? "")).toUpperCase() || "?";
+}
 
 const QS = ["q1", "q2", "q3", "q4", "q5", "q6", "q7"] as const;
 type QKey = (typeof QS)[number];
@@ -65,6 +70,11 @@ function Rejected() {
 
 function HealthDeclaration({ user }: { user: User }) {
   const H = t.health;
+  const [name, setName] = useState(user.name);
+  const [gender, setGender] = useState<Gender | "">("");
+  const [age, setAge] = useState("");
+  const [phone, setPhone] = useState(user.phone || "");
+  const [address, setAddress] = useState("");
   const [ans, setAns] = useState<Partial<Record<QKey, boolean>>>({});
   const [notes, setNotes] = useState("");
   const [terms, setTerms] = useState(false);
@@ -77,6 +87,8 @@ function HealthDeclaration({ user }: { user: User }) {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (busy) return;
+    if (!name.trim() || !gender || !age || !phone.trim() || !address.trim())
+      return toast(H.needDetails, "err");
     if (!allAnswered) return toast(H.qIntro, "err");
     if (!terms) return toast(H.needTerms, "err");
     if (!sign.trim()) return toast(H.needSign, "err");
@@ -90,9 +102,18 @@ function HealthDeclaration({ user }: { user: User }) {
       submittedAt: Date.now(),
     };
     try {
-      await submitHealthForm(user.id, form);
+      // Save the full registration in one write; healthForm present →
+      // <App /> re-renders this to <Pending /> (awaiting approval).
+      await updateUser(user.id, {
+        name: name.trim(),
+        initials: initialsOf(name),
+        phone: phone.trim(),
+        gender: gender as Gender,
+        age: Number(age) || undefined,
+        address: address.trim(),
+        healthForm: form,
+      });
       toast(H.sentToast, "ok");
-      // The store update (healthForm present) re-renders this to <Pending />.
     } catch {
       setBusy(false);
     }
@@ -108,6 +129,35 @@ function HealthDeclaration({ user }: { user: User }) {
         <p className="login-sub">{H.subtitle}</p>
 
         <form onSubmit={submit}>
+          <h2 className="onboard-h2">{H.sectionDetails}</h2>
+          <div className="field">
+            <label htmlFor="rg-name">{H.fullNameLabel}</label>
+            <input id="rg-name" className="input" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" required />
+          </div>
+          <div className="row gap-3 wrap">
+            <div className="field grow" style={{ minWidth: 130 }}>
+              <label htmlFor="rg-gender">{H.genderLabel}</label>
+              <select id="rg-gender" className="select" value={gender} onChange={(e) => setGender(e.target.value as Gender)}>
+                <option value="">{H.selectGender}</option>
+                <option value="female">{H.genders.female}</option>
+                <option value="male">{H.genders.male}</option>
+                <option value="other">{H.genders.other}</option>
+              </select>
+            </div>
+            <div className="field grow" style={{ minWidth: 90 }}>
+              <label htmlFor="rg-age">{H.ageLabel}</label>
+              <input id="rg-age" className="input" type="number" min={1} max={120} value={age} onChange={(e) => setAge(e.target.value)} />
+            </div>
+          </div>
+          <div className="field">
+            <label htmlFor="rg-phone">{H.phoneLabel}</label>
+            <input id="rg-phone" className="input" type="tel" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" />
+          </div>
+          <div className="field">
+            <label htmlFor="rg-address">{H.addressLabel}</label>
+            <input id="rg-address" className="input" value={address} onChange={(e) => setAddress(e.target.value)} autoComplete="street-address" />
+          </div>
+
           <h2 className="onboard-h2">{H.sectionQ}</h2>
           <p className="onboard-qintro">{H.qIntro}</p>
           <div className="health-qs">

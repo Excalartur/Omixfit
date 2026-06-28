@@ -2272,27 +2272,21 @@
   padding-inline-start: 2px;
 }
 
-/* live Jerusalem clock (app bar, visual top-left) */
+/* live Israel clock — time only (app bar, visual top-left) */
 .jclock {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.05;
-  margin-inline-end: 6px;
-  padding-inline: 10px;
-  border-inline-start: 1px solid var(--ink-600);
-}
-.jclock-city { font-size: 0.62rem; font-weight: 700; color: var(--on-ink-2); letter-spacing: 0.04em; }
-.jclock time {
   font-variant-numeric: tabular-nums;
   font-weight: 800;
-  font-size: 0.98rem;
+  font-size: 1rem;
   color: var(--gold);
+  padding-inline: 11px;
+  margin-inline-end: 4px;
+  border-inline-start: 1px solid var(--ink-600);
 }
 @media (max-width: 560px) {
-  .jclock { padding-inline: 7px; }
-  .jclock time { font-size: 0.85rem; }
+  .jclock { padding-inline: 7px; font-size: 0.85rem; }
 }
+/* clock inside the timer screen */
+.timer-clock { border: none; color: var(--on-ink-2); font-weight: 700; margin: 0; }
 
 /* timer launch pill (staff) */
 .timer-launch {
@@ -2443,3 +2437,8 @@
 .tag.kind-injury   { background: #ffe9e3; color: #b3461f; }
 
 .switch-cb { width: 22px; height: 22px; accent-color: var(--gold); flex-shrink: 0; }
+
+/* registration details in the member sheet */
+.member-details { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.member-details li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 12px; background: var(--surface-2); border-radius: var(--r-md); font-size: 0.88rem; }
+.member-details span { color: var(--text-2); }

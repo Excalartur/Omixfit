@@ -33,12 +33,18 @@ export interface HealthForm {
   submittedAt: number;
 }
 
+export type Gender = "female" | "male" | "other";
+
 export interface User {
   id: string;
   name: string;
   phone: string;
   /** Firebase Auth identity. Sign-in matches a user by email (case-insensitive). */
   email?: string;
+  /** Collected at registration (onboarding). */
+  gender?: Gender;
+  age?: number;
+  address?: string;
   role: Role;
   /**
    * Registration gate. Seeded/legacy users are `approved`. A fresh sign-up is
