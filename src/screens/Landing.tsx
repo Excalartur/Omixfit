@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { t } from "../lib/i18n";
 import { VersionTag } from "../components/common";
 import { OmixLogo, OmixMark } from "../components/Brand";
+import { Legal } from "../components/Legal";
 
 // Contact targets.
 const WHATSAPP = "https://wa.me/972507954902";
@@ -34,6 +35,7 @@ function useReveal() {
 export function Landing({ onEnter }: { onEnter: () => void }) {
   const L = t.landing;
   const S = t.spine;
+  const [legal, setLegal] = useState(false);
   useReveal();
 
   return (
@@ -141,8 +143,13 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
 
       <footer className="lux-foot">
         <OmixLogo size={22} />
-        <VersionTag />
+        <div className="lux-foot-links">
+          <button className="lux-foot-link" onClick={() => setLegal(true)}>{t.legal.open}</button>
+          <VersionTag />
+        </div>
       </footer>
+
+      {legal && <Legal onClose={() => setLegal(false)} />}
     </div>
   );
 }
