@@ -9,3 +9,5 @@ screenshots/
 functions/node_modules/
 functions/.env
 /Logo/
+.vercel
+.env*

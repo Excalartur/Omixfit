@@ -1,50 +1,22 @@
 // ---------------------------------------------------------------------------
-// OMIX Cloud Functions (Blaze plan).
+// OMIX Cloud Functions (Blaze) — Google Calendar 2-way sync.
 //
-// syncRoleClaim: the source of truth for a user's role is the `role` field on
-// their users/{uid} doc. This trigger mirrors that role into a Firebase Auth
-// custom claim, so security rules can verify the role *server-side* (a member
-// can't forge `role: admin` by writing their own doc — the claim only changes
-// here, and rules read the claim, not the doc). Applies only when the doc id is
-// a real auth uid (real accounts are uid-keyed; demo/seeded docs are skipped).
+// Plain gen-1 HTTPS functions only (no Firestore triggers / eventarc), so the
+// deploy needs no special IAM and isn't tied to the Firestore region.
+//
+//   calConnect  — owner opens this → Google OAuth consent.
+//   calCallback — Google redirects back → store the refresh token (locked doc).
+//   syncCalendar— callable the app invokes after session changes; mirrors all
+//                 upcoming sessions into Omer's Google Calendar.
 // ---------------------------------------------------------------------------
 
-const { onDocumentWritten } = require("firebase-functions/v2/firestore");
-const { initializeApp } = require("firebase-admin/app");
-const { getAuth } = require("firebase-admin/auth");
-const logger = require("firebase-functions/logger");
-
-initializeApp();
-
-exports.syncRoleClaim = onDocumentWritten("users/{uid}", async (event) => {
-  const uid = event.params.uid;
-  const after = event.data && event.data.after && event.data.after.data();
-  const role = after && after.role;
-  if (!role) return;
-
-  const user = await getAuth().getUser(uid).catch(() => null);
-  if (!user) return; // no matching auth account (seeded/demo doc) — nothing to do
-
-  const current = (user.customClaims || {}).role;
-  if (current === role) return;
-
-  await getAuth().setCustomUserClaims(uid, {
-    ...(user.customClaims || {}),
-    role,
-  });
-  logger.info(`role claim updated: ${uid} -> ${role}`);
-});
-
-// ---------------------------------------------------------------------------
-// Google Calendar 2-way sync (Blaze). The owner (Omer) connects her calendar
-// once via OAuth; the refresh token is stored server-side in meta/calendar
-// (locked from all clients — only these admin-SDK functions read it). Every
-// session create/update/cancel then mirrors into her Google Calendar.
-// ---------------------------------------------------------------------------
 const fnV1 = require("firebase-functions/v1");
+const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
+const logger = require("firebase-functions/logger");
 const { google } = require("googleapis");
 
+initializeApp();
 const db = getFirestore();
 const CAL_DOC = "meta/calendar";
 const CAL_ID = "primary";
@@ -54,7 +26,7 @@ function oauth() {
   return new google.auth.OAuth2(process.env.GCAL_CLIENT_ID, process.env.GCAL_CLIENT_SECRET, REDIRECT);
 }
 
-// owner clicks "connect" → consent screen
+// Owner opens this URL → Google consent screen.
 exports.calConnect = fnV1.https.onRequest((req, res) => {
   const url = oauth().generateAuthUrl({
     access_type: "offline",
@@ -64,7 +36,7 @@ exports.calConnect = fnV1.https.onRequest((req, res) => {
   res.redirect(url);
 });
 
-// Google redirects back here with a code → store the refresh token
+// Google redirects back here with a code → store the refresh token.
 exports.calCallback = fnV1.https.onRequest(async (req, res) => {
   const code = req.query.code;
   if (!code) return res.status(400).send("missing code");
@@ -72,8 +44,10 @@ exports.calCallback = fnV1.https.onRequest(async (req, res) => {
     const { tokens } = await oauth().getToken(code);
     if (tokens.refresh_token) {
       await db.doc(CAL_DOC).set({ refreshToken: tokens.refresh_token, connectedAt: Date.now() }, { merge: true });
+      await db.doc("meta/calendarStatus").set({ connected: true, connectedAt: Date.now() }, { merge: true });
     }
-    res.send("<html dir='rtl'><body style='font-family:sans-serif;text-align:center;padding-top:60px;background:#f6efe0'><h2>היומן חובר בהצלחה ✅</h2><p>אפשר לסגור את החלון ולחזור ל-Omix.</p></body></html>");
+    res.set("Content-Type", "text/html; charset=utf-8");
+    res.send("<html dir='rtl'><body style='font-family:sans-serif;text-align:center;padding-top:60px;background:#f6efe0;color:#241c12'><h2>היומן חובר בהצלחה ✅</h2><p>אפשר לסגור את החלון ולחזור ל-Omix.</p></body></html>");
   } catch (e) {
     logger.error("calCallback", e);
     res.status(500).send("auth failed");
@@ -102,28 +76,42 @@ function buildEvent(s, title) {
   };
 }
 
-exports.syncSession = fnV1.firestore.document("sessions/{id}").onWrite(async (change) => {
+// Callable from the app (after any session change, or a manual "sync now").
+// Mirrors every upcoming session into the connected Google Calendar.
+exports.syncCalendar = fnV1.https.onCall(async (data, context) => {
+  if (!context.auth) throw new fnV1.https.HttpsError("unauthenticated", "sign in");
   const cal = await calendar();
-  if (!cal) return; // not connected yet
-  const after = change.after.exists ? change.after.data() : null;
-  const before = change.before.exists ? change.before.data() : null;
-  try {
-    if (!after || after.cancelled) {
-      const evId = (after && after.gcalEventId) || (before && before.gcalEventId);
-      if (evId) await cal.events.delete({ calendarId: CAL_ID, eventId: evId }).catch(() => {});
-      if (after && after.gcalEventId) await change.after.ref.update({ gcalEventId: FieldValue.delete() });
-      return;
+  if (!cal) return { connected: false, synced: 0 };
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const snap = await db.collection("sessions").get();
+  const titles = {};
+  let synced = 0;
+  for (const doc of snap.docs) {
+    const s = doc.data();
+    if (!s.date || s.date < todayKey) continue; // only upcoming
+    try {
+      if (s.cancelled) {
+        if (s.gcalEventId) {
+          await cal.events.delete({ calendarId: CAL_ID, eventId: s.gcalEventId }).catch(() => {});
+          await doc.ref.update({ gcalEventId: FieldValue.delete() });
+        }
+        continue;
+      }
+      if (!titles[s.classTypeId]) {
+        const t = await db.doc("classTypes/" + s.classTypeId).get();
+        titles[s.classTypeId] = t.exists ? t.data().name : "אימון";
+      }
+      const ev = buildEvent(s, titles[s.classTypeId]);
+      if (s.gcalEventId) {
+        await cal.events.update({ calendarId: CAL_ID, eventId: s.gcalEventId, requestBody: ev });
+      } else {
+        const created = await cal.events.insert({ calendarId: CAL_ID, requestBody: ev });
+        await doc.ref.update({ gcalEventId: created.data.id });
+      }
+      synced++;
+    } catch (e) {
+      logger.error("sync session " + doc.id, e);
     }
-    const typeSnap = await db.doc(`classTypes/${after.classTypeId}`).get();
-    const title = typeSnap.exists ? typeSnap.data().name : "אימון";
-    const ev = buildEvent(after, title);
-    if (after.gcalEventId) {
-      await cal.events.update({ calendarId: CAL_ID, eventId: after.gcalEventId, requestBody: ev });
-    } else {
-      const created = await cal.events.insert({ calendarId: CAL_ID, requestBody: ev });
-      await change.after.ref.update({ gcalEventId: created.data.id });
-    }
-  } catch (e) {
-    logger.error("syncSession", e);
   }
+  return { connected: true, synced };
 });
