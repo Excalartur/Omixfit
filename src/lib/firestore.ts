@@ -99,8 +99,12 @@ function startListeners(): void {
   });
 }
 
-/** Seed the database on first ever run (guarded by a marker doc). */
+/** Seed the database on first ever run (guarded by a marker doc).
+ *  Demo seeding is OPT-IN: it only runs when VITE_SEED_DEMO="1" so a real
+ *  studio's schedule isn't polluted with demo classes. Set the flag in
+ *  .env.local for demos/showcases; leave it unset in production. */
 async function seedIfEmpty(): Promise<void> {
+  if (import.meta.env.VITE_SEED_DEMO !== "1") return;
   const marker = await getDoc(doc(db, "meta", "seed"));
   if (marker.exists()) return;
   const seed = buildSeed();
