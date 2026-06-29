@@ -440,6 +440,18 @@ export const t = {
     red: "בסיכון - 35+ ימים או טרם הגיע/ה",
   } as Record<string, string>,
 
+  // Google Calendar sync (admin)
+  calendar: {
+    title: "יומן Google",
+    subtitle: "סנכרון אוטומטי של השיעורים ליומן של עומר.",
+    connect: "חיבור יומן Google",
+    sync: "סנכרון עכשיו",
+    syncing: "מסנכרן…",
+    synced: (n: number) => `סונכרנו ${n} שיעורים ליומן ✅`,
+    notConnected: "היומן עדיין לא מחובר. לחצי על 'חיבור יומן Google' והתחברי עם החשבון של עומר.",
+    connectHint: "מתחברים פעם אחת עם החשבון של עומר; מאז כל שיעור מסתנכרן אוטומטית.",
+  },
+
   // admin-only business subscriptions / billing tracker
   billing: {
     open: "מנויים וחיובים",

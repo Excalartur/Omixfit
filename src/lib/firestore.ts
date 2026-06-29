@@ -12,6 +12,7 @@
 // ---------------------------------------------------------------------------
 
 import { getApps, initializeApp } from "firebase/app";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import {
   collection,
   deleteDoc,
@@ -429,6 +430,7 @@ export async function upsertSession(session: ClassSession): Promise<void> {
   await setDoc(doc(db, "sessions", session.id), data);
   await audit(exists ? "session_updated" : "session_created", sessionLabel(session));
   await promoteWaitlist(session.id); // a capacity increase may open slots (Q4)
+  bumpCalendar();
 }
 
 export async function createSessions(
@@ -455,12 +457,14 @@ export async function createSessions(
       ? `${sessionLabel(first)} (+${made.length - 1} בסדרה)`
       : sessionLabel(first),
   );
+  bumpCalendar();
 }
 
 export async function cancelSession(sessionId: string): Promise<void> {
   const target = getState().sessions.find((s) => s.id === sessionId);
   await updateDoc(doc(db, "sessions", sessionId), { cancelled: true });
   await audit("session_cancelled", target ? sessionLabel(target) : sessionId);
+  bumpCalendar();
 }
 
 export async function deleteSession(sessionId: string): Promise<void> {
@@ -471,6 +475,19 @@ export async function deleteSession(sessionId: string): Promise<void> {
   for (const d of snap.docs) batch.delete(d.ref);
   await batch.commit();
   await audit("session_deleted", target ? sessionLabel(target) : sessionId);
+  bumpCalendar();
+}
+
+// ---- Google Calendar sync (calls the Cloud Function) ------------------------
+/** Mirror upcoming sessions into the connected Google Calendar. */
+export async function syncCalendar(): Promise<{ connected: boolean; synced: number }> {
+  const call = httpsCallable(getFunctions(app, "us-central1"), "syncCalendar");
+  const res = await call();
+  return res.data as { connected: boolean; synced: number };
+}
+/** Fire-and-forget re-sync after a schedule change (no-op until connected). */
+function bumpCalendar() {
+  syncCalendar().catch(() => {});
 }
 
 export async function setAttendance(

@@ -141,6 +141,9 @@ export const deletePayment = (id: string) =>
 export const newServiceId = () => engine.genId("svc");
 export const saveSubscriptions = (items: import("./types").Subscription[]) =>
   backend().then((b) => b.saveSubscriptions(items));
+export const syncCalendar = () => backend().then((b) => b.syncCalendar());
+export const CALENDAR_CONNECT_URL =
+  "https://us-central1-omixfit-be3ff.cloudfunctions.net/calConnect";
 export const newSubId = () => engine.genId("sub");
 export const setApproval = (
   userId: string,

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CATEGORY_META, t } from "../lib/i18n";
 import type { ClassCategory, NotifyPrefs } from "../lib/types";
-import { logout, memberStats, updateUser, useStore } from "../lib/store";
+import { logout, memberStats, updateUser, useStore, syncCalendar, CALENDAR_CONNECT_URL } from "../lib/store";
 import { Avatar, VersionTag } from "../components/common";
 import { Sheet } from "../components/Sheet";
 import { Billing } from "../components/Billing";
@@ -20,6 +20,20 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
   };
   const [editing, setEditing] = useState(false);
   const [billingOpen, setBillingOpen] = useState(false);
+  const [calBusy, setCalBusy] = useState(false);
+
+  async function syncCal() {
+    setCalBusy(true);
+    try {
+      const r = await syncCalendar();
+      if (r.connected) toast(t.calendar.synced(r.synced), "ok");
+      else toast(t.calendar.notConnected, "info");
+    } catch {
+      toast(t.calendar.notConnected, "err");
+    } finally {
+      setCalBusy(false);
+    }
+  }
 
   function setPref(patch: Partial<NotifyPrefs>) {
     updateUser(me.id, { prefs: { ...prefs, ...patch } });
@@ -159,6 +173,27 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
           {t.signOut}
         </button>
       </div>
+
+      {me.role === "admin" && (
+        <div className="cal-card">
+          <div className="cal-head">
+            <span aria-hidden="true">🗓️</span>
+            <div>
+              <b>{t.calendar.title}</b>
+              <small>{t.calendar.subtitle}</small>
+            </div>
+          </div>
+          <div className="cal-actions">
+            <a className="btn btn-lime" href={CALENDAR_CONNECT_URL} target="_blank" rel="noreferrer">
+              {t.calendar.connect}
+            </a>
+            <button className="btn btn-ghost" onClick={syncCal} disabled={calBusy}>
+              {calBusy ? t.calendar.syncing : t.calendar.sync}
+            </button>
+          </div>
+          <small className="cal-hint">{t.calendar.connectHint}</small>
+        </div>
+      )}
 
       {me.role === "admin" && (
         <button className="billing-entry" onClick={() => setBillingOpen(true)}>
