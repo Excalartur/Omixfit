@@ -225,6 +225,9 @@ export interface Facility {
   cancelCutoffHours: number;
   /** Max concurrent confirmed bookings per member (anti-hoarding). */
   maxActiveBookings: number;
+  /** Business payment-request links (Bit / PayBox) for client self-pay. */
+  bitLink?: string;
+  payboxLink?: string;
 }
 
 export interface AppData {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CATEGORY_META, t } from "../lib/i18n";
 import type { ClassCategory, NotifyPrefs } from "../lib/types";
-import { logout, memberStats, updateUser, useStore, syncCalendar, CALENDAR_CONNECT_URL } from "../lib/store";
+import { logout, memberStats, updateUser, useStore, syncCalendar, savePaymentLinks, CALENDAR_CONNECT_URL } from "../lib/store";
 import { Avatar, VersionTag } from "../components/common";
 import { Sheet } from "../components/Sheet";
 import { Billing } from "../components/Billing";
@@ -21,6 +21,15 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
   const [editing, setEditing] = useState(false);
   const [billingOpen, setBillingOpen] = useState(false);
   const [calBusy, setCalBusy] = useState(false);
+  const fac = data.facility;
+  const [bit, setBit] = useState(fac.bitLink ?? "");
+  const [paybox, setPaybox] = useState(fac.payboxLink ?? "");
+  const isAdmin = me.role === "admin";
+
+  function savePay() {
+    savePaymentLinks({ bitLink: bit.trim(), payboxLink: paybox.trim() });
+    toast("קישורי התשלום נשמרו", "ok");
+  }
 
   async function syncCal() {
     setCalBusy(true);
@@ -85,6 +94,18 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
           <Avatar user={me} size={48} />
         </div>
       </div>
+
+      {/* client self-pay (Bit / PayBox) */}
+      {(fac.bitLink || fac.payboxLink) && (
+        <div className="pay-card">
+          <span className="pay-h">{t.pay.title}</span>
+          <div className="pay-actions">
+            {fac.bitLink && <a className="btn btn-lime grow" href={fac.bitLink} target="_blank" rel="noreferrer">{t.pay.bit}</a>}
+            {fac.payboxLink && <a className="btn btn-ink grow" href={fac.payboxLink} target="_blank" rel="noreferrer">{t.pay.paybox}</a>}
+          </div>
+          <small className="pay-hint">{t.pay.hint}</small>
+        </div>
+      )}
 
       {/* stats */}
       <h2 className="h2" style={{ marginBottom: 10 }}>{t.myStats}</h2>
@@ -192,6 +213,27 @@ export function Profile({ onSwitchUser }: { onSwitchUser: () => void }) {
             </button>
           </div>
           <small className="cal-hint">{t.calendar.connectHint}</small>
+        </div>
+      )}
+
+      {isAdmin && (
+        <div className="cal-card">
+          <div className="cal-head">
+            <span aria-hidden="true">💳</span>
+            <div>
+              <b>{t.pay.adminTitle}</b>
+              <small>{t.pay.adminHint}</small>
+            </div>
+          </div>
+          <div className="field" style={{ marginTop: 4 }}>
+            <label htmlFor="pl-bit">{t.pay.bit} (קישור)</label>
+            <input id="pl-bit" className="input" dir="ltr" value={bit} onChange={(e) => setBit(e.target.value)} placeholder="https://www.bitpay.co.il/app/me/..." />
+          </div>
+          <div className="field">
+            <label htmlFor="pl-pb">{t.pay.paybox} (קישור)</label>
+            <input id="pl-pb" className="input" dir="ltr" value={paybox} onChange={(e) => setPaybox(e.target.value)} placeholder="https://link.payboxapp.com/..." />
+          </div>
+          <button className="btn btn-lime" onClick={savePay}>{t.save}</button>
         </div>
       )}
 

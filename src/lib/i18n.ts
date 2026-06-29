@@ -443,6 +443,16 @@ export const t = {
     red: "בסיכון - 35+ ימים או טרם הגיע/ה",
   } as Record<string, string>,
 
+  // client self-pay via Bit / PayBox links
+  pay: {
+    title: "תשלום מהיר",
+    bit: "תשלום ב-Bit",
+    paybox: "תשלום ב-PayBox",
+    hint: "התשלום נפתח באפליקציה החיצונית. לאחר התשלום עדכני את עומר והיתרה תתעדכן.",
+    adminTitle: "קישורי תשלום (Bit / PayBox)",
+    adminHint: "הדביקי את קישורי בקשת התשלום שלך - הם יופיעו ללקוחות לתשלום מהיר.",
+  },
+
   // Google Calendar sync (admin)
   calendar: {
     title: "יומן Google",

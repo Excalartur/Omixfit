@@ -2885,3 +2885,9 @@
 .lux-contact a:hover { background: rgba(216,183,102,.16); border-color: rgba(216,183,102,.6); }
 .lux-foot { display: flex; align-items: center; justify-content: space-between; max-width: 1120px; margin: 0 auto; padding: 28px clamp(22px,6vw,64px); border-top: 1px solid #e7dcc4; }
 .lux-foot .omix-word { color: #6b6049; }
+
+/* client self-pay (Bit/PayBox) card */
+.pay-card { margin-top: 16px; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); }
+.pay-h { display: block; font-weight: 800; margin-bottom: 10px; }
+.pay-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.pay-hint { display: block; margin-top: 10px; color: var(--text-3); font-size: .76rem; line-height: 1.4; }

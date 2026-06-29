@@ -128,6 +128,11 @@ export async function saveSubscriptions(items: Subscription[]): Promise<void> {
   await setDoc(doc(db, "meta", "subscriptions"), { items });
 }
 
+/** Business Bit/PayBox payment links (stored on the facility doc). */
+export async function savePaymentLinks(links: { bitLink?: string; payboxLink?: string }): Promise<void> {
+  await setDoc(doc(db, "meta", "facility"), links, { merge: true });
+}
+
 /** Seed the database on first ever run (guarded by a marker doc). */
 async function seedIfEmpty(): Promise<void> {
   const marker = await getDoc(doc(db, "meta", "seed"));
