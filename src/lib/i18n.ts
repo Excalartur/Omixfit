@@ -467,6 +467,28 @@ export const t = {
     emptyAdmin: "עדיין אין אירועים",
   },
 
+  // "Just sign up" landing lead capture — docs/business.md §4
+  lead: {
+    cta: "השארת פרטים",
+    title: "השאירו פרטים ונחזור אליכם",
+    subtitle: "רוצים להתחיל להתאמן עם עומר? השאירו שם וטלפון ונחזור אליכם בהקדם.",
+    name: "שם מלא",
+    phone: "טלפון",
+    note: "הודעה (לא חובה)",
+    notePlaceholder: "מה מעניין אתכם? אימון אישי, קבוצה, ליווי…",
+    submit: "שליחה",
+    needNamePhone: "יש למלא שם וטלפון",
+    err: "השליחה נכשלה - נסו שוב עוד רגע",
+    thanksTitle: "תודה! 🙌",
+    thanks: "קיבלנו את הפרטים ונחזור אליכם בהקדם.",
+    // admin
+    adminTitle: "פניות חדשות (לידים)",
+    handled: "טופל",
+    whatsapp: "וואטסאפ",
+    toggleHandled: "סימון כטופל",
+    delete: "מחיקה",
+  },
+
   // staff: registration approvals
   approvals: {
     title: "אישור נרשמים חדשים",

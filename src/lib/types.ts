@@ -281,6 +281,18 @@ export interface SpecialEvent {
   createdAt: number;
 }
 
+/** A low-friction lead from the landing page — a prospect who left their details
+ *  without creating an account, for Omer to follow up (docs/business.md §4). */
+export interface Lead {
+  id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  note?: string;
+  handled?: boolean; // Omer ticks it once she's followed up
+  createdAt: number;
+}
+
 /** A public registration for a SpecialEvent (no app account required). */
 export interface EventSignup {
   id: string;
@@ -302,6 +314,7 @@ export interface AppData {
   payments: Payment[];
   subscriptions: Subscription[];
   events: SpecialEvent[];
+  leads: Lead[];
   facility: Facility;
   audit: AuditEntry[];
   /** null when logged out (the app shows the login screen). */

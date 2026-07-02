@@ -213,6 +213,7 @@ export function buildSeed(): AppData {
     payments: [],
     subscriptions: [],
     events: [],
+    leads: [],
     locations: [{ id: LOCATION_ID, name: "Omix · הסניף הראשי" }],
     facility: {
       name: "Omix",

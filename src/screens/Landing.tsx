@@ -3,6 +3,7 @@ import { t } from "../lib/i18n";
 import { VersionTag } from "../components/common";
 import { OmixLogo, OmixMark } from "../components/Brand";
 import { Legal } from "../components/Legal";
+import { LeadForm } from "../components/LeadForm";
 
 // Contact targets.
 const WHATSAPP = "https://wa.me/972507954902";
@@ -36,6 +37,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
   const L = t.landing;
   const S = t.spine;
   const [legal, setLegal] = useState(false);
+  const [lead, setLead] = useState(false);
   useReveal();
 
   return (
@@ -55,6 +57,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
         <p className="lux-lead reveal">{L.subtitle}</p>
         <div className="lux-cta reveal">
           <button className="lux-btn gold" onClick={onEnter}>{L.ctaEnter}</button>
+          <button className="lux-btn ghost" onClick={() => setLead(true)}>{t.lead.cta}</button>
           <a className="lux-btn ghost" href={WHATSAPP} target="_blank" rel="noreferrer">{L.ctaContact}</a>
         </div>
         <ul className="lux-creds reveal">
@@ -151,6 +154,7 @@ export function Landing({ onEnter }: { onEnter: () => void }) {
       </footer>
 
       {legal && <Legal onClose={() => setLegal(false)} />}
+      {lead && <LeadForm onClose={() => setLead(false)} />}
     </div>
   );
 }

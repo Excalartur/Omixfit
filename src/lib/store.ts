@@ -24,6 +24,7 @@ const EMPTY: AppData = {
   payments: [],
   subscriptions: [],
   events: [],
+  leads: [],
   facility: {
     name: "Omix",
     bookingWindowDays: 14,
@@ -158,6 +159,13 @@ export const submitEventSignup = (
   eventId: string,
   who: { name: string; phone: string; email?: string },
 ) => backend().then((b) => b.submitEventSignup(eventId, who));
+
+// landing leads ("just sign up")
+export const submitLead = (who: { name: string; phone: string; email?: string; note?: string }) =>
+  backend().then((b) => b.submitLead(who));
+export const setLeadHandled = (id: string, handled: boolean) =>
+  backend().then((b) => b.setLeadHandled(id, handled));
+export const deleteLead = (id: string) => backend().then((b) => b.deleteLead(id));
 export const syncCalendar = (mode?: "personal") =>
   backend().then((b) => b.syncCalendar(mode));
 export const calConnectUrl = () => backend().then((b) => b.calConnectUrl());

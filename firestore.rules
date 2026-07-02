@@ -67,6 +67,13 @@ service cloud.firestore {
         && request.resource.data.phone is string && request.resource.data.phone.size() <= 30
         && request.resource.data.eventId is string;
     }
+    // Landing leads — PUBLIC create ("just sign up"), staff read/manage.
+    match /leads/{id} {
+      allow read, update, delete: if signedIn();
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone', 'createdAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 80
+        && request.resource.data.phone is string && request.resource.data.phone.size() <= 30;
+    }
 
     // Audit log — append-only: created + read, never changed or removed.
     match /audit/{id} {

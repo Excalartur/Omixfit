@@ -46,6 +46,7 @@ import type {
   Facility,
   HealthForm,
   Location,
+  Lead,
   Payment,
   Service,
   SpecialEvent,
@@ -74,6 +75,7 @@ const col = {
   payments: collection(db, "payments"),
   events: collection(db, "events"),
   eventSignups: collection(db, "eventSignups"),
+  leads: collection(db, "leads"),
   audit: collection(db, "audit"),
 };
 
@@ -107,6 +109,9 @@ function startListeners(): void {
   );
   onSnapshot(col.events, (s) =>
     hydrate({ events: s.docs.map((d) => d.data() as SpecialEvent) }),
+  );
+  onSnapshot(col.leads, (s) =>
+    hydrate({ leads: s.docs.map((d) => d.data() as Lead) }),
   );
   onSnapshot(col.payments, (s) =>
     hydrate({ payments: s.docs.map((d) => d.data() as Payment) }),
@@ -685,4 +690,30 @@ export async function fetchEventSignups(eventId: string): Promise<EventSignup[]>
 }
 export async function markEventSignupPaid(id: string, paid: boolean): Promise<void> {
   await updateDoc(doc(db, "eventSignups", id), { paid });
+}
+
+// ---- landing leads ("just sign up", docs/business.md §4) ---------------------
+/** PUBLIC (no login): a prospect leaves their details from the landing page. */
+export async function submitLead(who: {
+  name: string; phone: string; email?: string; note?: string;
+}): Promise<void> {
+  await initFirestore();
+  const ref = doc(col.leads);
+  const lead: Lead = {
+    id: ref.id,
+    name: who.name.trim(),
+    phone: who.phone.trim(),
+    email: who.email?.trim() || undefined,
+    note: who.note?.trim() || undefined,
+    createdAt: Date.now(),
+  };
+  if (!lead.email) delete (lead as Partial<Lead>).email;
+  if (!lead.note) delete (lead as Partial<Lead>).note;
+  await setDoc(ref, lead);
+}
+export async function setLeadHandled(id: string, handled: boolean): Promise<void> {
+  await updateDoc(doc(db, "leads", id), { handled });
+}
+export async function deleteLead(id: string): Promise<void> {
+  await deleteDoc(doc(db, "leads", id));
 }

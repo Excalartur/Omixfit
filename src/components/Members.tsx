@@ -3,9 +3,11 @@ import { CATEGORY_META, t } from "../lib/i18n";
 import type { Role, User } from "../lib/types";
 import {
   classTypeOf,
+  deleteLead,
   memberStats,
   sessionStartDate,
   setApproval,
+  setLeadHandled,
   updateUser,
   useStore,
 } from "../lib/store";
@@ -35,6 +37,11 @@ export function Members() {
   const pending = useMemo(
     () => data.users.filter((u) => u.approvalStatus === "pending"),
     [data.users],
+  );
+
+  const leads = useMemo(
+    () => [...data.leads].sort((a, b) => Number(!!a.handled) - Number(!!b.handled) || b.createdAt - a.createdAt),
+    [data.leads],
   );
 
   const filtered = useMemo(() => {
@@ -74,6 +81,35 @@ export function Members() {
                 </span>
                 <span className="tag pending">{t.approvals.statusPending}</span>
               </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {leads.length > 0 && (
+        <div className="approvals-box">
+          <div className="approvals-head">
+            <span className="approvals-dot" aria-hidden="true" />
+            <b>{t.lead.adminTitle}</b>
+            <span className="approvals-count">{leads.filter((l) => !l.handled).length}</span>
+          </div>
+          <div className="member-list">
+            {leads.map((l) => (
+              <div key={l.id} className="member-row" style={{ cursor: "default", opacity: l.handled ? 0.55 : 1 }}>
+                <span className="mr-body">
+                  <span className="mr-name">
+                    {l.name}
+                    {l.handled && <span className="tag role-manager">{t.lead.handled}</span>}
+                  </span>
+                  <span className="mr-sub" dir="ltr">{l.phone}{l.email ? ` · ${l.email}` : ""}</span>
+                  {l.note && <span className="mr-sub">{l.note}</span>}
+                </span>
+                <span className="row gap-2">
+                  <a className="btn btn-sm btn-lime" href={`https://wa.me/${l.phone.replace(/\D/g, "").replace(/^0/, "972")}`} target="_blank" rel="noreferrer" aria-label={t.lead.whatsapp}>💬</a>
+                  <button className="btn btn-sm btn-ghost" onClick={() => setLeadHandled(l.id, !l.handled)} aria-label={t.lead.toggleHandled}>{l.handled ? "↩︎" : "✓"}</button>
+                  <button className="btn btn-sm btn-danger" onClick={() => deleteLead(l.id)} aria-label={t.lead.delete}>🗑</button>
+                </span>
+              </div>
             ))}
           </div>
         </div>
