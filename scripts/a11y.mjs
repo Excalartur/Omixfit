@@ -98,10 +98,9 @@ totalSerious += await audit("sheet: session editor", {
   open: ".page-head .btn-lime",
 });
 totalSerious += await audit("sheet: member detail", {
-  hash: "manage",
+  hash: "clients",
   userId: "u-noa",
-  open: ".seg button:nth-child(4)",
-  then: ".member-row",
+  open: ".member-row",
 });
 
 await browser.close();

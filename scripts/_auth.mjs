@@ -81,11 +81,16 @@ export async function signInAs(page, email, password = TEST_PASSWORD) {
     await signOut(page);
   }
   // Logged-out shows the marketing landing first — click a CTA to reach the form.
-  if (await page.$(".landing")) {
+  // Handles both the editorial landing (.lux-btn/.lux-link) and the old markup.
+  if (!(await page.$(".auth-form"))) {
     await page.evaluate(() => {
-      const btn = [...document.querySelectorAll(".landing .btn")].find((b) =>
-        /כניסה|התחל/.test(b.textContent || ""),
-      );
+      const cands = [
+        ...document.querySelectorAll(
+          ".lux-btn, .lux-link, .spine-signin, .landing .btn",
+        ),
+      ];
+      const btn =
+        cands.find((b) => /כניסה|התחל/.test(b.textContent || "")) || cands[0];
       btn?.click();
     });
   }
