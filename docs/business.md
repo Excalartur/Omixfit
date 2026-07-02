@@ -179,5 +179,7 @@ Built ✅ · Planned ⏳
   quick-insert templates, list flag) (§5.4).
 - ✅ **Coaching-subscription admin dashboard** — "ליווי" view, per-client
   call/contact/payment/first-meeting nudges + WhatsApp shortcut (§5.3).
-- ⏳ **Retreat / special-event signup** (separate, public, one-time price) (§5.2).
-- ⏳ **"Just sign up" low-friction landing lead capture** (§4).
+- ✅ **Retreat / special-event signup** — public /#events page (no login,
+  non-members welcome) + Manage → "אירועים" admin (create/publish/price/capacity,
+  registrations, mark paid, copy link) (§5.2).
+- ⏳ **"Just sign up" low-friction landing lead capture** (§4) — last item.
