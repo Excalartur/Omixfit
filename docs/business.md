@@ -177,6 +177,7 @@ Built ✅ · Planned ⏳
 - ✅ **Login tracking** (`lastLoginAt`, shown on the member card) (§4).
 - ✅ **Injury notes + adaptation templates** (per-client `trainerNotes`,
   quick-insert templates, list flag) (§5.4).
+- ✅ **Coaching-subscription admin dashboard** — "ליווי" view, per-client
+  call/contact/payment/first-meeting nudges + WhatsApp shortcut (§5.3).
 - ⏳ **Retreat / special-event signup** (separate, public, one-time price) (§5.2).
-- ⏳ **Coaching-subscription admin dashboard** with reminders (§5.3).
 - ⏳ **"Just sign up" low-friction landing lead capture** (§4).
