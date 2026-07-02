@@ -123,6 +123,7 @@ export function Members() {
                     {u.name}
                     <span className={`tag role-${u.role}`}>{t.roles[u.role]}</span>
                     {isNewClient(u) && <span className="tag tag-new">{t.approvals.newClient}</span>}
+                    {u.trainerNotes && <span className="tag inactive" title={u.trainerNotes}>🩺 {t.injury.hasNotes}</span>}
                     {!u.membershipActive && <span className="tag inactive">{t.inactive}</span>}
                   </span>
                   <span className="mr-sub" dir="ltr">{u.phone}</span>
@@ -160,6 +161,7 @@ function MemberDetail({ userId, onClose }: { userId: string; onClose: () => void
   const roles: Role[] = ["member", "instructor", "manager"];
   const isAdmin = u.role === "admin";
   const hf = u.healthForm;
+  const [notes, setNotes] = useState(u.trainerNotes ?? "");
 
   async function decide(status: "approved" | "rejected") {
     await setApproval(u.id, status);
@@ -351,6 +353,42 @@ function MemberDetail({ userId, onClose }: { userId: string; onClose: () => void
             >
               {t.approvals.markPass}
             </button>
+          )}
+
+          {/* sports-therapist injury notes + exercise adaptations */}
+          {u.role === "member" && (
+            <div className="field" style={{ marginTop: 16, borderTop: "1px solid var(--line)", paddingTop: 14 }}>
+              <label>🩺 {t.injury.title}</label>
+              <p className="muted" style={{ fontSize: ".8rem", margin: "0 0 8px" }}>{t.injury.hint}</p>
+              <div className="filterbar" style={{ margin: "0 0 8px", flexWrap: "wrap", gap: 6 }}>
+                {t.injury.items.map((it) => (
+                  <button
+                    key={it.label}
+                    className="filter-chip"
+                    onClick={() => setNotes((n) => (n.trim() ? n.trimEnd() + "\n" : "") + it.text)}
+                  >
+                    + {it.label}
+                  </button>
+                ))}
+              </div>
+              <textarea
+                className="input"
+                rows={4}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder={t.injury.placeholder}
+              />
+              <button
+                className="btn btn-lime"
+                style={{ marginTop: 8 }}
+                onClick={() => {
+                  updateUser(u.id, { trainerNotes: notes.trim() });
+                  toast(t.injury.saved, "ok");
+                }}
+              >
+                {t.injury.save}
+              </button>
+            </div>
           )}
         </>
       )}

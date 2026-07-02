@@ -67,6 +67,9 @@ export interface User {
   /** Set true once Omer records that the member bought a pass (punch-card); the
    *  trial auto-disconnect leaves passholders alone. */
   hasPass?: boolean;
+  /** Omer's clinical notes (sports-therapist): injuries, pain, and the exercise
+   *  ADAPTATIONS she prepares for this client. Staff-only; shown during class. */
+  trainerNotes?: string;
   /** Membership tier label + validity (manager-managed in v1). */
   membershipPlan?: string;
   membershipValidUntil?: string; // YYYY-MM-DD
