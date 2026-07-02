@@ -5,7 +5,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 Omixfit — a Hebrew-first, **RTL** PWA for booking fitness classes, built from the
-product spec in [`docs/plan.md`](docs/plan.md). Two experiences in one app: a
+product spec in [`docs/plan.md`](docs/plan.md). **Read [`docs/business.md`](docs/business.md)
+first** — the single source of truth for Omer's real business (offerings, client
+lifecycle, feature requirements). Two experiences in one app: a
 **trainee** side (browse the week, book/cancel, waitlist) and a **trainer/manager**
 side (publish schedule, rosters, reports, member management). Stack: Vite + React 18
 + TypeScript with a **hand-crafted CSS design system**. The backend is **Firebase**:
