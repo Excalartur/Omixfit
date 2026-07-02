@@ -73,7 +73,7 @@ export default function App() {
         setAuthResolved(true);
         setSignedIn(!!identity);
         setEmailVerified(!!identity?.emailVerified);
-        if (identity) onAuthIdentity(identity.uid, identity.email, identity.displayName);
+        if (identity) onAuthIdentity(identity.uid, identity.email, identity.displayName, identity.emailVerified);
         else logout();
       });
     });

@@ -188,6 +188,60 @@ function MemberDetail({ userId, onClose }: { userId: string; onClose: () => void
     </div>
   );
 
+  // Pending registrant → a stripped-down REVIEW card: just what Omer needs to
+  // approve/decline (she already knows her clients). No stats/role/activity.
+  if (u.approvalStatus === "pending") {
+    const medical = !!hf && (["q1", "q2", "q3", "q4", "q5", "q6", "q7"] as const).some((k) => hf[k]);
+    const note = hf?.notes?.trim();
+    return (
+      <Sheet
+        onClose={onClose}
+        hero={hero}
+        footer={
+          <div className="row gap-2" style={{ width: "100%" }}>
+            <button className="btn btn-lime grow" onClick={() => decide("approved")}>
+              {t.approvals.approve}
+            </button>
+            <button className="btn btn-danger" onClick={() => decide("rejected")}>
+              {t.approvals.reject}
+            </button>
+          </div>
+        }
+      >
+        <span className="tag pending" style={{ marginBottom: 12, display: "inline-block" }}>
+          {t.approvals.statusPending}
+        </span>
+
+        <ul className="member-details">
+          <li><span>{t.emailLabel}</span><b dir="ltr">{u.email || "-"}</b></li>
+          <li><span>{t.phone}</span><b dir="ltr">{u.phone || "-"}</b></li>
+          <li><span>{t.approvals.whereFrom}</span><b>{u.address || "-"}</b></li>
+          <li>
+            <span>{t.approvals.verifiedLabel}</span>
+            <b>{u.emailVerified ? `✅ ${t.approvals.verifiedYes}` : `⚠️ ${t.approvals.verifiedNo}`}</b>
+          </li>
+        </ul>
+
+        <div
+          style={{
+            padding: "10px 14px", borderRadius: 12, marginTop: 12, fontWeight: 700,
+            background: medical ? "#fff0f1" : "#e7fbf3",
+            color: medical ? "var(--danger-ink, #c0392b)" : "#0a7d56",
+          }}
+        >
+          {medical ? `🩺 ${t.approvals.medicalYes}` : `✓ ${t.approvals.medicalNo}`}
+        </div>
+
+        {note && (
+          <p className="health-summary-notes" style={{ marginTop: 10 }}>
+            <b>{t.health.notesLabel}:</b> {note}
+          </p>
+        )}
+        {!hf && <p className="muted" style={{ marginTop: 10 }}>{t.approvals.noHealthForm}</p>}
+      </Sheet>
+    );
+  }
+
   return (
     <Sheet
       onClose={onClose}
@@ -218,45 +272,6 @@ function MemberDetail({ userId, onClose }: { userId: string; onClose: () => void
           </li>
         )}
       </ul>
-
-      {/* pending registration → health declaration + approve / reject */}
-      {u.approvalStatus === "pending" && (
-        <div className="approval-panel">
-          <div className="approval-bar">
-            <span className="tag pending">{t.approvals.statusPending}</span>
-            {hf && <small className="muted">{t.approvals.submittedAt}: {new Date(hf.submittedAt).toLocaleDateString("he-IL")}</small>}
-          </div>
-          {hf ? (
-            <>
-              <h3 className="h2" style={{ margin: "10px 0 6px" }}>{t.approvals.healthTitle}</h3>
-              <ul className="health-summary">
-                {(["q1", "q2", "q3", "q4", "q5", "q6", "q7"] as const).map((k) => (
-                  <li key={k} className={hf[k] ? "yes" : "no"}>
-                    <span>{t.health[k]}</span>
-                    <b>{hf[k] ? t.health.yes : t.health.no}</b>
-                  </li>
-                ))}
-              </ul>
-              <p className="health-summary-notes">
-                <b>{t.health.notesLabel}:</b> {hf.notes || t.approvals.noNotes}
-              </p>
-              <p className="health-summary-sign" dir="rtl">
-                ✍︎ {hf.signedName}
-              </p>
-            </>
-          ) : (
-            <p className="muted">{t.health.subtitle}</p>
-          )}
-          <div className="row gap-2 wrap" style={{ marginTop: 12 }}>
-            <button className="btn btn-lime grow" onClick={() => decide("approved")}>
-              {t.approvals.approve}
-            </button>
-            <button className="btn btn-danger btn-sm" onClick={() => decide("rejected")}>
-              {t.approvals.reject}
-            </button>
-          </div>
-        </div>
-      )}
 
       {isAdmin ? (
         <p className="admin-locked" role="note">🔒 {t.approvals.adminLocked}</p>

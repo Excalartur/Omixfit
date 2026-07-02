@@ -162,4 +162,5 @@ export const onAuthIdentity = (
   uid: string,
   email: string,
   displayName: string | null,
-) => backend().then((b) => b.resolveAuthUser(uid, email, displayName));
+  emailVerified: boolean,
+) => backend().then((b) => b.resolveAuthUser(uid, email, displayName, emailVerified));

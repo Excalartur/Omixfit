@@ -206,6 +206,7 @@ export async function resolveAuthUser(
   uid: string,
   email: string,
   displayName: string | null,
+  emailVerified = false,
 ): Promise<void> {
   await initFirestore();
   const e = email.trim().toLowerCase();
@@ -232,6 +233,7 @@ export async function resolveAuthUser(
       patch.approvalStatus = "approved";
       patch.membershipActive = true;
     }
+    if (existing.emailVerified !== emailVerified) patch.emailVerified = emailVerified;
     // Heal a name that's still just the email prefix (e.g. owners who skipped
     // onboarding) when we now have a real name.
     if (existing.name === prefix && chosenName !== prefix) {
@@ -255,6 +257,7 @@ export async function resolveAuthUser(
     role: owner ? "admin" : "member",
     approvalStatus: owner ? "approved" : "pending",
     membershipActive: owner,
+    emailVerified,
     avatarColor: AVATAR_COLORS[hashCode(email) % AVATAR_COLORS.length],
     initials: initialsOf(name),
     prefs: { push: true, email: true, whatsapp: false, reminderHours: 2 },

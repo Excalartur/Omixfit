@@ -381,12 +381,20 @@ export const t = {
     submittedAt: "נשלח",
     approve: "אישור והפעלת מנוי",
     reject: "דחייה",
-    approvedToast: (name: string) => `${name} אושר/ה - נפתח מייל לשליחה`,
+    approvedToast: (name: string) => `${name} אושר/ה - נשלח מייל אישור`,
     rejectedToast: (name: string) => `הבקשה של ${name} נדחתה`,
     statusPending: "ממתין לאישור",
     statusApproved: "מאושר",
     statusRejected: "נדחה",
     noNotes: "אין הערות",
+    // simplified review card
+    whereFrom: "מאיפה",
+    verifiedLabel: "אימות",
+    verifiedYes: "אומת (מייל)",
+    verifiedNo: "לא אומת",
+    medicalYes: "דיווח/ה על בעיה רפואית - לשים לב",
+    medicalNo: "אין בעיה רפואית מדווחת",
+    noHealthForm: "טרם מילא/ה הצהרת בריאות",
     // approval email (opens in the admin's mail app, pre-filled)
     emailSubject: (app: string) => `החשבון שלך ב${app} אושר ✅`,
     emailBody: (name: string, app: string) =>

@@ -45,6 +45,9 @@ export interface User {
   gender?: Gender;
   age?: number;
   address?: string;
+  /** Whether the Firebase email was verified (mirrored from auth so staff can
+   *  see it on the approval card). */
+  emailVerified?: boolean;
   role: Role;
   /**
    * Registration gate. Seeded/legacy users are `approved`. A fresh sign-up is
